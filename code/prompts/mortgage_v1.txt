@@ -1,0 +1,10 @@
+Read the mortgage complaint and choose the issue that best describes the consumer's main problem.
+
+A — Applying for a new mortgage or refinancing an existing mortgage.
+B — Closing on a mortgage, including problems with the final documents, signing, or settlement.
+C — Servicing an existing mortgage, including problems with how payments are collected, posted, or applied, or how escrow is handled.
+D — Struggling to afford mortgage payments, including requests for forbearance, a loan modification, or other payment relief.
+E — Problems with a credit report, score, credit inquiry, dispute investigation, monitoring service, fraud alert, or security freeze affecting the mortgage.
+
+If several issues appear, choose the one the consumer most wants resolved. A payment applied incorrectly belongs to C. A request for help making payments belongs to D. Choose E when the credit reporting problem itself is the main complaint.
+Return exactly one uppercase letter from A through E.
