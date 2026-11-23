@@ -14,7 +14,8 @@ MODEL = "google/gemma-4-31B-it"
 BASE_URL = "https://api.siliconflow.com/v1"
 LABELS = ("A", "B", "C", "D", "E")
 PROMPT_DIR = ROOT / "code/prompts"
-DEFAULT_VERSION = "v2"
+SUPPORTED_VERSIONS = ("v1", "v2", "v3")
+DEFAULT_VERSION = "v3"
 DECODING = {"temperature": 0, "max_tokens": 16}
 
 
@@ -24,9 +25,9 @@ def load_prompt(version):
         # Keep this snapshot compatible with the original Teacher ledger.
         return {"prompt_file": path.name, "system_prompt": path.read_text(encoding="utf-8").strip(),
                 "user_template": "<complaint>\n{text}\n</complaint>"}
-    if version != "v2":
+    if version not in SUPPORTED_VERSIONS:
         raise ValueError(f"Unknown prompt version: {version}")
-    path = PROMPT_DIR / "mortgage_v2.toml"
+    path = PROMPT_DIR / f"mortgage_{version}.toml"
     with path.open("rb") as f:
         return {"prompt_file": path.name, **tomllib.load(f)}
 

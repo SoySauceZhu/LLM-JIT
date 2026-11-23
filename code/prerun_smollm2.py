@@ -16,7 +16,9 @@ import transformers
 from transformers import AutoModelForCausalLM, AutoTokenizer, GenerationConfig
 
 from baseline_gemma import REVISION, TOKENIZER, classification_scores, prepare_cases
-from gemma_teacher import DATA, DEFAULT_VERSION, LABELS, ROOT, build_messages, load_prompt
+from gemma_teacher import (
+    DATA, DEFAULT_VERSION, LABELS, ROOT, SUPPORTED_VERSIONS, build_messages, load_prompt,
+)
 
 
 PILOT = ROOT / "output/gemma_dev_n300_s42_v1"
@@ -113,11 +115,12 @@ def score(rows, field):
 
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("--prompt-version", choices=("v1", "v2"), default=DEFAULT_VERSION)
+    parser.add_argument("--prompt-version", choices=SUPPORTED_VERSIONS, default=DEFAULT_VERSION)
     parser.add_argument("--output", type=Path)
     args = parser.parse_args()
     config, cases = load_paired_cases(args.prompt_version)
-    dirname = "smollm2-135m-zero-shot" if args.prompt_version == "v1" else "smollm2-135m-few-shot-v2"
+    dirname = ("smollm2-135m-zero-shot" if args.prompt_version == "v1"
+               else f"smollm2-135m-few-shot-{args.prompt_version}")
     output_dir = args.output or RESULTS / dirname
     torch.set_num_threads(4)
     tokenizer = AutoTokenizer.from_pretrained(TOKENIZER, revision=REVISION)

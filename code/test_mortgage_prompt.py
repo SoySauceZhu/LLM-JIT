@@ -5,10 +5,18 @@ from contextlib import closing
 from unittest.mock import Mock
 
 from baseline_gemma import initialize
-from gemma_teacher import LABELS, build_messages, load_prompt, request_label
+from gemma_teacher import (
+    DEFAULT_VERSION, LABELS, SUPPORTED_VERSIONS, build_messages, load_prompt, request_label,
+)
 
 
 class TestMortgagePrompt(unittest.TestCase):
+    def test_v3_is_the_shared_default_and_v2_remains_available(self):
+        self.assertEqual(DEFAULT_VERSION, "v3")
+        self.assertEqual(SUPPORTED_VERSIONS, ("v1", "v2", "v3"))
+        self.assertEqual(load_prompt("v3")["prompt_file"], "mortgage_v3.toml")
+        self.assertEqual(load_prompt("v2")["prompt_file"], "mortgage_v2.toml")
+
     def test_served_few_shot_messages_can_be_replayed_from_the_ledger(self):
         client = Mock()
         text = "The amount on my escrow statement is wrong."

@@ -1,0 +1,68 @@
+system_prompt = """
+Read the mortgage complaint and choose one category.
+
+Identify the main problem the consumer wants resolved. If they do not
+ask for a specific fix, use the main problem they describe. A topic
+mentioned as background or as a consequence may be different from the
+problem they want resolved.
+
+A = Applying for a mortgage or refinancing an existing mortgage.
+Choose A for problems with an application, eligibility, an offer or
+rate quote, or a lender's decision to approve or deny a new loan.
+
+B = Closing on a mortgage.
+Choose B for problems completing the transaction, such as incorrect
+final documents, signing delays, closing costs, or funds due at settlement.
+
+C = Managing an existing mortgage account.
+Choose C when the consumer wants the servicer to correct how it handled
+a payment, balance, fee, escrow account, or payoff on an existing loan.
+
+D = Difficulty paying or seeking mortgage relief.
+Choose D when the main problem is inability to pay, getting or changing
+a relief arrangement, or seeking help to avoid foreclosure. Examples
+include forbearance, a repayment plan, or a hardship loan modification.
+
+E = Credit reporting and related services.
+Choose E when the main problem concerns information on a credit report,
+a credit inquiry or dispute, or access to a credit report, score,
+monitoring service, fraud alert, or security freeze.
+
+When two categories seem plausible, use these distinctions:
+- A vs B: A wrong rate in an offer is A. A wrong rate in the final
+  documents the consumer is being asked to sign is B.
+- A vs D: Reconsidering an application for a new refinance loan is A.
+  Changing payments on the current loan because of hardship is D.
+- C vs D: Correcting how a payment was applied is C. Requesting lower
+  payments or more time to pay because of hardship is D.
+- C vs E: Correcting the servicer's account records is C. Correcting
+  what appears on the consumer's credit report is E.
+
+Return exactly one uppercase letter: A, B, C, D, or E.
+"""
+
+user_template = """
+Complaint: {text}
+
+Category (one letter):"""
+
+# Keep the v2 demonstrations so Teacher and Student receive the same few-shot messages.
+[[examples]]
+text = "My credit report still shows a mortgage I paid off last year. The lender confirms I owe nothing. Please remove the balance from my credit file."
+label = "E"
+
+[[examples]]
+text = "I applied to refinance. The lender rejected my application using the wrong income figure. Please reconsider my application."
+label = "A"
+
+[[examples]]
+text = "My work hours were cut and I cannot make next month's payment. I asked for a temporary payment reduction and need a decision."
+label = "D"
+
+[[examples]]
+text = "Our loan was approved at a fixed rate. At settlement the papers showed a variable rate. We need corrected documents before we sign."
+label = "B"
+
+[[examples]]
+text = "My mortgage statement says I missed a payment. The money left my bank on time, but the servicer credited another account. Please apply my payment."
+label = "C"

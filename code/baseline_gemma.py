@@ -13,7 +13,7 @@ from pathlib import Path
 
 from gemma_teacher import (
     BASE_URL, DATA, DECODING, DEFAULT_PROMPT, DEFAULT_VERSION, LABELS, MODEL, ROOT,
-    load_prompt, make_client, request_label,
+    SUPPORTED_VERSIONS, load_prompt, make_client, request_label,
 )
 from teacher_collection import collect, single_runner
 
@@ -156,7 +156,7 @@ def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--size", type=int, default=300)
     parser.add_argument("--seed", type=int, default=42)
-    parser.add_argument("--prompt-version", choices=("v1", "v2"), default=DEFAULT_VERSION)
+    parser.add_argument("--prompt-version", choices=SUPPORTED_VERSIONS, default=DEFAULT_VERSION)
     parser.add_argument("--concurrency", type=int, default=1, metavar="N",
                         help="Maximum number of in-flight Teacher requests (default: 1)")
     parser.add_argument("--output", type=Path, help="Run directory, also used for resume")
