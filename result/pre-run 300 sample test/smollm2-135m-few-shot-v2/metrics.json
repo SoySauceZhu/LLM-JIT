@@ -1,0 +1,222 @@
+{
+  "model": "HuggingFaceTB/SmolLM2-135M-Instruct",
+  "revision": "12fd25f77366fa6b3b4b768ec3050bf629380bac",
+  "device": "cpu",
+  "dtype": "torch.float32",
+  "torch": "2.10.0",
+  "transformers": "5.5.4",
+  "teacher_run": "gemma_dev_n300_s42_v2",
+  "prompt": "Classify each mortgage complaint by the main problem the consumer wants fixed.\nA = Application or refinancing (loan offer, eligibility, approval).\nB = Closing (final papers, signing, settlement, closing funds).\nC = Loan servicing (payment posting, balance, fees, escrow).\nD = Payment hardship (cannot afford payments, forbearance, loan modification, foreclosure relief).\nE = Credit reporting (report error, score, dispute, inquiry, access, monitoring, fraud alert or freeze).\n\nA rate error in an offer is A. A rate error in the final papers to be signed is B.\nA payment already sent but credited incorrectly is C. A payment the consumer cannot afford is D.\nUse E when the requested fix is to a credit file.\nWrite a single uppercase letter. Extra words such as \"Label: C\" or \"C because ...\" make the answer invalid.",
+  "prompt_file": "mortgage_v2.toml",
+  "examples": [
+    {
+      "text": "My credit report still shows a mortgage I paid off last year. The lender confirms I owe nothing. Please remove the balance from my credit file.",
+      "label": "E"
+    },
+    {
+      "text": "I applied to refinance. The lender rejected my application using the wrong income figure. Please reconsider my application.",
+      "label": "A"
+    },
+    {
+      "text": "My work hours were cut and I cannot make next month's payment. I asked for a temporary payment reduction and need a decision.",
+      "label": "D"
+    },
+    {
+      "text": "Our loan was approved at a fixed rate. At settlement the papers showed a variable rate. We need corrected documents before we sign.",
+      "label": "B"
+    },
+    {
+      "text": "My mortgage statement says I missed a payment. The money left my bank on time, but the servicer credited another account. Please apply my payment.",
+      "label": "C"
+    }
+  ],
+  "user_template": "Complaint: {text}\n\nCategory (one letter):",
+  "max_new_tokens": 16,
+  "do_sample": false,
+  "batch_size": 1,
+  "max_attempts": 2,
+  "split": "development",
+  "seed_sampling": 42,
+  "clipped": 2,
+  "teacher_valid": 300,
+  "attempts": 300,
+  "inference_seconds": 162.24989612499485,
+  "strict_generation": {
+    "n": 300,
+    "valid_rate": 1.0,
+    "accuracy": 0.14,
+    "macro_f1": 0.0921868715734214,
+    "per_class": {
+      "A": {
+        "support": 26,
+        "recall": 0.7692307692307693,
+        "fpr": 0.6788321167883211,
+        "f1": 0.1724137931034483
+      },
+      "B": {
+        "support": 19,
+        "recall": 0.0,
+        "fpr": 0.03202846975088968,
+        "f1": 0.0
+      },
+      "C": {
+        "support": 172,
+        "recall": 0.03488372093023256,
+        "fpr": 0.0234375,
+        "f1": 0.06629834254143646
+      },
+      "D": {
+        "support": 68,
+        "recall": 0.23529411764705882,
+        "fpr": 0.25862068965517243,
+        "f1": 0.2222222222222222
+      },
+      "E": {
+        "support": 15,
+        "recall": 0.0,
+        "fpr": 0.0,
+        "f1": 0.0
+      }
+    },
+    "correct": 42,
+    "teacher_matches": 36,
+    "teacher_agreement_all_cases": 0.12,
+    "predicted_counts": {
+      "D": 76,
+      "A": 206,
+      "B": 9,
+      "C": 9
+    },
+    "confusion_rows_reference_columns_student": {
+      "A": {
+        "A": 20,
+        "B": 0,
+        "C": 1,
+        "D": 5,
+        "E": 0,
+        "FAIL": 0
+      },
+      "B": {
+        "A": 14,
+        "B": 0,
+        "C": 0,
+        "D": 5,
+        "E": 0,
+        "FAIL": 0
+      },
+      "C": {
+        "A": 113,
+        "B": 6,
+        "C": 6,
+        "D": 47,
+        "E": 0,
+        "FAIL": 0
+      },
+      "D": {
+        "A": 48,
+        "B": 2,
+        "C": 2,
+        "D": 16,
+        "E": 0,
+        "FAIL": 0
+      },
+      "E": {
+        "A": 11,
+        "B": 1,
+        "C": 0,
+        "D": 3,
+        "E": 0,
+        "FAIL": 0
+      }
+    }
+  },
+  "first_token_choice": {
+    "n": 300,
+    "valid_rate": 1.0,
+    "accuracy": 0.14,
+    "macro_f1": 0.0921868715734214,
+    "per_class": {
+      "A": {
+        "support": 26,
+        "recall": 0.7692307692307693,
+        "fpr": 0.6788321167883211,
+        "f1": 0.1724137931034483
+      },
+      "B": {
+        "support": 19,
+        "recall": 0.0,
+        "fpr": 0.03202846975088968,
+        "f1": 0.0
+      },
+      "C": {
+        "support": 172,
+        "recall": 0.03488372093023256,
+        "fpr": 0.0234375,
+        "f1": 0.06629834254143646
+      },
+      "D": {
+        "support": 68,
+        "recall": 0.23529411764705882,
+        "fpr": 0.25862068965517243,
+        "f1": 0.2222222222222222
+      },
+      "E": {
+        "support": 15,
+        "recall": 0.0,
+        "fpr": 0.0,
+        "f1": 0.0
+      }
+    },
+    "correct": 42,
+    "teacher_matches": 36,
+    "teacher_agreement_all_cases": 0.12,
+    "predicted_counts": {
+      "D": 76,
+      "A": 206,
+      "B": 9,
+      "C": 9
+    },
+    "confusion_rows_reference_columns_student": {
+      "A": {
+        "A": 20,
+        "B": 0,
+        "C": 1,
+        "D": 5,
+        "E": 0,
+        "FAIL": 0
+      },
+      "B": {
+        "A": 14,
+        "B": 0,
+        "C": 0,
+        "D": 5,
+        "E": 0,
+        "FAIL": 0
+      },
+      "C": {
+        "A": 113,
+        "B": 6,
+        "C": 6,
+        "D": 47,
+        "E": 0,
+        "FAIL": 0
+      },
+      "D": {
+        "A": 48,
+        "B": 2,
+        "C": 2,
+        "D": 16,
+        "E": 0,
+        "FAIL": 0
+      },
+      "E": {
+        "A": 11,
+        "B": 1,
+        "C": 0,
+        "D": 3,
+        "E": 0,
+        "FAIL": 0
+      }
+    }
+  }
+}

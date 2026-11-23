@@ -1,0 +1,817 @@
+complaint_id,reference_label,student_tokens_before_clip,clipped,teacher_label,student_label,first_token_choice,first_reply,last_reply,attempts,prompt_tokens_per_attempt,generated_tokens_all_attempts
+8085676,C,91,False,E,,A,"<complaint>
+I am a customer of XXXXXXXX XXXX","<complaint>
+I am a customer of XXXXXXXX XXXX",2,312,32
+8085526,B,154,False,C,,A,"<complaint>
+To whom it may concern, My grandmother passed away in","<complaint>
+To whom it may concern, My grandmother passed away in",2,375,32
+8086764,C,39,False,C,,A,"<complaint>
+I asked for an appraisal theyre refusing to give me","<complaint>
+I asked for an appraisal theyre refusing to give me",2,260,32
+8088502,D,194,False,C,,A,"<complaint>
+I have lived in my home since XXXX. It","<complaint>
+I have lived in my home since XXXX. It",2,415,32
+8087882,C,301,False,C,,A,"<complaint>
+I am a mortgagee and have been unable to set","<complaint>
+I am a mortgagee and have been unable to set",2,522,32
+8090985,D,214,False,D,,A,"<complaint>
+I was on a 3-month forebearance","<complaint>
+I was on a 3-month forebearance",2,435,32
+8089139,C,222,False,C,,A,"<complaint>
+I've been trying to get my XXXX owners insurance","<complaint>
+I've been trying to get my XXXX owners insurance",2,443,32
+8091211,D,43,False,C,,C,"<complaint>
+On Tuesday, XX/XX/XXXX when I spoke","<complaint>
+On Tuesday, XX/XX/XXXX when I spoke",2,264,32
+8095341,E,72,False,C,,A,"<complaint>
+NewRez will not give me my $ XXXX","<complaint>
+NewRez will not give me my $ XXXX",2,293,32
+8092915,A,1879,False,A,,A,"Based on the information provided, the complaint against United Wholesale Mortgage appears","Based on the information provided, the complaint against United Wholesale Mortgage appears",2,2100,32
+8094252,C,143,False,C,,A,"<complaint>
+I purchased this property and had no issues initially. Then","<complaint>
+I purchased this property and had no issues initially. Then",2,364,32
+8093967,C,519,False,C,,A,"<complaint>
+
+I am a homeowner in Maryland and have been facing","<complaint>
+
+I am a homeowner in Maryland and have been facing",2,740,32
+8093369,C,455,False,C,,A,"The consumer is requesting a refund for the property tax owed on their mortgage, specifically","The consumer is requesting a refund for the property tax owed on their mortgage, specifically",2,676,32
+8093151,D,269,False,D,,A,"<complaint>
+I purchased my primary home in XX/XX/XXXX","<complaint>
+I purchased my primary home in XX/XX/XXXX",2,490,32
+8093196,C,93,False,C,,A,"<complaint>
+Company has failed to make XXXX year property and","<complaint>
+Company has failed to make XXXX year property and",2,314,32
+8092991,A,212,False,E,,A,"<complaint>
+I received a letter from US Bank on XX/XX","<complaint>
+I received a letter from US Bank on XX/XX",2,433,32
+8092880,C,199,False,C,,A,"<complaint>
+I had added autopay to my account with a","<complaint>
+I had added autopay to my account with a",2,420,32
+8092181,D,369,False,D,,C,"<complaint>
+Carrington Mortgage Services duped me into","<complaint>
+Carrington Mortgage Services duped me into",2,590,32
+8092262,C,119,False,C,,A,"<complaint>
+1. I have missing credits for previous payments.
+","<complaint>
+1. I have missing credits for previous payments.
+",2,340,32
+8092096,C,2165,False,C,,A,"Based on the complaint, the issue is that the loan is being denied due to","Based on the complaint, the issue is that the loan is being denied due to",2,2386,32
+8089678,C,353,False,C,,A,XX/XX/XXXX - I send loandepot a statement that my,XX/XX/XXXX - I send loandepot a statement that my,2,574,32
+8100758,C,200,False,C,,A,"<complaint>
+I had autopay set up with my Citizens Bank","<complaint>
+I had autopay set up with my Citizens Bank",2,421,32
+8101202,E,22,False,C,,A,"<complaint>
+The agent for the company said they don't have a","<complaint>
+The agent for the company said they don't have a",2,243,32
+8099852,D,273,False,D,,A,"<complaint>
+On XX/XX/2023 I returned","<complaint>
+On XX/XX/2023 I returned",2,494,32
+8098916,C,223,False,C,,A,"<complaint>
+The payment that I made to Arvest mortgage in early","<complaint>
+The payment that I made to Arvest mortgage in early",2,444,32
+8099404,D,512,False,D,,A,"Based on the complaint, the main issue with Wells Fargo is that they deny","Based on the complaint, the main issue with Wells Fargo is that they deny",2,733,32
+8097409,C,313,False,C,,A,"<complaint>
+I am writing to inform you that I have received a","<complaint>
+I am writing to inform you that I have received a",2,534,32
+8098167,C,329,False,C,,A,"<complaint>
+
+Dear [Name],
+
+I am writing to","<complaint>
+
+Dear [Name],
+
+I am writing to",2,550,32
+8098238,C,253,False,C,,A,"<complaint>
+Since XX/XX/XXXX, our mortgage company has","<complaint>
+Since XX/XX/XXXX, our mortgage company has",2,474,32
+8098078,D,206,False,D,,A,XX/XX/XXXX - and before this date: Working Truist/BB,XX/XX/XXXX - and before this date: Working Truist/BB,2,427,32
+8097718,B,1077,False,A,,A,"Based on the complaint, the main issue is that the consumer is struggling to afford","Based on the complaint, the main issue is that the consumer is struggling to afford",2,1298,32
+8101679,C,424,False,C,,A,"<complaint>
+I am filing a complaint against Aimloan.com.","<complaint>
+I am filing a complaint against Aimloan.com.",2,645,32
+8096758,C,443,False,C,,A,"Based on the complaint, the consumer is seeking to resolve the issue of the monthly","Based on the complaint, the consumer is seeking to resolve the issue of the monthly",2,664,32
+8108025,D,639,False,D,,A,"Based on the complaint, the consumer is facing a significant issue with the mortgage service","Based on the complaint, the consumer is facing a significant issue with the mortgage service",2,860,32
+8102702,C,551,False,C,,A,"Based on the complaint, the issue that the consumer most wants resolved is:
+","Based on the complaint, the issue that the consumer most wants resolved is:
+",2,772,32
+8107533,B,165,False,B,,A,"<complaint>
+Prime Lending, A plains XXXX XXXX,","<complaint>
+Prime Lending, A plains XXXX XXXX,",2,386,32
+8102646,C,134,False,C,,A,"<complaint>
+On XXXX XXXX XXXX I signed a XXX","<complaint>
+On XXXX XXXX XXXX I signed a XXX",2,355,32
+8107467,D,552,False,D,,A,"Based on the complaint, the consumer is dissatisfied with the following issues:
+
+","Based on the complaint, the consumer is dissatisfied with the following issues:
+
+",2,773,32
+8107481,C,365,False,C,,A,"Based on the complaint, the consumer is seeking the following remedies:
+
+1.","Based on the complaint, the consumer is seeking the following remedies:
+
+1.",2,586,32
+8105897,E,758,False,C,,A,"<complaint>
+To : Citibank From : XXXX XXXX","<complaint>
+To : Citibank From : XXXX XXXX",2,979,32
+8105254,D,453,False,C,,A,"<complaint>
+I responded to an email by XXXX, called the","<complaint>
+I responded to an email by XXXX, called the",2,674,32
+8104453,E,207,False,E,,A,"<complaint>
+XXXX XXXX XXXX a debt collection company is stating","<complaint>
+XXXX XXXX XXXX a debt collection company is stating",2,428,32
+8103963,D,213,False,D,,A,"<complaint>
+Right path servicing is my mortgage servicer. I had","<complaint>
+Right path servicing is my mortgage servicer. I had",2,434,32
+8103941,B,94,False,B,,A,"<complaint>
+Our mortgage lender caused us to nearly have to terminate our","<complaint>
+Our mortgage lender caused us to nearly have to terminate our",2,315,32
+8103900,B,86,False,D,,A,"The issue is that the homeowner is not agreeing to the terms of the mortgage,","The issue is that the homeowner is not agreeing to the terms of the mortgage,",2,307,32
+8113195,C,636,False,C,,A,"<complaint>
+Mr. Cooper aka Nationstar Mortgage has again failed","<complaint>
+Mr. Cooper aka Nationstar Mortgage has again failed",2,857,32
+8112659,C,534,False,C,,A,"<complaint>
+Good morning, we have the worst experience with the mortgage","<complaint>
+Good morning, we have the worst experience with the mortgage",2,755,32
+8112154,C,804,False,C,,A,"Based on the information provided, the most likely issue is that the previous homeowner's","Based on the information provided, the most likely issue is that the previous homeowner's",2,1025,32
+8112190,C,502,False,C,,A,"<complaint>
+On XX/XX/XXXXXXXX RightPath Servicing sent","<complaint>
+On XX/XX/XXXXXXXX RightPath Servicing sent",2,723,32
+8111672,C,105,False,C,,A,"<complaint>
+I closed on my loan and the payment amount for my","<complaint>
+I closed on my loan and the payment amount for my",2,326,32
+8112338,D,446,False,C,,A,"Based on the information provided, the most likely issue is that the escrow account","Based on the information provided, the most likely issue is that the escrow account",2,667,32
+8115678,E,66,False,E,,A,"<complaint>
+I am pleased to inform you that your account was granted","<complaint>
+I am pleased to inform you that your account was granted",2,287,32
+8110942,D,189,False,D,,A,"<complaint>
+I am writing to inform you that I have been attempting","<complaint>
+I am writing to inform you that I have been attempting",2,410,32
+8110977,C,267,False,C,,A,"<complaint>
+Mr. Cooper bought my home loan. Monthly there has","<complaint>
+Mr. Cooper bought my home loan. Monthly there has",2,488,32
+8117101,B,319,False,B,,A,"<complaint>
+For a quarter of a century, I have called this","<complaint>
+For a quarter of a century, I have called this",2,540,32
+8118111,C,448,False,C,,A,"<complaint>
+On XXXX XXXX XXXX I went online to","<complaint>
+On XXXX XXXX XXXX I went online to",2,669,32
+8118842,C,766,False,C,,A,"Based on the complaint, the consumer is seeking to resolve the issue of the orig","Based on the complaint, the consumer is seeking to resolve the issue of the orig",2,987,32
+8119124,C,149,False,C,,D,"<complaint>
+Dovenmuehle Mortgage took over our","<complaint>
+Dovenmuehle Mortgage took over our",2,370,32
+8121065,C,549,False,C,,A,"<complaint>
+Greetings, On XX/XX/XXXX,","<complaint>
+Greetings, On XX/XX/XXXX,",2,770,32
+8121628,A,1082,False,E,,A,"Based on the complaint, the main issue is that XXXX XXXX denied your","Based on the complaint, the main issue is that XXXX XXXX denied your",2,1303,32
+8125816,D,235,False,C,,A,"<complaint>
+My bankruptcy case was XXXX in XX/XX/","<complaint>
+My bankruptcy case was XXXX in XX/XX/",2,456,32
+8125864,C,85,False,C,,C,"<complaint>
+Newrez took out an amount of $110","<complaint>
+Newrez took out an amount of $110",2,306,32
+8126816,D,274,False,D,,A,"<complaint>
+On two occasions, I have spoken to Shellpoint Mort","<complaint>
+On two occasions, I have spoken to Shellpoint Mort",2,495,32
+8128901,D,57,False,C,,A,"<complaint>
+Wells Fargo issued me a check for $2","<complaint>
+Wells Fargo issued me a check for $2",2,278,32
+8122791,D,89,False,D,,A,"<complaint>
+On XXXX XXXX Wells Fargo Home Mortgage","<complaint>
+On XXXX XXXX Wells Fargo Home Mortgage",2,310,32
+8122478,C,141,False,C,,A,"<complaint>
+On XX/XX/XXXX and XX/XX/","<complaint>
+On XX/XX/XXXX and XX/XX/",2,362,32
+8122168,C,158,False,C,,A,"<complaint>
+I am trying to set up some systems with my mortgage","<complaint>
+I am trying to set up some systems with my mortgage",2,379,32
+8122856,D,643,False,C,,A,"Based on the information provided, it appears that the consumer is seeking an attorney to","Based on the information provided, it appears that the consumer is seeking an attorney to",2,864,32
+8122920,D,338,False,D,,A,"<complaint>
+Mr. Cooper engaged in fraudulent and deceptive practices over the","<complaint>
+Mr. Cooper engaged in fraudulent and deceptive practices over the",2,559,32
+8122924,C,146,False,C,,A,"<complaint>
+I have been paying {$1000.","<complaint>
+I have been paying {$1000.",2,367,32
+8123236,C,235,False,C,,A,"<complaint>
+Funding from the XXXX XXXX XXXX XXXX","<complaint>
+Funding from the XXXX XXXX XXXX XXXX",2,456,32
+8123231,C,396,False,C,,A,"<complaint>
+I am a mortgage broker and I have been working with","<complaint>
+I am a mortgage broker and I have been working with",2,617,32
+8123599,D,125,False,D,,A,"<complaint>
+On XXXX XXXX XXXX XXXX I received","<complaint>
+On XXXX XXXX XXXX XXXX I received",2,346,32
+8131214,B,93,False,C,,A,"<complaint>
+My ex wife had me removed from the deed and I","<complaint>
+My ex wife had me removed from the deed and I",2,314,32
+8124022,C,485,False,B,,A,"Based on the complaint, the issue is that the warranty deed is not accurate where","Based on the complaint, the issue is that the warranty deed is not accurate where",2,706,32
+8124024,C,164,False,B,,A,"<complaint>
+For a FHA loan, there were several issues that","<complaint>
+For a FHA loan, there were several issues that",2,385,32
+8124014,C,294,False,C,,A,"<complaint>
+Payoff of the mortgage amount was made XXXX XXX","<complaint>
+Payoff of the mortgage amount was made XXXX XXX",2,515,32
+8124046,A,63,False,B,,A,"<complaint>
+When I bought this condo the loan officer told me","<complaint>
+When I bought this condo the loan officer told me",2,284,32
+8124419,E,897,False,E,,A,"Based on the information provided, the consumer is facing a significant issue with their mortgage","Based on the information provided, the consumer is facing a significant issue with their mortgage",2,1118,32
+8124349,C,476,False,C,,A,"<complaint>
+I requested a payoff via email. Although the company","<complaint>
+I requested a payoff via email. Although the company",2,697,32
+8135916,D,266,False,D,,A,"<complaint>
+On XXXX, I spoke with XXXX XXXX","<complaint>
+On XXXX, I spoke with XXXX XXXX",2,487,32
+8136441,D,190,False,D,,A,"<complaint>
+I am unsure of how I have gotten to this point","<complaint>
+I am unsure of how I have gotten to this point",2,411,32
+8129475,D,209,False,D,,A,"<complaint>
+I applied for a loan modification and was approved with a","<complaint>
+I applied for a loan modification and was approved with a",2,430,32
+8136450,E,292,False,E,,A,"<complaint>
+Newrex corporation is reporting a loan payment as late when","<complaint>
+Newrex corporation is reporting a loan payment as late when",2,513,32
+8130256,C,451,False,E,,A,"<complaint>
+I called Wells Fargo to ask to skip one payment","<complaint>
+I called Wells Fargo to ask to skip one payment",2,672,32
+8129774,C,363,False,C,,A,"<complaint>
+My mortgage was transferred from XXXX XXXX to Mr","<complaint>
+My mortgage was transferred from XXXX XXXX to Mr",2,584,32
+8130799,A,575,False,C,,C,"<complaint>
+<div class=""subtitle"">
+<p>","<complaint>
+<div class=""subtitle"">
+<p>",2,796,32
+8130918,A,884,False,D,,A,"Based on the complaint, the issue that the consumer most wants resolved is the payment","Based on the complaint, the issue that the consumer most wants resolved is the payment",2,1105,32
+8130919,E,266,False,E,,A,"<complaint>
+In accordance with the Fair Credit Reporting act, I have","<complaint>
+In accordance with the Fair Credit Reporting act, I have",2,487,32
+8131082,C,146,False,E,,A,"<complaint>
+I recently discovered that a, MORTGAGE had","<complaint>
+I recently discovered that a, MORTGAGE had",2,367,32
+8133050,C,300,False,C,,A,"<complaint>
+I wanted to make a final payment to pay off my","<complaint>
+I wanted to make a final payment to pay off my",2,521,32
+8133328,D,273,False,C,,C,"<complaint>
+Per, our Qualified Written Request to Fay Servicing","<complaint>
+Per, our Qualified Written Request to Fay Servicing",2,494,32
+8139131,C,209,False,C,,A,"<complaint>
+I missed a mortgage payment last XXXX. I agreed","<complaint>
+I missed a mortgage payment last XXXX. I agreed",2,430,32
+8139928,C,253,False,C,,A,"<complaint>
+In XXXX XXXX a letter was sent to me","<complaint>
+In XXXX XXXX a letter was sent to me",2,474,32
+8139932,C,209,False,C,,A,"<complaint>
+On XXXX I received a letter from SPS stating","<complaint>
+On XXXX I received a letter from SPS stating",2,430,32
+8140244,C,18,False,C,,A,"<complaint>
+did not provide adequate payment information in detail, respa","<complaint>
+did not provide adequate payment information in detail, respa",2,239,32
+8138476,C,771,False,C,,A,"Based on the information provided, the most likely issue is that the mortgage was not","Based on the information provided, the most likely issue is that the mortgage was not",2,992,32
+8139648,B,1144,False,C,,A,"Based on the complaint, the main issue is that Mr. Cooper is not responsive","Based on the complaint, the main issue is that Mr. Cooper is not responsive",2,1365,32
+8139671,C,421,False,C,,A,"<complaint>
+I purchased my home in XX/XX/XXXX,","<complaint>
+I purchased my home in XX/XX/XXXX,",2,642,32
+8145362,D,308,False,D,,A,"<complaint>
+
+<div class=""text-center"">
+<","<complaint>
+
+<div class=""text-center"">
+<",2,529,32
+8145507,B,192,False,E,,A,"<complaint>
+On my closing, XX/XX/202","<complaint>
+On my closing, XX/XX/202",2,413,32
+8145915,A,284,False,C,,A,"<complaint>
+<complaint>
+<complaint>
+<","<complaint>
+<complaint>
+<complaint>
+<",2,505,32
+8144570,D,353,False,C,,A,"Based on the information provided, the consumer most wants resolved is the issue of the","Based on the information provided, the consumer most wants resolved is the issue of the",2,574,32
+8151195,C,287,False,C,,A,"<complaint>
+I paid off my heloc in XXXX of XXX","<complaint>
+I paid off my heloc in XXXX of XXX",2,508,32
+8151231,B,411,False,A,,A,"<complaint>
+I was requesting a home loan in the amount of {","<complaint>
+I was requesting a home loan in the amount of {",2,632,32
+8151340,C,113,False,C,,A,"<complaint>
+Flagstar holds a mortgage on our home. The property","<complaint>
+Flagstar holds a mortgage on our home. The property",2,334,32
+8152448,D,133,False,D,,A,"<complaint>
+I am behind on my mortgage and want to stay in","<complaint>
+I am behind on my mortgage and want to stay in",2,354,32
+8151949,C,39,False,C,,A,"<complaint>
+My loan covers 2 parcels. They have not paid","<complaint>
+My loan covers 2 parcels. They have not paid",2,260,32
+8151648,D,91,False,D,,A,"<complaint>
+Wells Fargo is demanding the full balance on my","<complaint>
+Wells Fargo is demanding the full balance on my",2,312,32
+8148612,C,331,False,C,,A,"<complaint>
+I changed Home insurance companies in XX/XX/2","<complaint>
+I changed Home insurance companies in XX/XX/2",2,552,32
+8149105,C,635,False,C,C,C,C,C,1,856,2
+8150517,C,443,False,C,,A,"<complaint>
+I am a homeowner who has been in the mortgage business","<complaint>
+I am a homeowner who has been in the mortgage business",2,664,32
+8229077,C,296,False,C,,A,"<complaint>
+When BMO bought by bank, Bank of the West","<complaint>
+When BMO bought by bank, Bank of the West",2,517,32
+8173401,C,211,False,C,,A,Rocket Mortgage Account # XXXX I escrow property tax and homeowners insurance,Rocket Mortgage Account # XXXX I escrow property tax and homeowners insurance,2,432,32
+8189602,A,677,False,A,,A,"Based on the complaint, the consumer is seeking to resolve the issue of a mortgage","Based on the complaint, the consumer is seeking to resolve the issue of a mortgage",2,898,32
+8173437,C,745,False,C,,A,"Based on the complaint, the consumer is seeking a refund of the property tax payment","Based on the complaint, the consumer is seeking a refund of the property tax payment",2,966,32
+8181305,C,126,False,C,,A,"<complaint>
+Dear CFPB,
+
+I am writing to","<complaint>
+Dear CFPB,
+
+I am writing to",2,347,32
+8172685,B,451,False,A,,A,"Based on the complaint, the consumer has been unsuccessful in reaching out to the company","Based on the complaint, the consumer has been unsuccessful in reaching out to the company",2,672,32
+8173691,C,70,False,C,,C,"<complaint>
+Carrington lied policy was change from XXXX","<complaint>
+Carrington lied policy was change from XXXX",2,291,32
+8154014,A,401,False,A,,A,"<complaint>
+I applied for a mortgage assumption in XXXX of ","<complaint>
+I applied for a mortgage assumption in XXXX of ",2,622,32
+8173350,C,221,False,C,,A,"<complaint>
+I set up auto pay directly with select portfolio mortgage company","<complaint>
+I set up auto pay directly with select portfolio mortgage company",2,442,32
+8156213,C,218,False,C,,A,"<complaint>
+Spoke to freedom mortgage at least XXXX times.","<complaint>
+Spoke to freedom mortgage at least XXXX times.",2,439,32
+8154978,D,147,False,E,,A,"<complaint>
+In XXXX to XXXX XXXX XXXX XXX","<complaint>
+In XXXX to XXXX XXXX XXXX XXX",2,368,32
+8172578,A,1283,False,A,,A,"Based on the complaint, the main issue is the adverse action notice, which is","Based on the complaint, the main issue is the adverse action notice, which is",2,1504,32
+8172489,D,328,False,D,,A,"<complaint>
+I began a mortgage forbearance in XX/XX/","<complaint>
+I began a mortgage forbearance in XX/XX/",2,549,32
+8181552,D,454,False,D,,A,"<complaint>
+The company consistently defends itself and avoids addressing the issues","<complaint>
+The company consistently defends itself and avoids addressing the issues",2,675,32
+8173949,D,6071,True,C,,A,"Based on the information provided, the Consumer Financial Protection Bureau (CFPB)","Based on the information provided, the Consumer Financial Protection Bureau (CFPB)",2,3221,32
+8157348,C,314,False,C,,A,"<complaint>
+Truist repeatedly mails me letters falsely telling me","<complaint>
+Truist repeatedly mails me letters falsely telling me",2,535,32
+8156887,C,245,False,C,,A,"<complaint>
+On XX/XX/XXXX : I sold my property","<complaint>
+On XX/XX/XXXX : I sold my property",2,466,32
+8158641,C,696,False,C,,A,"Based on the complaint, the consumer is seeking to resolve the issue of a mortgage","Based on the complaint, the consumer is seeking to resolve the issue of a mortgage",2,917,32
+8158512,E,129,False,E,,A,"<complaint>
+This follows from complaint XXXX where Mr Cooper incorrectly XXX","<complaint>
+This follows from complaint XXXX where Mr Cooper incorrectly XXX",2,350,32
+8163866,C,195,False,C,,A,"<complaint>
+Truist Bank is punishing you because you refuse to","<complaint>
+Truist Bank is punishing you because you refuse to",2,416,32
+8164430,C,699,False,C,,A,"Based on the complaint, the consumer is unhappy with the change in their mortgage payment","Based on the complaint, the consumer is unhappy with the change in their mortgage payment",2,920,32
+8163437,D,567,False,D,,A,"<complaint>
+
+On XX/XX/XXXX, I applied for","<complaint>
+
+On XX/XX/XXXX, I applied for",2,788,32
+8162317,C,353,False,C,,A,"<complaint>
+Umpqua Bank did not provide the required escrow","<complaint>
+Umpqua Bank did not provide the required escrow",2,574,32
+8161140,D,271,False,D,,A,"<complaint>
+I contacted Mr. Cooper on XX/XX/XXXX","<complaint>
+I contacted Mr. Cooper on XX/XX/XXXX",2,492,32
+8160968,C,151,False,C,,A,"<complaint>
+First Hawaiian Bank ( FHB ) purchased an insurance policy","<complaint>
+First Hawaiian Bank ( FHB ) purchased an insurance policy",2,372,32
+8159264,A,195,False,A,,A,"<complaint>
+I am writing to inform you that I have been working","<complaint>
+I am writing to inform you that I have been working",2,416,32
+8159268,C,1060,False,C,,A,"Based on the information provided, the most likely issue with the mortgage is the late","Based on the information provided, the most likely issue with the mortgage is the late",2,1281,32
+8159121,D,728,False,D,,A,"<complaint>
+I submitted this complaint and the servicer is sending information","<complaint>
+I submitted this complaint and the servicer is sending information",2,949,32
+8168307,C,74,False,C,,A,"<complaint>
+I would like a complete accounting, including description and date","<complaint>
+I would like a complete accounting, including description and date",2,295,32
+8166129,C,359,False,C,,A,"<complaint>
+On XX/XX/XXXX, I was notified that","<complaint>
+On XX/XX/XXXX, I was notified that",2,580,32
+8171347,C,891,False,D,,A,"Based on the information provided, it appears that the consumer is facing a significant financial","Based on the information provided, it appears that the consumer is facing a significant financial",2,1112,32
+8166108,D,577,False,C,,A,"<complaint>
+I purchased the home at XXXX XXXX XXXX","<complaint>
+I purchased the home at XXXX XXXX XXXX",2,798,32
+8165729,C,99,False,C,,A,"<complaint>
+XXXX Acct paid early XX/XX/XXXX XXX","<complaint>
+XXXX Acct paid early XX/XX/XXXX XXX",2,320,32
+8171325,C,199,False,C,,A,"<complaint>
+We have been many months trying to communicate with National Asset","<complaint>
+We have been many months trying to communicate with National Asset",2,420,32
+8164561,C,293,False,C,,A,"<complaint>
+XXXX XXXX XXXX XXXX XXXX XXXX","<complaint>
+XXXX XXXX XXXX XXXX XXXX XXXX",2,514,32
+8170842,C,222,False,C,,E,"<complaint>
+this company SPECIALIZED LOAN SERVICING","<complaint>
+this company SPECIALIZED LOAN SERVICING",2,443,32
+8170598,C,374,False,C,,A,"<complaint>
+My mortgage was transferred to a company called Regions Mortgage","<complaint>
+My mortgage was transferred to a company called Regions Mortgage",2,595,32
+8170514,C,975,False,C,,A,"Based on the complaint, the consumer is seeking refunds for the outstanding balance of","Based on the complaint, the consumer is seeking refunds for the outstanding balance of",2,1196,32
+8168167,C,338,False,C,,A,XX/XX/XXXX requested to perform an escrow analysis on my home mortgage,XX/XX/XXXX requested to perform an escrow analysis on my home mortgage,2,559,32
+8170656,C,352,False,C,,A,"Based on the complaint, it appears that the consumer has a credit card issue that","Based on the complaint, it appears that the consumer has a credit card issue that",2,573,32
+8170118,C,237,False,C,,A,"<complaint>
+We - XXXX XXXX and XXXX XXXX","<complaint>
+We - XXXX XXXX and XXXX XXXX",2,458,32
+8168163,D,337,False,D,,A,"<complaint>
+I applied for a Loan Modification that was approved.","<complaint>
+I applied for a Loan Modification that was approved.",2,558,32
+8180646,C,95,False,D,,C,"<complaint>
+Good morning, Due to employment loss, I need to","<complaint>
+Good morning, Due to employment loss, I need to",2,316,32
+8180315,E,29,False,E,,A,"<complaint>
+US Bank home mortgage. Location XXXX XXXX XXX","<complaint>
+US Bank home mortgage. Location XXXX XXXX XXX",2,250,32
+8180506,C,155,False,C,,A,"<complaint>
+On XX/XX/2024, I","<complaint>
+On XX/XX/2024, I",2,376,32
+8180345,C,953,False,C,,A,"<div class=""attachment-item""><div class=""attachment-item-","<div class=""attachment-item""><div class=""attachment-item-",2,1174,32
+8179280,C,470,False,C,,A,"Based on the information provided, the consumer is facing a significant issue with their mortgage","Based on the information provided, the consumer is facing a significant issue with their mortgage",2,691,32
+8178347,D,1074,False,C,,A,"<complaint>
+THIS IS OUR RESPONSE TO PHH","<complaint>
+THIS IS OUR RESPONSE TO PHH",2,1295,32
+8178342,C,4501,True,C,,A,"Based on the information provided, the issue with the tax bill is that it is","Based on the information provided, the issue with the tax bill is that it is",2,3221,32
+8178157,D,556,False,C,,A,"<complaint>
+I am writing to bring to your attention the challenges and","<complaint>
+I am writing to bring to your attention the challenges and",2,777,32
+8178545,D,804,False,D,,A,"Based on the complaint, Shellpoint Mortgage has closed the door on your family","Based on the complaint, Shellpoint Mortgage has closed the door on your family",2,1025,32
+8181032,C,338,False,C,,A,"<complaint>
+We were transferred to Panorama Mortgage Group in","<complaint>
+We were transferred to Panorama Mortgage Group in",2,559,32
+8176292,D,2182,False,D,,A,"Based on the complaint, the consumer is facing several issues:
+
+1. Lack","Based on the complaint, the consumer is facing several issues:
+
+1. Lack",2,2403,32
+8175671,C,217,False,C,,A,"<complaint>
+I have as they call it Hazard insurance and always have","<complaint>
+I have as they call it Hazard insurance and always have",2,438,32
+8186703,A,953,False,A,,A,"Based on the complaint, the consumer is seeking a payment for the Home Equity Line","Based on the complaint, the consumer is seeking a payment for the Home Equity Line",2,1174,32
+8188267,C,87,False,C,,A,"<complaint>
+Loan Number : # XXXX Nationstar/Mr","<complaint>
+Loan Number : # XXXX Nationstar/Mr",2,308,32
+8186765,C,986,False,C,,A,"Based on the complaint, the issue is that Roundpoint is not providing the correct","Based on the complaint, the issue is that Roundpoint is not providing the correct",2,1207,32
+8182486,C,961,False,C,,A,"Based on the complaint, the consumer is facing a situation where their home mortgage is","Based on the complaint, the consumer is facing a situation where their home mortgage is",2,1182,32
+8182357,C,271,False,C,,C,"<complaint>
+On XX/XX/XXXX, I closed on a","<complaint>
+On XX/XX/XXXX, I closed on a",2,492,32
+8182369,A,338,False,A,,A,"<complaint>
+I am XXXX XXXX XXX woman who applied for","<complaint>
+I am XXXX XXXX XXX woman who applied for",2,559,32
+8182582,C,492,False,C,,A,"<complaint>
+We transferred a mortgage to Roundpoint Mortgage/ payments","<complaint>
+We transferred a mortgage to Roundpoint Mortgage/ payments",2,713,32
+8183100,C,117,False,C,,A,"<complaint>
+I set up my payments to pay twice monthly. I","<complaint>
+I set up my payments to pay twice monthly. I",2,338,32
+8184499,C,140,False,C,,A,"<complaint>
+This has been going on for over 3 months.","<complaint>
+This has been going on for over 3 months.",2,361,32
+8184669,C,42,False,D,,A,"<complaint>
+We have tried to communicate with them in regards to the","<complaint>
+We have tried to communicate with them in regards to the",2,263,32
+8193711,C,136,False,C,,A,"<complaint>
+My next year's payment increased almost XXXX dollars a","<complaint>
+My next year's payment increased almost XXXX dollars a",2,357,32
+8193136,D,93,False,C,,A,"<complaint>
+Please direct Wells Fargo to give me my portion of","<complaint>
+Please direct Wells Fargo to give me my portion of",2,314,32
+8192985,C,92,False,C,,C,"<complaint>
+On XX/XX/2009 Wells F","<complaint>
+On XX/XX/2009 Wells F",2,313,32
+8193111,C,131,False,C,,A,"<complaint>
+On XX/XX/year>, I gave my Re","<complaint>
+On XX/XX/year>, I gave my Re",2,352,32
+8192835,C,2754,False,C,,A,I'm sorry for the inconvenience and frustration caused by this letter. I appreciate your,I'm sorry for the inconvenience and frustration caused by this letter. I appreciate your,2,2975,32
+8193923,C,1216,False,C,,A,"I'm sorry for the confusion, but as a mortgage complaint AI, I don","I'm sorry for the confusion, but as a mortgage complaint AI, I don",2,1437,32
+8192098,C,789,False,C,,A,"Based on the complaint, the consumer is owed the $2100.","Based on the complaint, the consumer is owed the $2100.",2,1010,32
+8190731,D,37,False,D,,A,"<complaint>
+When XXXX XXXX XXXX I had it me","<complaint>
+When XXXX XXXX XXXX I had it me",2,258,32
+8195522,C,163,False,C,,A,"<complaint>
+I received an email with the words "" duplicate "" complaint","<complaint>
+I received an email with the words "" duplicate "" complaint",2,384,32
+8195450,C,77,False,C,,A,"<complaint>
+THIS IS NOT A DUPLICATE COMP","<complaint>
+THIS IS NOT A DUPLICATE COMP",2,298,32
+8202797,E,241,False,E,,A,"<complaint>
+I am currently interviewing for a higher paying position at a","<complaint>
+I am currently interviewing for a higher paying position at a",2,462,32
+8205255,C,167,False,C,,A,"<complaint>
+Rushmore Servicing company took over Rushmore mortgage","<complaint>
+Rushmore Servicing company took over Rushmore mortgage",2,388,32
+8203567,C,315,False,C,,A,"<complaint>
+I have been having issues with BB & T/T","<complaint>
+I have been having issues with BB & T/T",2,536,32
+8197464,C,173,False,C,,A,"<complaint>
+I called NewRez To ask what was my pay","<complaint>
+I called NewRez To ask what was my pay",2,394,32
+8198548,C,124,False,C,,C,"<complaint>
+on XX/XX/2023 I sent","<complaint>
+on XX/XX/2023 I sent",2,345,32
+8198871,D,444,False,C,,A,"<complaint>
+Greetings, I am writing to lodge a formal","<complaint>
+Greetings, I am writing to lodge a formal",2,665,32
+8198851,C,15,False,C,,A,"<complaint>
+<complaint>
+<complaint>
+<","<complaint>
+<complaint>
+<complaint>
+<",2,236,32
+8199452,C,1472,False,C,,A,"Based on the complaint, the main issue is that the consumer is applying for a","Based on the complaint, the main issue is that the consumer is applying for a",2,1693,32
+8199297,E,266,False,C,,A,"<complaint>
+I submitted two payments to Freedom Mortgage on XX/","<complaint>
+I submitted two payments to Freedom Mortgage on XX/",2,487,32
+8199554,C,525,False,C,,C,"XX/XX/XXXX
+
+A) Applying for a new mortgage or refin","XX/XX/XXXX
+
+A) Applying for a new mortgage or refin",2,746,32
+8199378,D,84,False,D,,A,"<complaint>
+After XXXX, I applied for a loan modification.","<complaint>
+After XXXX, I applied for a loan modification.",2,305,32
+8200266,C,172,False,C,,A,"<complaint>
+This XXXX XXXX or XXXX when my homeowners","<complaint>
+This XXXX XXXX or XXXX when my homeowners",2,393,32
+8204248,C,84,False,C,,A,"<complaint>
+This is a follow-up to Complaint XXXX","<complaint>
+This is a follow-up to Complaint XXXX",2,305,32
+8206357,D,221,False,C,,A,"<complaint>
+I had a job working for XXXX, my first","<complaint>
+I had a job working for XXXX, my first",2,442,32
+8207543,B,465,False,A,,A,"<complaint>
+I am writing to bring to your attention a highly concerning","<complaint>
+I am writing to bring to your attention a highly concerning",2,686,32
+8207401,E,895,False,E,,A,"Based on the information provided, the consumer is facing a payment issue with Carrington","Based on the information provided, the consumer is facing a payment issue with Carrington",2,1116,32
+8208706,C,298,False,C,,A,"<complaint>
+On XX/XX/XXXX a registered security was submitted","<complaint>
+On XX/XX/XXXX a registered security was submitted",2,519,32
+8209398,C,244,False,C,,A,"<complaint>
+Since XXXX of XXXX when I received first a","<complaint>
+Since XXXX of XXXX when I received first a",2,465,32
+8209134,C,139,False,C,,A,"<complaint>
+I changed insurance carriers and submitted the requested documents per the","<complaint>
+I changed insurance carriers and submitted the requested documents per the",2,360,32
+8209424,E,157,False,E,,A,"<complaint>
+US Bank is not honoring the Cares Act Credit Reporting","<complaint>
+US Bank is not honoring the Cares Act Credit Reporting",2,378,32
+8208751,C,221,False,C,,A,"<complaint>
+I have my property taxes escrowed each month along","<complaint>
+I have my property taxes escrowed each month along",2,442,32
+8209074,C,167,False,C,,A,"<complaint>
+I've been paying my mortgage with Wells Fargo as","<complaint>
+I've been paying my mortgage with Wells Fargo as",2,388,32
+8209213,C,215,False,C,,A,"<complaint>
+After contacting Newrez through the consumer portal, Newrez","<complaint>
+After contacting Newrez through the consumer portal, Newrez",2,436,32
+8210213,D,279,False,D,,A,"<complaint>
+In XXXX of 2023, I","<complaint>
+In XXXX of 2023, I",2,500,32
+8209904,C,600,False,C,,A,"<complaint>
+I am a homeowner who has been in the mortgage business","<complaint>
+I am a homeowner who has been in the mortgage business",2,821,32
+8210333,C,158,False,C,,A,"<complaint>
+This company is a bunch of LIARS & CHE","<complaint>
+This company is a bunch of LIARS & CHE",2,379,32
+8210477,C,416,False,D,,C,"<complaint>
+NewRez and XXXX XXXX XXXXXXX","<complaint>
+NewRez and XXXX XXXX XXXXXXX",2,637,32
+8210396,D,458,False,D,,A,"<complaint>
+I am a XXXX XXXX service-connected XXX","<complaint>
+I am a XXXX XXXX service-connected XXX",2,679,32
+8210874,C,1225,False,C,,A,"Based on the complaint, the main issue is that the mortgage loan was not properly","Based on the complaint, the main issue is that the mortgage loan was not properly",2,1446,32
+8211412,C,148,False,C,,A,"<complaint>
+For Chase Account # XXXX, I had been paying","<complaint>
+For Chase Account # XXXX, I had been paying",2,369,32
+8212256,C,337,False,C,,A,"<complaint>
+I am sorry for the inconvenience and frustration caused by this","<complaint>
+I am sorry for the inconvenience and frustration caused by this",2,558,32
+8212721,D,115,False,C,,A,"<complaint>
+This company allowed a non-XXXXXX XXXX","<complaint>
+This company allowed a non-XXXXXX XXXX",2,336,32
+8212754,A,47,False,A,,C,"<complaint>
+XXXX XXXX posted a misleading advertisement regarding an interest rate","<complaint>
+XXXX XXXX posted a misleading advertisement regarding an interest rate",2,268,32
+8215803,C,491,False,C,,A,"<complaint>
+Subject : Urgent Complaint - Incorrect Payment All","<complaint>
+Subject : Urgent Complaint - Incorrect Payment All",2,712,32
+8216991,A,146,False,A,,A,"<complaint>
+Originally purchase home with Wells Fargo XX/XX/","<complaint>
+Originally purchase home with Wells Fargo XX/XX/",2,367,32
+8217176,A,147,False,A,,A,"<complaint>
+I am a real estate agent in XXXX XXXX","<complaint>
+I am a real estate agent in XXXX XXXX",2,368,32
+8217995,A,217,False,C,,C,"<complaint>
+i pay the principal now i reach 69.","<complaint>
+i pay the principal now i reach 69.",2,438,32
+8218377,B,114,False,A,,A,"<complaint>
+We are a lender and we have been working with you","<complaint>
+We are a lender and we have been working with you",2,335,32
+8218660,C,205,False,C,,A,"<complaint>
+I am a mortgage company representative and I am sorry for","<complaint>
+I am a mortgage company representative and I am sorry for",2,426,32
+8219148,C,341,False,C,,A,"<complaint>
+PNC Bank acquired our mortgate from BBVA Comp","<complaint>
+PNC Bank acquired our mortgate from BBVA Comp",2,562,32
+8219094,A,260,False,A,,A,"<complaint>
+On XXXX XXXX I was notified by the lender","<complaint>
+On XXXX XXXX I was notified by the lender",2,481,32
+8213767,B,200,False,C,,A,"<complaint>
+I have sent correspondence with registered mail # XXXX to","<complaint>
+I have sent correspondence with registered mail # XXXX to",2,421,32
+8223083,B,425,False,C,,A,"Based on the complaint, the consumer is seeking to resolve the issue of wind/","Based on the complaint, the consumer is seeking to resolve the issue of wind/",2,646,32
+8221147,B,456,False,B,,A,"<complaint>
+I sold my home to Easy knock with the option to","<complaint>
+I sold my home to Easy knock with the option to",2,677,32
+8224447,C,370,False,C,,A,"<complaint>
+For the second year in a row, my mortgage company","<complaint>
+For the second year in a row, my mortgage company",2,591,32
+8224603,D,219,False,C,,A,"<complaint>
+In XXXX XXXX XXXX my father died after","<complaint>
+In XXXX XXXX XXXX my father died after",2,440,32
+8225065,C,209,False,C,,E,"<complaint>
+hurricane XXXX flooded our home XX/XX","<complaint>
+hurricane XXXX flooded our home XX/XX",2,430,32
+8226998,D,231,False,D,,A,"<complaint>
+In XX/XX/2023, I","<complaint>
+In XX/XX/2023, I",2,452,32
+8229728,C,87,False,C,,C,"<complaint>
+My mortgage company, Newrez llc DBA of","<complaint>
+My mortgage company, Newrez llc DBA of",2,308,32
+8230049,B,203,False,C,,A,"<complaint>
+XXXX of XXXX I refinanced my home from New","<complaint>
+XXXX of XXXX I refinanced my home from New",2,424,32
+8230069,C,55,False,C,,A,"<complaint>
+RoundPoint Mortgage added extra insurance to my account unnecessarily","<complaint>
+RoundPoint Mortgage added extra insurance to my account unnecessarily",2,276,32
+8231456,C,269,False,C,,A,"<complaint>
+On XX/XX/XXXX we paid {$3","<complaint>
+On XX/XX/XXXX we paid {$3",2,490,32
+8231441,A,100,False,C,,A,"<complaint>
+The statute of limitations on your mortgage expired and you previously","<complaint>
+The statute of limitations on your mortgage expired and you previously",2,321,32
+8232636,D,464,False,D,,A,"Based on the complaint, it appears that the mortgage servicer is not providing any","Based on the complaint, it appears that the mortgage servicer is not providing any",2,685,32
+8232869,C,273,False,C,,A,"<complaint>
+I made a payment of $50000","<complaint>
+I made a payment of $50000",2,494,32
+8233064,D,131,False,D,,A,"<complaint>
+XXXX XXXX, officer of the court representing JPM","<complaint>
+XXXX XXXX, officer of the court representing JPM",2,352,32
+8232712,D,160,False,D,,A,"<complaint>
+I applied for a mortgage modification after a XXXX caused","<complaint>
+I applied for a mortgage modification after a XXXX caused",2,381,32
+8233367,C,232,False,C,,A,"<complaint>
+A brief summary is that PNC charged me an aut","<complaint>
+A brief summary is that PNC charged me an aut",2,453,32
+8237680,B,474,False,A,,A,"<complaint>
+Citibank is not responding to my request for compensation","<complaint>
+Citibank is not responding to my request for compensation",2,695,32
+8237695,D,791,False,C,,A,"Based on the complaint, the consumer is seeking to recover the $900","Based on the complaint, the consumer is seeking to recover the $900",2,1012,32
+8234687,D,485,False,D,,A,"Based on the complaint, the issue that best describes the consumer's main problem is","Based on the complaint, the issue that best describes the consumer's main problem is",2,706,32
+8236710,C,1274,False,C,,A,"Based on the complaint, the consumer is facing a significant issue with the federal defer","Based on the complaint, the consumer is facing a significant issue with the federal defer",2,1495,32
+8237313,D,129,False,C,,A,"Based on the complaint, it appears that the issue is related to the process of","Based on the complaint, it appears that the issue is related to the process of",2,350,32
+8236928,C,174,False,C,,A,"<complaint>
+I obtained my mortgage -origination- in XXXX","<complaint>
+I obtained my mortgage -origination- in XXXX",2,395,32
+8236519,C,222,False,C,,A,"<complaint>
+I was out of the US from XXXX XXXX","<complaint>
+I was out of the US from XXXX XXXX",2,443,32
+8236360,C,23,False,C,,A,"<complaint>
+Could not I fo from loan from prior servicer to","<complaint>
+Could not I fo from loan from prior servicer to",2,244,32
+8236008,D,948,False,D,,A,"<div class=""complaint"">
+<p>Dear Consumer Financial Protection Bureau","<div class=""complaint"">
+<p>Dear Consumer Financial Protection Bureau",2,1169,32
+8235469,E,87,False,E,,A,"<complaint>
+My partner and I took a lone out from fairway","<complaint>
+My partner and I took a lone out from fairway",2,308,32
+8235451,C,67,False,C,,A,"<complaint>
+Pay on the bill monthly, with interest at XXXX","<complaint>
+Pay on the bill monthly, with interest at XXXX",2,288,32
+8241125,C,410,False,C,,A,"<complaint>
+For loan number XXXX, I continue to have issues","<complaint>
+For loan number XXXX, I continue to have issues",2,631,32
+8240022,C,226,False,C,,A,"<complaint>
+On XX/XX/XXXX, contacted Rightpath Serv","<complaint>
+On XX/XX/XXXX, contacted Rightpath Serv",2,447,32
+8239930,C,233,False,E,,C,"<complaint>
+Around XX/XX/XXXX, I noticed a loan","<complaint>
+Around XX/XX/XXXX, I noticed a loan",2,454,32
+8239106,C,582,False,C,,C,"<complaint>
+In XX/XX/2023, we","<complaint>
+In XX/XX/2023, we",2,803,32
+8239159,D,61,False,C,,A,"<complaint>
+I asked my mortgage company to prove that they lent me","<complaint>
+I asked my mortgage company to prove that they lent me",2,282,32
+8242801,D,391,False,D,,A,"<complaint>
+XXXX XXXX XXXX was servicing my mortgage. I","<complaint>
+XXXX XXXX XXXX was servicing my mortgage. I",2,612,32
+8247676,A,508,False,A,,A,"<complaint>
+I am a homeowner and have been in the mortgage business","<complaint>
+I am a homeowner and have been in the mortgage business",2,729,32
+8241821,C,265,False,C,,A,"<complaint>
+An Escrow analysis was performed in XX/XX/","<complaint>
+An Escrow analysis was performed in XX/XX/",2,486,32
+8241465,C,224,False,C,,A,"<complaint>
+NewRez LLC took over management of my mortgage from","<complaint>
+NewRez LLC took over management of my mortgage from",2,445,32
+8246348,C,102,False,C,,A,"<complaint>
+Round Point Mortgage company was supposed to pay home owners","<complaint>
+Round Point Mortgage company was supposed to pay home owners",2,323,32
+8245822,C,81,False,C,,A,"<complaint>
+When I had my previous mortgage company, I was allowed","<complaint>
+When I had my previous mortgage company, I was allowed",2,302,32
+8244516,D,1089,False,D,,A,"Based on the information provided, the CFPB has requested a thorough loss mitigation","Based on the information provided, the CFPB has requested a thorough loss mitigation",2,1310,32
+8243906,C,386,False,C,,A,"<complaint>
+<div class=""subtitle"">
+<p>","<complaint>
+<div class=""subtitle"">
+<p>",2,607,32
+8243779,A,452,False,A,,A,"Based on the complaint, the consumer is seeking assistance with the VA Loan Assumption","Based on the complaint, the consumer is seeking assistance with the VA Loan Assumption",2,673,32
+8243560,C,381,False,C,,C,"<complaint>
+I received a warning from my mortgage servicer, New","<complaint>
+I received a warning from my mortgage servicer, New",2,602,32
+8253463,C,197,False,C,,A,"<complaint>
+As a mortgagor sent the check for XXXX","<complaint>
+As a mortgagor sent the check for XXXX",2,418,32
+8255202,C,44,False,C,,A,"<complaint>
+they asked for payment then refuse payment because that asked for","<complaint>
+they asked for payment then refuse payment because that asked for",2,265,32
+8255204,D,326,False,D,,A,"<complaint>
+On XX/XX/XXXX, I spoke with XXX","<complaint>
+On XX/XX/XXXX, I spoke with XXX",2,547,32
+8255225,C,1751,False,E,,C,"Based on the complaint, the consumer is facing a complex issue with late mortgage payments","Based on the complaint, the consumer is facing a complex issue with late mortgage payments",2,1972,32
+8252075,B,395,False,B,,A,"<complaint>
+On XX/XX/XXXX I emailed XXXX","<complaint>
+On XX/XX/XXXX I emailed XXXX",2,616,32
+8252227,C,646,False,C,,A,"Based on the complaint, the consumer is seeking to resolve the issue of their property","Based on the complaint, the consumer is seeking to resolve the issue of their property",2,867,32
+8255139,C,166,False,C,,C,"<complaint>
+XXXX is the mortgage holder of my XXXX loan.","<complaint>
+XXXX is the mortgage holder of my XXXX loan.",2,387,32
+8251496,D,83,False,C,,A,"<complaint>
+Hello, I received a letter from my bank with increasing","<complaint>
+Hello, I received a letter from my bank with increasing",2,304,32
+8251324,C,862,False,C,,A,"Based on the complaint, the consumer is seeking an appraisal of their home to re","Based on the complaint, the consumer is seeking an appraisal of their home to re",2,1083,32
+8251278,C,410,False,C,,A,"Based on the complaint, the consumer is seeking assistance in re-forecasting their","Based on the complaint, the consumer is seeking assistance in re-forecasting their",2,631,32
+8251205,C,83,False,C,,A,"<complaint>
+Wells Fargo since XX/XX/XXXX to","<complaint>
+Wells Fargo since XX/XX/XXXX to",2,304,32
+8251171,A,170,False,D,,A,"<complaint>
+The area was hit by a hurricane and declared a natural","<complaint>
+The area was hit by a hurricane and declared a natural",2,391,32
+8254801,D,286,False,D,,A,"<complaint>
+We submitted for a modification and we were denied. We","<complaint>
+We submitted for a modification and we were denied. We",2,507,32
+8250631,C,341,False,C,,A,"<complaint>
+I am a resident at XXXX XXXX XXXX","<complaint>
+I am a resident at XXXX XXXX XXXX",2,562,32
+8250358,D,546,False,D,,A,"Based on the complaint, the issue that best describes the consumer's main problem is","Based on the complaint, the issue that best describes the consumer's main problem is",2,767,32
+8250223,C,522,False,C,,A,"<complaint>
+We attempted to make a claim for a burst pipe on","<complaint>
+We attempted to make a claim for a burst pipe on",2,743,32
+8249814,C,683,False,C,,A,"Based on the information provided, the most likely issue is that Caliber Home Lo","Based on the information provided, the most likely issue is that Caliber Home Lo",2,904,32
+8250189,A,188,False,A,,A,"<complaint>
+We were renting a home from my friend 's husband","<complaint>
+We were renting a home from my friend 's husband",2,409,32
+8249231,D,250,False,E,,A,"<complaint>
+I have made multiple attempts with BSI mortgage to resolve","<complaint>
+I have made multiple attempts with BSI mortgage to resolve",2,471,32
+8248936,A,532,False,C,,A,"The complaint is:
+
+""I am writing to inform you that I have","The complaint is:
+
+""I am writing to inform you that I have",2,753,32
+8256651,C,279,False,C,,A,"<complaint>
+In XXXX XXXX XXXX we received the es","<complaint>
+In XXXX XXXX XXXX we received the es",2,500,32
+8255541,A,95,False,A,,A,"<complaint>
+I have applied for a mortgage with Chase and received conditional","<complaint>
+I have applied for a mortgage with Chase and received conditional",2,316,32
+8260300,A,175,False,C,,E,"<complaint>
+My mortgage account was hacked, and I was unable to","<complaint>
+My mortgage account was hacked, and I was unable to",2,396,32
+8261385,C,104,False,C,,A,"<complaint>
+Flagstar mortgage did an escrow analysis on XXXX","<complaint>
+Flagstar mortgage did an escrow analysis on XXXX",2,325,32
+8260798,C,427,False,C,,C,"<complaint>
+2. On XX/XX/XXXX Valon Mort","<complaint>
+2. On XX/XX/XXXX Valon Mort",2,648,32
+8260437,C,289,False,C,,A,"<complaint>
+Loan/mortgage was originated approximately 10","<complaint>
+Loan/mortgage was originated approximately 10",2,510,32
+8260575,C,92,False,C,,C,"<complaint>
+My mortgage is currently due $880.0","<complaint>
+My mortgage is currently due $880.0",2,313,32
+8259599,C,163,False,,,A,"<complaint>
+When you are deliquent with Flagstar, you","<complaint>
+When you are deliquent with Flagstar, you",2,384,32
+8259715,D,724,False,D,,A,"Based on the complaint, the issue is that the PHH customer service representative sent","Based on the complaint, the issue is that the PHH customer service representative sent",2,945,32
+8258724,C,235,False,C,,A,"<complaint>
+I previously filed a complaint ( # XXXX ) with","<complaint>
+I previously filed a complaint ( # XXXX ) with",2,456,32

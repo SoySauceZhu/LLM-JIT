@@ -1,0 +1,197 @@
+{
+  "model": "HuggingFaceTB/SmolLM2-135M-Instruct",
+  "revision": "12fd25f77366fa6b3b4b768ec3050bf629380bac",
+  "device": "cpu",
+  "dtype": "torch.float32",
+  "torch": "2.10.0",
+  "transformers": "5.5.4",
+  "teacher_run": "gemma_dev_n300_s42_v1",
+  "prompt": "Read the mortgage complaint and choose the issue that best describes the consumer's main problem.\n\nA \u2014 Applying for a new mortgage or refinancing an existing mortgage.\nB \u2014 Closing on a mortgage, including problems with the final documents, signing, or settlement.\nC \u2014 Servicing an existing mortgage, including problems with how payments are collected, posted, or applied, or how escrow is handled.\nD \u2014 Struggling to afford mortgage payments, including requests for forbearance, a loan modification, or other payment relief.\nE \u2014 Problems with a credit report, score, credit inquiry, dispute investigation, monitoring service, fraud alert, or security freeze affecting the mortgage.\n\nIf several issues appear, choose the one the consumer most wants resolved. A payment applied incorrectly belongs to C. A request for help making payments belongs to D. Choose E when the credit reporting problem itself is the main complaint.\nReturn exactly one uppercase letter from A through E.",
+  "user_template": "<complaint>\n{text}\n</complaint>",
+  "max_new_tokens": 16,
+  "do_sample": false,
+  "batch_size": 1,
+  "max_attempts": 2,
+  "split": "development",
+  "seed_sampling": 42,
+  "clipped": 2,
+  "teacher_valid": 299,
+  "attempts": 599,
+  "inference_seconds": 448.3687017080083,
+  "strict_generation": {
+    "n": 300,
+    "valid_rate": 0.0033333333333332993,
+    "accuracy": 0.0033333333333333335,
+    "macro_f1": 0.002312138728323699,
+    "per_class": {
+      "A": {
+        "support": 26,
+        "recall": 0.0,
+        "fpr": 0.0,
+        "f1": 0.0
+      },
+      "B": {
+        "support": 19,
+        "recall": 0.0,
+        "fpr": 0.0,
+        "f1": 0.0
+      },
+      "C": {
+        "support": 172,
+        "recall": 0.005813953488372093,
+        "fpr": 0.0,
+        "f1": 0.011560693641618497
+      },
+      "D": {
+        "support": 68,
+        "recall": 0.0,
+        "fpr": 0.0,
+        "f1": 0.0
+      },
+      "E": {
+        "support": 15,
+        "recall": 0.0,
+        "fpr": 0.0,
+        "f1": 0.0
+      }
+    },
+    "correct": 1,
+    "teacher_matches": 1,
+    "teacher_agreement_all_cases": 0.0033333333333333335,
+    "predicted_counts": {
+      "FAIL": 299,
+      "C": 1
+    },
+    "confusion_rows_reference_columns_student": {
+      "A": {
+        "A": 0,
+        "B": 0,
+        "C": 0,
+        "D": 0,
+        "E": 0,
+        "FAIL": 26
+      },
+      "B": {
+        "A": 0,
+        "B": 0,
+        "C": 0,
+        "D": 0,
+        "E": 0,
+        "FAIL": 19
+      },
+      "C": {
+        "A": 0,
+        "B": 0,
+        "C": 1,
+        "D": 0,
+        "E": 0,
+        "FAIL": 171
+      },
+      "D": {
+        "A": 0,
+        "B": 0,
+        "C": 0,
+        "D": 0,
+        "E": 0,
+        "FAIL": 68
+      },
+      "E": {
+        "A": 0,
+        "B": 0,
+        "C": 0,
+        "D": 0,
+        "E": 0,
+        "FAIL": 15
+      }
+    }
+  },
+  "first_token_choice": {
+    "n": 300,
+    "valid_rate": 1.0,
+    "accuracy": 0.13,
+    "macro_f1": 0.06430323299888517,
+    "per_class": {
+      "A": {
+        "support": 26,
+        "recall": 0.8461538461538461,
+        "fpr": 0.916058394160584,
+        "f1": 0.14715719063545152
+      },
+      "B": {
+        "support": 19,
+        "recall": 0.0,
+        "fpr": 0.0,
+        "f1": 0.0
+      },
+      "C": {
+        "support": 172,
+        "recall": 0.09883720930232558,
+        "fpr": 0.046875,
+        "f1": 0.17435897435897435
+      },
+      "D": {
+        "support": 68,
+        "recall": 0.0,
+        "fpr": 0.004310344827586207,
+        "f1": 0.0
+      },
+      "E": {
+        "support": 15,
+        "recall": 0.0,
+        "fpr": 0.010526315789473684,
+        "f1": 0.0
+      }
+    },
+    "correct": 39,
+    "teacher_matches": 37,
+    "teacher_agreement_all_cases": 0.12333333333333334,
+    "predicted_counts": {
+      "A": 273,
+      "C": 23,
+      "D": 1,
+      "E": 3
+    },
+    "confusion_rows_reference_columns_student": {
+      "A": {
+        "A": 22,
+        "B": 0,
+        "C": 3,
+        "D": 0,
+        "E": 1,
+        "FAIL": 0
+      },
+      "B": {
+        "A": 19,
+        "B": 0,
+        "C": 0,
+        "D": 0,
+        "E": 0,
+        "FAIL": 0
+      },
+      "C": {
+        "A": 152,
+        "B": 0,
+        "C": 17,
+        "D": 1,
+        "E": 2,
+        "FAIL": 0
+      },
+      "D": {
+        "A": 65,
+        "B": 0,
+        "C": 3,
+        "D": 0,
+        "E": 0,
+        "FAIL": 0
+      },
+      "E": {
+        "A": 15,
+        "B": 0,
+        "C": 0,
+        "D": 0,
+        "E": 0,
+        "FAIL": 0
+      }
+    }
+  }
+}
