@@ -25,7 +25,7 @@ def single_runner(output):
         yield
 
 
-def collect_case(db, client, case, used, concurrency, stop):
+def collect_case(db, client, case, used, concurrency, stop, predict):
     """Return True for a terminal case. Leave interrupted work eligible for resume."""
     cid = case["complaint_id"]
     for _ in range(used, 2):
@@ -34,7 +34,7 @@ def collect_case(db, client, case, used, concurrency, stop):
         start = time.monotonic()
         raw = label = detail = response_id = response_model = usage = None
         try:
-            response = request_label(client, case["text"])
+            response = predict(client, case["text"])
             raw, label = parse_reply(response)
             status = "ok" if label else "invalid"
             response_id, response_model, usage = response.id, response.model, response.usage
@@ -64,7 +64,9 @@ def collect_case(db, client, case, used, concurrency, stop):
     return True
 
 
-def collect(db, db_path, client, cases, concurrency):
+def collect(db, db_path, client, cases, concurrency, *, predict=None):
+    if predict is None:
+        predict = request_label
     # Paused service errors do not consume the two classification attempts.
     history = db.execute("""SELECT complaint_id, COUNT(*), MAX(status = 'ok')
         FROM attempts WHERE status != 'paused' GROUP BY complaint_id""")
@@ -89,7 +91,7 @@ def collect(db, db_path, client, cases, concurrency):
                     if not pending:
                         return
                     case, prior_attempts = pending.popleft()
-                if collect_case(writer, client, case, prior_attempts, concurrency, stop):
+                if collect_case(writer, client, case, prior_attempts, concurrency, stop, predict):
                     with lock:
                         completed += 1
                         if completed % 10 == 0 or completed == len(cases):

@@ -8,11 +8,12 @@ import random
 import sqlite3
 from collections import Counter
 from contextlib import closing
+from functools import partial
 from pathlib import Path
 
 from gemma_teacher import (
-    BASE_URL, DATA, DECODING, LABELS, MODEL, PROMPT, PROMPT_PATH, ROOT,
-    USER_TEMPLATE, make_client,
+    BASE_URL, DATA, DECODING, DEFAULT_PROMPT, DEFAULT_VERSION, LABELS, MODEL, ROOT,
+    load_prompt, make_client, request_label,
 )
 from teacher_collection import collect, single_runner
 
@@ -63,7 +64,7 @@ def prepare_cases(rows):
     return cases
 
 
-def initialize(db, cases, seed):
+def initialize(db, cases, seed, prompt=DEFAULT_PROMPT):
     # Freeze the exact visible inputs without storing a second copy of each narrative.
     manifest = [{
         **{k: v for k, v in case.items() if k != "text"},
@@ -71,7 +72,7 @@ def initialize(db, cases, seed):
     } for case in cases]
     config = json.dumps({
         "model": MODEL, "base_url": BASE_URL, "decoding": DECODING,
-        "prompt_file": PROMPT_PATH.name, "system_prompt": PROMPT, "user_template": USER_TEMPLATE,
+        **prompt,
         "tokenizer": TOKENIZER, "revision": REVISION, "head": HEAD, "tail": TAIL,
         "split": "development", "seed": seed, "cases": manifest,
     }, sort_keys=True)
@@ -114,7 +115,24 @@ def export_results(db, cases, output):
                 "teacher_label": label, "status": status, "attempts": len(attempts),
             })
 
-    n = len(cases)
+    usage = db.execute("""SELECT COUNT(*) AS attempts, SUM(prompt_tokens) AS known_prompt_tokens,
+        SUM(completion_tokens) AS known_completion_tokens,
+        SUM(prompt_tokens IS NULL OR completion_tokens IS NULL) AS attempts_missing_usage
+        FROM attempts""")
+    summary = {
+        **classification_scores(matrix), "clipped": clipped,
+        "confusion_rows_reference_columns_teacher": matrix,
+        "usage": dict(zip([col[0] for col in usage.description], usage.fetchone())),
+        "attempts_by_concurrency": dict(db.execute(
+            "SELECT concurrency, COUNT(*) FROM attempts GROUP BY concurrency")),
+    }
+    (output / "metrics.json").write_text(json.dumps(summary, indent=2) + "\n", encoding="utf-8")
+    print(f"accuracy={summary['accuracy']:.3f}  macro-F1={summary['macro_f1']:.3f}  "
+          f"valid={summary['valid_rate']:.1%}  output={output}")
+
+
+def classification_scores(matrix):
+    n = sum(sum(row.values()) for row in matrix.values())
     per_class = {}
     for label in LABELS:
         support = sum(matrix[label].values())
@@ -125,34 +143,26 @@ def export_results(db, cases, output):
             "fpr": (predicted - tp) / (n - support) if support < n else None,
             "f1": 2 * tp / (support + predicted) if support + predicted else 0.0,
         }
-    usage = db.execute("""SELECT COUNT(*) AS attempts, SUM(prompt_tokens) AS known_prompt_tokens,
-        SUM(completion_tokens) AS known_completion_tokens,
-        SUM(prompt_tokens IS NULL OR completion_tokens IS NULL) AS attempts_missing_usage
-        FROM attempts""")
-    summary = {
-        "n": n, "clipped": clipped,
+    return {
+        "n": n,
         "valid_rate": 1 - sum(row["FAIL"] for row in matrix.values()) / n,
         "accuracy": sum(matrix[label][label] for label in LABELS) / n,
         "macro_f1": sum(row["f1"] for row in per_class.values()) / len(LABELS),
-        "per_class": per_class, "confusion_rows_reference_columns_teacher": matrix,
-        "usage": dict(zip([col[0] for col in usage.description], usage.fetchone())),
-        "attempts_by_concurrency": dict(db.execute(
-            "SELECT concurrency, COUNT(*) FROM attempts GROUP BY concurrency")),
+        "per_class": per_class,
     }
-    (output / "metrics.json").write_text(json.dumps(summary, indent=2) + "\n", encoding="utf-8")
-    print(f"accuracy={summary['accuracy']:.3f}  macro-F1={summary['macro_f1']:.3f}  "
-          f"valid={summary['valid_rate']:.1%}  output={output}")
 
 
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--size", type=int, default=300)
     parser.add_argument("--seed", type=int, default=42)
+    parser.add_argument("--prompt-version", choices=("v1", "v2"), default=DEFAULT_VERSION)
     parser.add_argument("--concurrency", type=int, default=1, metavar="N",
                         help="Maximum number of in-flight Teacher requests (default: 1)")
     parser.add_argument("--output", type=Path, help="Run directory, also used for resume")
     parser.add_argument("--run", action="store_true", help="Call the Teacher and score the sample")
     args = parser.parse_args()
+    prompt = load_prompt(args.prompt_version)
     if args.concurrency < 1:
         parser.error("--concurrency must be at least 1")
     rows = sample_development(args.size, args.seed)
@@ -160,16 +170,16 @@ def main():
     print(f"development n={len(rows)} seed={args.seed}  " +
           "  ".join(f"{label}={counts[label]}" for label in LABELS))
     if not args.run:
-        print(f"Preview only. Prompt: {PROMPT_PATH}. Add --run to start.")
+        print(f"Preview only. Prompt: {prompt['prompt_file']}. Add --run to start.")
         return
 
-    output = args.output or ROOT / "output" / f"gemma_dev_n{args.size}_s{args.seed}_v1"
+    output = args.output or ROOT / "output" / f"gemma_dev_n{args.size}_s{args.seed}_{args.prompt_version}"
     output.mkdir(parents=True, exist_ok=True)
     db_path = output / "run.sqlite"
     with single_runner(output), make_client() as client, closing(sqlite3.connect(db_path, timeout=60)) as db:
         cases = prepare_cases(rows)
-        initialize(db, cases, args.seed)
-        collect(db, db_path, client, cases, args.concurrency)
+        initialize(db, cases, args.seed, prompt)
+        collect(db, db_path, client, cases, args.concurrency, predict=partial(request_label, prompt=prompt))
         export_results(db, cases, output)
 
 
