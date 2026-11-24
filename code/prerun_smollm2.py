@@ -147,6 +147,7 @@ def main():
         "torch": str(torch.__version__), "transformers": transformers.__version__,
         "teacher_run": config["teacher_run"], "prompt": config["system_prompt"],
         "prompt_file": config["prompt_file"], "examples": config.get("examples", []),
+        "final_instruction": config.get("final_instruction", ""),
         "user_template": config["user_template"], "max_new_tokens": settings.max_new_tokens,
         "do_sample": False, "batch_size": 1, "max_attempts": 2, "split": config["split"],
         "seed_sampling": config["seed"], "clipped": sum(c["clipped"] for c in cases),

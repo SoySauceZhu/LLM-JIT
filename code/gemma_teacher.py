@@ -14,8 +14,8 @@ MODEL = "google/gemma-4-31B-it"
 BASE_URL = "https://api.siliconflow.com/v1"
 LABELS = ("A", "B", "C", "D", "E")
 PROMPT_DIR = ROOT / "code/prompts"
-SUPPORTED_VERSIONS = ("v1", "v2", "v3")
-DEFAULT_VERSION = "v3"
+SUPPORTED_VERSIONS = ("v1", "v2", "v3", "v4")
+DEFAULT_VERSION = "v4"
 DECODING = {"temperature": 0, "max_tokens": 16}
 
 
@@ -41,7 +41,10 @@ def build_messages(text, prompt):
     for example in prompt.get("examples", ()):
         messages.append({"role": "user", "content": render_user(text=example["text"])})
         messages.append({"role": "assistant", "content": example["label"]})
-    messages.append({"role": "user", "content": render_user(text=text)})
+    final_user = render_user(text=text)
+    if prompt.get("final_instruction"):
+        final_user += "\n" + prompt["final_instruction"]
+    messages.append({"role": "user", "content": final_user})
     return messages
 
 

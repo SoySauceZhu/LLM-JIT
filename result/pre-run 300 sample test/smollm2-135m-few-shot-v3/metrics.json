@@ -1,0 +1,223 @@
+{
+  "model": "HuggingFaceTB/SmolLM2-135M-Instruct",
+  "revision": "12fd25f77366fa6b3b4b768ec3050bf629380bac",
+  "device": "cpu",
+  "dtype": "torch.float32",
+  "torch": "2.10.0",
+  "transformers": "5.5.4",
+  "teacher_run": "gemma_dev_n300_s42_v3",
+  "prompt": "Read the mortgage complaint and choose one category.\n\nIdentify the main problem the consumer wants resolved. If they do not\nask for a specific fix, use the main problem they describe. A topic\nmentioned as background or as a consequence may be different from the\nproblem they want resolved.\n\nA = Applying for a mortgage or refinancing an existing mortgage.\nChoose A for problems with an application, eligibility, an offer or\nrate quote, or a lender's decision to approve or deny a new loan.\n\nB = Closing on a mortgage.\nChoose B for problems completing the transaction, such as incorrect\nfinal documents, signing delays, closing costs, or funds due at settlement.\n\nC = Managing an existing mortgage account.\nChoose C when the consumer wants the servicer to correct how it handled\na payment, balance, fee, escrow account, or payoff on an existing loan.\n\nD = Difficulty paying or seeking mortgage relief.\nChoose D when the main problem is inability to pay, getting or changing\na relief arrangement, or seeking help to avoid foreclosure. Examples\ninclude forbearance, a repayment plan, or a hardship loan modification.\n\nE = Credit reporting and related services.\nChoose E when the main problem concerns information on a credit report,\na credit inquiry or dispute, or access to a credit report, score,\nmonitoring service, fraud alert, or security freeze.\n\nWhen two categories seem plausible, use these distinctions:\n- A vs B: A wrong rate in an offer is A. A wrong rate in the final\n  documents the consumer is being asked to sign is B.\n- A vs D: Reconsidering an application for a new refinance loan is A.\n  Changing payments on the current loan because of hardship is D.\n- C vs D: Correcting how a payment was applied is C. Requesting lower\n  payments or more time to pay because of hardship is D.\n- C vs E: Correcting the servicer's account records is C. Correcting\n  what appears on the consumer's credit report is E.\n\nReturn exactly one uppercase letter: A, B, C, D, or E.\n",
+  "prompt_file": "mortgage_v3.toml",
+  "examples": [
+    {
+      "text": "My credit report still shows a mortgage I paid off last year. The lender confirms I owe nothing. Please remove the balance from my credit file.",
+      "label": "E"
+    },
+    {
+      "text": "I applied to refinance. The lender rejected my application using the wrong income figure. Please reconsider my application.",
+      "label": "A"
+    },
+    {
+      "text": "My work hours were cut and I cannot make next month's payment. I asked for a temporary payment reduction and need a decision.",
+      "label": "D"
+    },
+    {
+      "text": "Our loan was approved at a fixed rate. At settlement the papers showed a variable rate. We need corrected documents before we sign.",
+      "label": "B"
+    },
+    {
+      "text": "My mortgage statement says I missed a payment. The money left my bank on time, but the servicer credited another account. Please apply my payment.",
+      "label": "C"
+    }
+  ],
+  "user_template": "Complaint: {text}\n\nCategory (one letter):",
+  "max_new_tokens": 16,
+  "do_sample": false,
+  "batch_size": 1,
+  "max_attempts": 2,
+  "split": "development",
+  "seed_sampling": 42,
+  "clipped": 2,
+  "teacher_valid": 300,
+  "attempts": 307,
+  "inference_seconds": 133.3864461670164,
+  "strict_generation": {
+    "n": 300,
+    "valid_rate": 0.9766666666666667,
+    "accuracy": 0.16,
+    "macro_f1": 0.1298287478802809,
+    "per_class": {
+      "A": {
+        "support": 26,
+        "recall": 0.5384615384615384,
+        "fpr": 0.5985401459854015,
+        "f1": 0.13725490196078433
+      },
+      "B": {
+        "support": 19,
+        "recall": 0.2631578947368421,
+        "fpr": 0.1708185053380783,
+        "f1": 0.1388888888888889
+      },
+      "C": {
+        "support": 172,
+        "recall": 0.12209302325581395,
+        "fpr": 0.125,
+        "f1": 0.20095693779904306
+      },
+      "D": {
+        "support": 68,
+        "recall": 0.11764705882352941,
+        "fpr": 0.07327586206896551,
+        "f1": 0.17204301075268819
+      },
+      "E": {
+        "support": 15,
+        "recall": 0.0,
+        "fpr": 0.0,
+        "f1": 0.0
+      }
+    },
+    "correct": 48,
+    "teacher_matches": 40,
+    "teacher_agreement_all_cases": 0.13333333333333333,
+    "predicted_counts": {
+      "D": 25,
+      "A": 178,
+      "C": 37,
+      "FAIL": 7,
+      "B": 53
+    },
+    "confusion_rows_reference_columns_student": {
+      "A": {
+        "A": 14,
+        "B": 4,
+        "C": 6,
+        "D": 1,
+        "E": 0,
+        "FAIL": 1
+      },
+      "B": {
+        "A": 8,
+        "B": 5,
+        "C": 2,
+        "D": 4,
+        "E": 0,
+        "FAIL": 0
+      },
+      "C": {
+        "A": 104,
+        "B": 33,
+        "C": 21,
+        "D": 11,
+        "E": 0,
+        "FAIL": 3
+      },
+      "D": {
+        "A": 41,
+        "B": 10,
+        "C": 6,
+        "D": 8,
+        "E": 0,
+        "FAIL": 3
+      },
+      "E": {
+        "A": 11,
+        "B": 1,
+        "C": 2,
+        "D": 1,
+        "E": 0,
+        "FAIL": 0
+      }
+    }
+  },
+  "first_token_choice": {
+    "n": 300,
+    "valid_rate": 1.0,
+    "accuracy": 0.16,
+    "macro_f1": 0.12842127511057902,
+    "per_class": {
+      "A": {
+        "support": 26,
+        "recall": 0.5384615384615384,
+        "fpr": 0.6167883211678832,
+        "f1": 0.1339712918660287
+      },
+      "B": {
+        "support": 19,
+        "recall": 0.2631578947368421,
+        "fpr": 0.17793594306049823,
+        "f1": 0.13513513513513514
+      },
+      "C": {
+        "support": 172,
+        "recall": 0.12209302325581395,
+        "fpr": 0.125,
+        "f1": 0.20095693779904306
+      },
+      "D": {
+        "support": 68,
+        "recall": 0.11764705882352941,
+        "fpr": 0.07327586206896551,
+        "f1": 0.17204301075268819
+      },
+      "E": {
+        "support": 15,
+        "recall": 0.0,
+        "fpr": 0.0,
+        "f1": 0.0
+      }
+    },
+    "correct": 48,
+    "teacher_matches": 40,
+    "teacher_agreement_all_cases": 0.13333333333333333,
+    "predicted_counts": {
+      "D": 25,
+      "A": 183,
+      "C": 37,
+      "B": 55
+    },
+    "confusion_rows_reference_columns_student": {
+      "A": {
+        "A": 14,
+        "B": 5,
+        "C": 6,
+        "D": 1,
+        "E": 0,
+        "FAIL": 0
+      },
+      "B": {
+        "A": 8,
+        "B": 5,
+        "C": 2,
+        "D": 4,
+        "E": 0,
+        "FAIL": 0
+      },
+      "C": {
+        "A": 107,
+        "B": 33,
+        "C": 21,
+        "D": 11,
+        "E": 0,
+        "FAIL": 0
+      },
+      "D": {
+        "A": 43,
+        "B": 11,
+        "C": 6,
+        "D": 8,
+        "E": 0,
+        "FAIL": 0
+      },
+      "E": {
+        "A": 11,
+        "B": 1,
+        "C": 2,
+        "D": 1,
+        "E": 0,
+        "FAIL": 0
+      }
+    }
+  }
+}

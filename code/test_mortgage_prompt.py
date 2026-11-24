@@ -11,11 +11,11 @@ from gemma_teacher import (
 
 
 class TestMortgagePrompt(unittest.TestCase):
-    def test_v3_is_the_shared_default_and_v2_remains_available(self):
-        self.assertEqual(DEFAULT_VERSION, "v3")
-        self.assertEqual(SUPPORTED_VERSIONS, ("v1", "v2", "v3"))
-        self.assertEqual(load_prompt("v3")["prompt_file"], "mortgage_v3.toml")
-        self.assertEqual(load_prompt("v2")["prompt_file"], "mortgage_v2.toml")
+    def test_v4_is_the_shared_default_and_archived_versions_remain_available(self):
+        self.assertEqual(DEFAULT_VERSION, "v4")
+        self.assertEqual(SUPPORTED_VERSIONS, ("v1", "v2", "v3", "v4"))
+        for version in ("v2", "v3", "v4"):
+            self.assertEqual(load_prompt(version)["prompt_file"], f"mortgage_{version}.toml")
 
     def test_served_few_shot_messages_can_be_replayed_from_the_ledger(self):
         client = Mock()
