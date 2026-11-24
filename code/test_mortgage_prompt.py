@@ -4,15 +4,14 @@ import unittest
 from contextlib import closing
 from unittest.mock import Mock
 
-from baseline_gemma import initialize
-from gemma_teacher import (
-    DEFAULT_VERSION, LABELS, SUPPORTED_VERSIONS, build_messages, load_prompt, request_label,
-)
+from teacher_baseline import initialize
+from mortgage_prompt import DEFAULT_VERSION, LABELS, SUPPORTED_VERSIONS, build_messages, load_prompt
+from teacher_client import request_label
 
 
 class TestMortgagePrompt(unittest.TestCase):
-    def test_v4_is_the_shared_default_and_archived_versions_remain_available(self):
-        self.assertEqual(DEFAULT_VERSION, "v4")
+    def test_v3_is_the_shared_default_and_archived_versions_remain_available(self):
+        self.assertEqual(DEFAULT_VERSION, "v3")
         self.assertEqual(SUPPORTED_VERSIONS, ("v1", "v2", "v3", "v4"))
         for version in ("v2", "v3", "v4"):
             self.assertEqual(load_prompt(version)["prompt_file"], f"mortgage_{version}.toml")

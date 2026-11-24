@@ -1,34 +1,23 @@
 """Run independent Teacher requests with bounded concurrency and a resumable ledger."""
 
+import json
 import sqlite3
 import time
 from collections import deque
 from concurrent.futures import ThreadPoolExecutor, as_completed
-from contextlib import closing, contextmanager
+from contextlib import closing
 from threading import Event, Lock
 
 from openai import APIError, APITimeoutError
 
-from gemma_teacher import parse_reply, request_label
+from teacher_client import parse_reply, request_label
+from run_store import record_history, single_runner
 
 
-@contextmanager
-def single_runner(output):
-    # Lock a separate file so the attempt ledger stays readable during API calls.
-    with closing(sqlite3.connect(output / "runner.lock.sqlite", timeout=0)) as lock:
-        try:
-            lock.execute("BEGIN IMMEDIATE")
-        except sqlite3.OperationalError as exc:
-            if exc.sqlite_errorcode == sqlite3.SQLITE_BUSY:
-                raise SystemExit(f"Another baseline runner is using {output}.") from None
-            raise
-        yield
-
-
-def collect_case(db, client, case, used, concurrency, stop, predict):
+def collect_case(db, client, case, used, concurrency, stop, predict, history_milestones=None):
     """Return True for a terminal case. Leave interrupted work eligible for resume."""
     cid = case["complaint_id"]
-    for _ in range(used, 2):
+    for attempt_number in range(used, 2):
         if stop.is_set():
             return False
         start = time.monotonic()
@@ -50,13 +39,16 @@ def collect_case(db, client, case, used, concurrency, stop, predict):
 
         seconds = time.monotonic() - start
         with db:
-            db.execute("""INSERT INTO attempts
+            inserted = db.execute("""INSERT INTO attempts
                 (complaint_id, status, raw_reply, label, detail, response_id, response_model,
                  prompt_tokens, completion_tokens, seconds, concurrency)
                 VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)""",
                 (cid, status, raw, label, detail, response_id, response_model,
                  usage.prompt_tokens if usage else None, usage.completion_tokens if usage else None,
                  seconds, concurrency))
+            if history_milestones is not None and (status == "ok" or
+                    (status != "paused" and attempt_number == 1)):
+                record_history(db, case, inserted.lastrowid, label, history_milestones)
         if status == "paused":
             raise SystemExit(f"Paused at {cid}: {detail}\nResume using the same output directory.")
         if status == "ok":
@@ -67,6 +59,10 @@ def collect_case(db, client, case, used, concurrency, stop, predict):
 def collect(db, db_path, client, cases, concurrency, *, predict=None):
     if predict is None:
         predict = request_label
+    config = json.loads(db.execute("SELECT config FROM run WHERE id=1").fetchone()[0])
+    history_milestones = config["milestones"] if config["split"] == "history" else None
+    if concurrency < 1 or (history_milestones is not None and concurrency != 1):
+        raise ValueError("History collection requires concurrency 1; all concurrency must be positive")
     # Paused service errors do not consume the two classification attempts.
     history = db.execute("""SELECT complaint_id, COUNT(*), MAX(status = 'ok')
         FROM attempts WHERE status != 'paused' GROUP BY complaint_id""")
@@ -91,7 +87,8 @@ def collect(db, db_path, client, cases, concurrency, *, predict=None):
                     if not pending:
                         return
                     case, prior_attempts = pending.popleft()
-                if collect_case(writer, client, case, prior_attempts, concurrency, stop, predict):
+                if collect_case(writer, client, case, prior_attempts, concurrency, stop, predict,
+                                history_milestones):
                     with lock:
                         completed += 1
                         if completed % 10 == 0 or completed == len(cases):

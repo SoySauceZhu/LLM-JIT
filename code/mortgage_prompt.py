@@ -1,22 +1,13 @@
-"""Shared SiliconFlow client and mortgage classification prompt."""
+"""Shared mortgage labels, versioned prompts and message construction."""
 
-import os
 import tomllib
 from pathlib import Path
 
-from dotenv import load_dotenv
-from openai import OpenAI
-
-
 ROOT = Path(__file__).resolve().parents[1]
-DATA = ROOT / "data/mortgage_complaint.csv"
-MODEL = "google/gemma-4-31B-it"
-BASE_URL = "https://api.siliconflow.com/v1"
 LABELS = ("A", "B", "C", "D", "E")
 PROMPT_DIR = ROOT / "code/prompts"
 SUPPORTED_VERSIONS = ("v1", "v2", "v3", "v4")
-DEFAULT_VERSION = "v4"
-DECODING = {"temperature": 0, "max_tokens": 16}
+DEFAULT_VERSION = "v3"
 
 
 def load_prompt(version):
@@ -47,24 +38,6 @@ def build_messages(text, prompt):
     messages.append({"role": "user", "content": final_user})
     return messages
 
-
-def make_client():
-    load_dotenv(ROOT / ".env")
-    key = os.getenv("SILICONFLOW_API_KEY", "").strip()
-    if not key:
-        raise SystemExit("Set SILICONFLOW_API_KEY in .env or the environment.")
-    return OpenAI(api_key=key, base_url=BASE_URL, timeout=45, max_retries=0)
-
-
-def request_label(client, text, prompt=DEFAULT_PROMPT):
-    return client.chat.completions.create(
-        model=MODEL,
-        messages=build_messages(text, prompt),
-        **DECODING,
-    )
-
-
-def parse_reply(response):
-    raw = response.choices[0].message.content if response.choices else None
+def parse_label(raw):
     label = (raw or "").strip()
-    return raw, label if label in LABELS else None
+    return label if label in LABELS else None

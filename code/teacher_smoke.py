@@ -3,25 +3,27 @@
 Install dependencies with: python3 -m pip install openai python-dotenv
 Set SILICONFLOW_API_KEY to a key from cloud.siliconflow.com in the environment
 or the repository's .env file.
-Run from the repository root with: python3 code/smoke_gemma.py
+Run from the repository root with: python3 code/teacher_smoke.py
 """
 
-import csv
+import argparse
 from openai import APIError
 
-from gemma_teacher import DATA, make_client, parse_reply, request_label
+from mortgage_data import load_cohort, prepare_cases
+from mortgage_prompt import DEFAULT_VERSION, SUPPORTED_VERSIONS, load_prompt
+from teacher_client import make_client, parse_reply, request_label
 
 
 def main():
-    client = make_client()
-    with DATA.open(encoding="utf-8-sig", newline="") as f:
-        rows = csv.DictReader(f)
-        sample = next((r for r in rows if r["split"] == "development" and r["text"].strip()), None)
-    if sample is None:
-        raise SystemExit("No development complaint with a narrative found in the CSV.")
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument("--prompt-version", choices=SUPPORTED_VERSIONS, default=DEFAULT_VERSION)
+    args = parser.parse_args()
+    sample = next(r for r in load_cohort() if r["split"] == "development")
+    case = prepare_cases([sample])[0]
 
     try:
-        response = request_label(client, sample["text"])
+        with make_client() as client:
+            response = request_label(client, case["text"], load_prompt(args.prompt_version))
     except APIError as exc:
         raise SystemExit(f"SiliconFlow request failed: {exc}") from None
 

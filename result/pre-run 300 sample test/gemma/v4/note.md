@@ -68,8 +68,8 @@ Student 固定 revision 为 `12fd25f77366fa6b3b4b768ec3050bf629380bac`，使用 
 复现命令（Teacher 调用 API 会产生费用，已完成且配置一致的记录可直接复用）：
 
 ```bash
-python3 code/baseline_gemma.py --run --size 300 --seed 42 --prompt-version v4 --concurrency 4
-python3 code/prerun_smollm2.py --prompt-version v4
+python3 code/teacher_baseline.py --split development --run --size 300 --seed 42 --prompt-version v4 --concurrency 4
+python3 code/student_baseline.py --split development --run --prompt-version v4
 ```
 
 [Gemma 逐条预测](predictions.csv) · [Gemma 指标](metrics.json) · [原始调用记录](../../../../output/gemma_dev_n300_s42_v4/run.sqlite) · [Student 原始回复](../../smollm2-135m-few-shot-v4/predictions.csv) · [Student 指标](../../smollm2-135m-few-shot-v4/metrics.json) · [八组逐条预测对照](paired_predictions.csv) · [四版比较数据](comparison.json) · [v3 报告](../v3/note.md)

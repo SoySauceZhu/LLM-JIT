@@ -14,6 +14,6 @@
 
 **五选一诊断。** 在第一次生成的首个位置，仅比较 A、B、C、D、E 五个字母 token 的分数。A 被选了 273 次（91%），C 23 次、E 3 次、D 1 次、B 0 次。同一样本全部猜 C 的准确率为 57.3%。在这套提示词下，直接读取字母偏好也存在明显的类别偏差。
 
-**可比性。** 逐条核对了投诉 ID、顺序和输入正文哈希，含原先截短的 2 条。准确率、有效标签率和 Teacher 一致率均以 300 条为分母，与 Gemma 一致要求两边都有合法且相同的标签。使用官方固定版本权重（`12fd25f77366fa6b3b4b768ec3050bf629380bac`），本地 CPU、FP32、逐条推理。可在项目根目录运行 `python3 code/prerun_smollm2.py --prompt-version v1` 复现。
+**可比性。** 逐条核对了投诉 ID、顺序和输入正文哈希，含原先截短的 2 条。准确率、有效标签率和 Teacher 一致率均以 300 条为分母，与 Gemma 一致要求两边都有合法且相同的标签。使用官方固定版本权重（`12fd25f77366fa6b3b4b768ec3050bf629380bac`），本地 CPU、FP32、逐条推理。可在项目根目录运行 `python3 code/student_baseline.py --split development --run --prompt-version v1` 复现。
 
 [逐条预测及原始回复](predictions.csv) · [完整指标与运行配置](metrics.json) · [Gemma 预实验](../gemma/note.md)

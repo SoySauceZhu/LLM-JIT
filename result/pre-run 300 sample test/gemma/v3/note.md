@@ -60,8 +60,8 @@ SmolLM2 使用与历史运行相同的固定模型 revision `12fd25f77366fa6b3b4
 复现命令（Gemma 会调用 API 并产生费用；同配置已完成的 Teacher 记录会直接复用）：
 
 ```bash
-python3 code/baseline_gemma.py --run --size 300 --seed 42 --prompt-version v3 --concurrency 4
-python3 code/prerun_smollm2.py --prompt-version v3
+python3 code/teacher_baseline.py --split development --run --size 300 --seed 42 --prompt-version v3 --concurrency 4
+python3 code/student_baseline.py --split development --run --prompt-version v3
 ```
 
 [Gemma 预测](predictions.csv) · [Gemma 指标](metrics.json) · [调用记录](../../../../output/gemma_dev_n300_s42_v3/run.sqlite) · [Student 指标](../../smollm2-135m-few-shot-v3/metrics.json) · [六组逐条预测对照](paired_predictions.csv) · [三版比较数据及变化 ID](comparison.json) · [v1 记录](../note.md) · [v2 记录](../v2/note.md)

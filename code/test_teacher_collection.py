@@ -13,7 +13,7 @@ from unittest.mock import patch
 import httpx
 from openai import RateLimitError
 
-from baseline_gemma import export_results, initialize
+from teacher_baseline import export_results, initialize
 from teacher_collection import collect, single_runner
 
 

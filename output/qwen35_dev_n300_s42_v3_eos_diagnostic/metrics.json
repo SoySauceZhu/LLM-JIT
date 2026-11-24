@@ -1,0 +1,195 @@
+{
+  "n_expected": 300,
+  "n_terminal": 2,
+  "n_pending": 298,
+  "complete": false,
+  "provisional": true,
+  "metric_denominator": "terminal_cases",
+  "teacher_run": "/Users/mingjie.zhu22/SynologyDrive/1.2026_MEng/LLM-JIT/output/gemma_dev_n300_s42_v3",
+  "model": "Qwen/Qwen3.5-0.8B",
+  "model_revision": "2fc06364715b967f1860aea9cf38778875588b17",
+  "pairing_status": "complete",
+  "clipped": 2,
+  "usage": {
+    "attempts": 5,
+    "known_prompt_tokens": 4060,
+    "known_completion_tokens": 20,
+    "attempts_missing_usage": 0,
+    "attempt_seconds": 67.34778658396681,
+    "cost_usd": null,
+    "pricing_status": "unpriced"
+  },
+  "strict_generation": {
+    "n": 2,
+    "valid_rate": 0.0,
+    "accuracy": 0.0,
+    "macro_f1": 0.0,
+    "per_class": {
+      "A": {
+        "support": 0,
+        "recall": null,
+        "fpr": 0.0,
+        "f1": 0.0
+      },
+      "B": {
+        "support": 1,
+        "recall": 0.0,
+        "fpr": 0.0,
+        "f1": 0.0
+      },
+      "C": {
+        "support": 1,
+        "recall": 0.0,
+        "fpr": 0.0,
+        "f1": 0.0
+      },
+      "D": {
+        "support": 0,
+        "recall": null,
+        "fpr": 0.0,
+        "f1": 0.0
+      },
+      "E": {
+        "support": 0,
+        "recall": null,
+        "fpr": 0.0,
+        "f1": 0.0
+      }
+    },
+    "correct": 0,
+    "teacher_matches": null,
+    "teacher_agreement_all_cases": null,
+    "predicted_counts": {
+      "FAIL": 2
+    },
+    "confusion_rows_reference_columns_prediction": {
+      "A": {
+        "A": 0,
+        "B": 0,
+        "C": 0,
+        "D": 0,
+        "E": 0,
+        "FAIL": 0
+      },
+      "B": {
+        "A": 0,
+        "B": 0,
+        "C": 0,
+        "D": 0,
+        "E": 0,
+        "FAIL": 1
+      },
+      "C": {
+        "A": 0,
+        "B": 0,
+        "C": 0,
+        "D": 0,
+        "E": 0,
+        "FAIL": 1
+      },
+      "D": {
+        "A": 0,
+        "B": 0,
+        "C": 0,
+        "D": 0,
+        "E": 0,
+        "FAIL": 0
+      },
+      "E": {
+        "A": 0,
+        "B": 0,
+        "C": 0,
+        "D": 0,
+        "E": 0,
+        "FAIL": 0
+      }
+    }
+  },
+  "first_token_choice": {
+    "n": 2,
+    "valid_rate": 1.0,
+    "accuracy": 0.0,
+    "macro_f1": 0.0,
+    "per_class": {
+      "A": {
+        "support": 0,
+        "recall": null,
+        "fpr": 0.0,
+        "f1": 0.0
+      },
+      "B": {
+        "support": 1,
+        "recall": 0.0,
+        "fpr": 0.0,
+        "f1": 0.0
+      },
+      "C": {
+        "support": 1,
+        "recall": 0.0,
+        "fpr": 0.0,
+        "f1": 0.0
+      },
+      "D": {
+        "support": 0,
+        "recall": null,
+        "fpr": 0.5,
+        "f1": 0.0
+      },
+      "E": {
+        "support": 0,
+        "recall": null,
+        "fpr": 0.5,
+        "f1": 0.0
+      }
+    },
+    "correct": 0,
+    "teacher_matches": null,
+    "teacher_agreement_all_cases": null,
+    "predicted_counts": {
+      "E": 1,
+      "D": 1
+    },
+    "confusion_rows_reference_columns_prediction": {
+      "A": {
+        "A": 0,
+        "B": 0,
+        "C": 0,
+        "D": 0,
+        "E": 0,
+        "FAIL": 0
+      },
+      "B": {
+        "A": 0,
+        "B": 0,
+        "C": 0,
+        "D": 1,
+        "E": 0,
+        "FAIL": 0
+      },
+      "C": {
+        "A": 0,
+        "B": 0,
+        "C": 0,
+        "D": 0,
+        "E": 1,
+        "FAIL": 0
+      },
+      "D": {
+        "A": 0,
+        "B": 0,
+        "C": 0,
+        "D": 0,
+        "E": 0,
+        "FAIL": 0
+      },
+      "E": {
+        "A": 0,
+        "B": 0,
+        "C": 0,
+        "D": 0,
+        "E": 0,
+        "FAIL": 0
+      }
+    }
+  }
+}
