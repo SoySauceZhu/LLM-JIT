@@ -8,13 +8,13 @@ Initially, **Gemma 4 31B IT** handles mortgage complaints. As successful Teacher
 
 # Target at this phase
 
-Evaluate whether Gemma 3 270M IT, fine-tuned only on past Gemma 4 31B IT labels, can approach the Teacher's five-class classification quality on later CFPB mortgage complaints.
+The immediate stage labels all complaints with Gemma 4 31B IT and records complete attempts. Later stages evaluate whether Gemma 3 270M IT, fine-tuned only on past history Teacher labels, approaches Teacher quality on later complaints.
 
 Measure accuracy, five-class macro-F1, per-class recall and false-positive rate, valid-output rate, and agreement with the Teacher as training history grows. Estimate how many subsequent requests are needed to recover training, validation and loading costs. All requests already belong to the mortgage topic; topic discovery and confidence-based routing remain outside this experiment.
 
 # Dataset
 
-**Selected dataset:** the audited 2024 CFPB mortgage complaint source snapshot has 12,196 unique nonblank narratives. The formal experiment uses **11,239 requests in three chronological partitions** (training stream, validation and test); the 957 January development cases are retained separately as earlier pilot data. The model sees only the narrative. CFPB reference labels are used for evaluation; accepted Teacher predictions provide training supervision.
+**Selected dataset:** the audited 2024 CFPB mortgage complaint snapshot has **12,196** unique nonblank narratives in exactly three chronological partitions: history (January–September, 9,159), validation (October, 1,013), and test (November–December, 2,024). January's 957 complaints now belong to history. Teacher collection labels the full cohort once and preserves each row's split; choosing training subsets is a separate later stage. The model sees only the narrative. CFPB references support evaluation; accepted Teacher predictions provide training supervision.
 
 Earlier dataset candidates, retained as background:
 
@@ -77,7 +77,7 @@ CFPB reference labels are consumer-selected categories and can disagree with a r
 | 3\. Checkpoint controller and trainer | `accept_trace(outcome)`; `train(prefix, base_revision, config) -> adapter` | Count committed successes, snapshot eligible prefixes, train an independent LoRA for each prefix, then reload the saved adapter and mark it ready. |
 | 4\. Evaluation and cost replay | `score(model, split)`; `replay_policy(milestone) -> ledger` | Measure quality on held-out cases and simulate each train-once policy on identical traffic. Produce one row per candidate and per-request cumulative costs. |
 
-Use a Python CLI, SQLite and a single GPU worker. A sequential collection loop makes arrival order and restart behavior easy to verify. A queued job owns its immutable prefix even if more Teacher calls finish before the GPU becomes available.
+Use a Python CLI, SQLite and a single GPU worker. The collector records requests independently; concurrency 1 gives serial completion. A later trainer owns its selected history subset independently of collection.
 
 ## Model configuration
 
@@ -98,7 +98,7 @@ The Gemma 3 pilot used MPS/FP32, four CPU threads and batch size 1; the Qwen pil
 
 ### January pilot evidence and model-selection context
 
-All rows below use the same 300 development complaints, proportional reference-label sampling with seed 42, and v3 instructions. Input order, narrative hashes and clipping were verified. All scores use a denominator of 300, including exhausted failures.
+All rows below use the same historical 300 January pilot complaints, proportional reference-label sampling with seed 42, and v3 instructions. Input order, narrative hashes and clipping were verified. All scores use a denominator of 300, including exhausted failures.
 
 | Model | Accuracy | Five-class macro-F1 | Valid output | Agreement with Teacher |
 | :---- | ----: | ----: | ----: | ----: |
@@ -109,24 +109,24 @@ All rows below use the same 300 development complaints, proportional reference-l
 
 The main-model choice prioritizes the Gemma-family Teacher–Student pairing and a smaller local Student. The pilot scores above remain part of that decision's evidence. Gemma 3 produced 40 empty final replies after retries and predicted no B or E labels. Its first-token five-choice diagnostic reached only 30.67% accuracy, so format recovery alone would not close the classification gap. Always predicting reference-majority class C gives 57.33% on this pilot; this is a diagnostic, not the later history-Teacher-trained majority baseline.
 
-Treat valid-output rate, B/E recall and Teacher agreement as visible learning outcomes throughout fine-tuning. These pilots do not establish that a Gemma 3 adapter will approach Gemma 4. The sample is reused development data: 25 cases participated in v2 prompt development, and later prompt variants were informed by pilot failures. Freeze v3 and the primary model now; use October for candidate selection and November–December for final held-out results.
+Treat valid-output rate, B/E recall and Teacher agreement as visible learning outcomes throughout fine-tuning. These pilots do not establish that a Gemma 3 adapter will approach Gemma 4. The sample is reused pilot data: 25 cases participated in v2 prompt development, and later prompt variants were informed by pilot failures. Freeze v3 and the primary model now; use October for candidate selection and November–December for final held-out results.
 
 [Gemma 3 pilot and four-model comparison](result/pre-run%20300%20sample%20test/gemma3-270m-it-v3/note.md) · [Qwen pilot](result/pre-run%20300%20sample%20test/qwen3.5-0.8b-v3/note.md) · [Gemma Teacher v3 pilot](result/pre-run%20300%20sample%20test/gemma/v3/note.md)
 
 ## Persistent data and restart behavior
 
-The table specifies the target layout for the full training/evaluation system. The current baseline implementation uses the audited `data/mortgage_complaint.csv` and one `run.sqlite` per output directory, with `run`, `attempts`, `history_traces`, `prefixes` and `progress` tables. History exports contain `history_labels.csv` without CFPB labels and immutable prefix manifests. Separate input/reference Parquet files, training jobs, adapter artifacts and deployment cost ledgers remain planned. The trainer must join history labels only to allowlisted input columns and must not use CFPB labels as supervision.
+The table includes the target layout for the later training/evaluation system. The current baseline uses the audited CSV and one schema-3 `run.sqlite` per output directory, containing only `run` and `attempts`. The Teacher defaults to labeling all 12,196 complaints and records each complaint's real split, raw replies, labels, timestamps, errors and token usage. No accepted-trace table, prefix manifests, milestone cursor or training jobs are created during collection. Training subsets can be derived later from accepted history attempts and the frozen manifest, using only Teacher labels as supervision.
 
 | Location | Minimum fields or contents |
 | :---- | :---- |
 | `data/raw/`, `data/manifest.json` | Original CSV and four ZIPs, source URLs, SHA-256 hashes, retrieval date, selection rules, per-class counts, split counts and ordered cohort fingerprint. |
 | `data/inputs.parquet` | Unique complaint ID, sequence number, UTC receipt time, split, normalized text and its hash. Store each complaint body once. |
 | `data/reference_labels.parquet` | Complaint ID, raw issue and mapped A–E label. The offline audit and evaluator read this file. Restrict the trainer to the inputs and Teacher traces. |
-| SQLite `runs`, `attempts`, `teacher_traces` | Frozen run configuration and cursor; each attempt's complaint ID, model, attempt number, tokens, timing, status, parsed prediction and cost; accepted history rows with `run_id, success_index, complaint_id, attempt_id, teacher_label`. |
+| SQLite `run`, `attempts` | Current collection: frozen config and ordered input manifest with actual splits; every attempt's complaint ID, raw reply, parsed label, status/error, response identity, usage and timing. Resume derives completion from these attempts. |
 | SQLite `training_jobs`, `predictions`; `artifacts/<run_id>/<n>/<seed>/` | Prefix membership, configuration and hash, job status, timings, GPU seconds, cost and adapter files; one final prediction or failure per model and evaluation ID. |
 | `results/<run_id>/` | Per-class metrics, candidate selection, policy ledgers, curves, test results, run configuration and written interpretation. |
 
-Enforce unique `(run_id, complaint_id)` and `(run_id, success_index)` in accepted traces, and unique `(run_id, milestone, seed)` in jobs. A successful model call and a correct prediction are different events. A legal Teacher label is eligible even if the consumer selected another issue. Allow one retry after a timeout or invalid output. Count each billed attempt, accept at most one trace per complaint and advance after exhausted retries. Commit final status, the accepted trace, any milestone job and the cursor atomically. On restart, process queued or interrupted work idempotently and load completed artifacts by their recorded hash.
+Current collection commits every attempt immediately and reconstructs each complaint's outcome on resume. A successful API call and a correct prediction are different events: any legal Teacher label is accepted even when it disagrees with CFPB. Allow one retry after a timeout or invalid output; retain all attempts, including exhausted failures. Other API errors pause the run. No training-subset selection occurs in this stage. Later training jobs must record their chosen history IDs, parameters and artifact hashes independently.
 
 # Experiment design — Experiment 1
 
@@ -134,7 +134,7 @@ Enforce unique `(run_id, complaint_id)` and `(run_id, success_index)` in accepte
 
 ## Step 1\. Rebuild the cohort and freeze the splits
 
-Use the existing audited CSV and frozen split membership for the main run. Formal data loading uses `load_experiment()`, which returns only `history` (training stream), `validation` and `test`. The 957 January development cases are excluded from this experiment and are available only through `load_development()` for explicit pilot/smoke work. The complete CSV and its fingerprint remain unchanged for source auditing and old-run compatibility. The steps below document provenance and reproduction; a new data download is not needed to start the current baselines.
+Use the audited CSV and the updated three-partition membership for the main run. `load_cohort()` and `load_experiment()` both return all 12,196 rows; there is no separate pilot split or loader. January belongs to history. The migration changed exactly 957 split fields and preserved all other source content and the ordered-ID fingerprint. New runs store the updated full CSV hash and use schema 3; old experiment artifacts keep their original metadata and cannot be resumed into a new run.
 
 1. Download the live metadata CSV for `Product = Mortgage` and UTC receipt dates from 2024-01-01 through 2024-12-31. Retain complaint ID, receipt timestamp, product and issue. Download narrative archive exports 5, 6, 7 and 8 and stream the quoted CSV inside each ZIP. The ordinary metadata export omits the narrative. [Filtered metadata](https://www.consumerfinance.gov/data-research/consumer-complaints/search/?date_received_min=2024-01-01&date_received_max=2024-12-31&product=Mortgage) · [Official narrative archive](https://www.consumerfinance.gov/foia-requests/foia-electronic-reading-room/cfpb-consumer-complaint-database-narratives-archive/)  
 2. Inner-join on numeric complaint ID. Normalize text to Unicode NFC, collapse whitespace to single spaces, trim and drop empty text. Sort by the live metadata's UTC receipt timestamp and then numeric complaint ID. Keep the earliest occurrence of each SHA-256 normalized-text hash. Apply the issue mapping and save the two Parquet files. Use only the narrative as model input.  
@@ -142,23 +142,23 @@ Use the existing audited CSV and frozen split membership for the main run. Forma
 
 | Receipt window and role | A | B | C | D | E | Total |
 | :---- | :---- | :---- | :---- | :---- | :---- | :---- |
-| February–September · training request stream (`history`) | 849 | 600 | 4,573 | 1,854 | 326 | 8,202 |
+| January–September · training request stream (`history`) | 934 | 660 | 5,121 | 2,070 | 374 | 9,159 |
 | October · select a candidate | 106 | 84 | 562 | 215 | 46 | 1,013 |
 | November–December · final held-out evaluation | 207 | 149 | 1,204 | 389 | 75 | 2,024 |
 
 ## Step 2\. Verify the pipeline and establish baselines
 
-Use the completed January pilots to freeze v3, the Gemma 4 Teacher and the Gemma 3 primary Student; retain seed 42. Complete a disposable January-only or synthetic Gemma 3 LoRA train/save/reload smoke before large-scale history collection. Its adapter and examples do not enter the main experiment, whose candidates all start from the untouched pinned Gemma 3 base.
+Use the completed January pilots as historical evidence for v3, the Gemma 4 Teacher and the Gemma 3 primary Student. Those complaints are now part of history, not a fourth split. A later disposable synthetic Gemma 3 LoRA train/save/reload smoke must not contribute its adapter to the main experiment; all main candidates start from the untouched pinned base. Sampling/epoch seeds belong to that later training configuration, not the full Teacher collection CLI.
 
-Run the Teacher and original Gemma 3 as fixed baselines on all 1,013 October cases. Include a majority-class baseline from history Teacher labels and a TF–IDF plus logistic regression classifier fitted on the same Teacher-labeled prefixes as LoRA. Fit each vocabulary on its prefix alone. Record supervision and cost for every baseline. The archived Qwen and SmolLM2 development results provide exploratory context; the primary Gemma 3 study does not require training their adapters. An independent scripted Teacher fixture exercises orchestration without paid calls; its outputs belong only in test artifacts.
+Run the Teacher and original Gemma 3 as fixed baselines on all 1,013 October cases. Include a majority-class baseline from history Teacher labels and a TF–IDF plus logistic regression classifier fitted on the same Teacher-labeled prefixes as LoRA. Fit each vocabulary on its prefix alone. Record supervision and cost for every baseline. The archived Qwen and SmolLM2 pilot results provide exploratory context; the primary Gemma 3 study does not require training their adapters. An independent scripted Teacher fixture exercises orchestration without paid calls; its outputs belong only in test artifacts.
 
 ## Step 3\. Collect the stream and train candidates
 
-Replay February–September in order, one complaint per request. The default cumulative milestones are **100, 200, 400, 800, 1,600, 3,200 and 6,400 successful, distinct Teacher calls**. At success 100, freeze the first 100 accepted traces. At success 200, freeze the first 200, including the original 100\. Continue the same way. If three complaints exhaust their retries, success 100 could occur at arrival 103\. Store both the success index and the arrival index. Preserve and count every failure. Mark any unreached milestone in the results.
+First label the complete January–December cohort with the Teacher, keeping the original order in exported records and retaining actual partition metadata. The collector does not create training prefixes, count successes toward milestones or launch adapters. In the later training stage, choose cumulative history subsets from accepted Teacher attempts sorted by original sequence number; only January–September history IDs may be used. Record each chosen list and hash with its training job at that time. Validation and test Teacher labels remain available for evaluation, never as training supervision.
 
 For every prefix, create `(v3 classification messages with narrative, teacher_label)` pairs, initialize the same untouched Gemma 3 270M IT checkpoint, and fine-tune one fresh adapter. Use the native Gemma 3 chat template for training and inference. Apply LoRA to the attention `q_proj` and `v_proj` modules, with rank 8, alpha 16 and dropout 0.05; freeze the base weights. Start with AdamW, learning rate 0.0002, three epochs and effective batch size 8\. These are proposed training defaults pending the Gemma 3 adapter smoke, with constant learning rate, zero weight decay and no warmup. Use gradient accumulation if necessary. Fix and record precision and epoch shuffle seed 42. Compute loss only on the answer and native `<end_of_turn>` termination, excluding prompt and padding. Save ordered training IDs, label histogram, update count, duration, device time and adapter checksum. Reload the saved artifact through the normal Gemma 3 classifier and obtain a legal label on the fixed smoke input before enabling it. [LoRA implementation reference](https://huggingface.co/docs/peft/en/package_reference/lora)
 
-The CLI may finish collection before draining queued training jobs. Freeze each prefix when its success index is reached. For cost simulation, use the historical trigger time and measured job duration, independent of the research worker queue.
+The current CLI finishes collection without creating or draining training jobs. Any future deployment replay reconstructs hypothetical trigger points from the ordered history records and measured training durations; those choices are independent of collection.
 
 The **collection run** keeps the Teacher active to acquire a common history for all candidates. The **deployment replay** charges each candidate only for the one training decision that policy would have made. Starting from the prior adapter at every checkpoint would answer a different question about incremental training.
 
@@ -170,7 +170,7 @@ For the first run, retain the predeclared quality tolerance of **0.02 absolute m
 
 ## Step 5\. Calculate how long each training decision takes to pay back
 
-Replay the same February–December arrivals under always-Gemma-4, always-original-Gemma-3, and each Gemma-3 train-once policy. In each train-once policy, Gemma 4 serves through training and loading. Model readiness time equals the triggering receipt timestamp plus measured training, required validation and loading time, assuming an immediately available dedicated worker. Route subsequent arrivals at or after readiness to that Gemma 3 adapter. Handle same-time events in the frozen stream order; the complaint that triggered training always used the Teacher. Charge failed training and leave the Teacher serving if the adapter cannot be activated.
+Replay the same January–December arrivals under always-Gemma-4, always-original-Gemma-3, and each Gemma-3 train-once policy. In each train-once policy, Gemma 4 serves through training and loading. Model readiness time equals the triggering receipt timestamp plus measured training, required validation and loading time, assuming an immediately available dedicated worker. Route subsequent arrivals at or after readiness to that Gemma 3 adapter. Handle same-time events in the frozen stream order; the triggering complaint always used the Teacher. Charge failed training and leave the Teacher serving if the adapter cannot be activated.
 
 For each request, store the cost of every serving attempt, model chosen, incremental training spend, cumulative policy spend and cumulative always-Teacher spend. Use billed tokens and dated prices for APIs, and measured GPU-seconds times count-adjusted hourly rates divided by 3,600 for local runs. Record concurrency, batch size and treatment of idle capacity. Collect matched per-request serving costs or label the sampling method and estimates explicitly. Keep unavailable prices or usage values explicit and mark the affected dollar results unpriced until rates are supplied. Keep extra benchmark calls and the cost of training the other six research candidates in a separate research ledger.
 
@@ -185,24 +185,24 @@ Sync the uv-managed project environment from `uv.lock`, then use the following e
 ```bash
 uv sync --locked
 
-# Preview only; omit --run to avoid inference.
-uv run --locked python code/teacher_baseline.py --split history --prompt-version v3
-uv run --locked python code/student_baseline.py --student-model gemma3-270m-it --split validation --prompt-version v3
+# Preview all 12,196 Teacher inputs without calls or tokenizer downloads.
+uv run --locked python code/teacher_baseline.py --prompt-version v3
 
-# Chronological Teacher history and full October baselines.
-uv run --locked python code/teacher_baseline.py --split history --prompt-version v3 --run
-uv run --locked python code/teacher_baseline.py --split validation --prompt-version v3 --concurrency 4 --run
-uv run --locked python code/student_baseline.py --student-model gemma3-270m-it --device mps --split validation --prompt-version v3 --teacher-run output/baseline_v3/teacher_validation --output output/baseline_v3/student_gemma3-270m-it_validation --run
+# Label the entire cohort once; retain each complaint's actual split.
+uv run --locked python code/teacher_baseline.py --prompt-version v3 --concurrency 1 --run
 
-# Alternative Student validation run on the remote NVIDIA machine.
-uv run --locked python code/student_baseline.py --student-model gemma3-270m-it --device cuda --split validation --prompt-version v3 --teacher-run output/baseline_v3/teacher_validation --output output/baseline_v3/student_gemma3-270m-it_validation_cuda --run
+# October Student baseline paired with the selected rows from teacher_all.
+uv run --locked python code/student_baseline.py --student-model gemma3-270m-it --device mps --split validation --prompt-version v3 --teacher-run output/baseline_v3/teacher_all --output output/baseline_v3/student_gemma3-270m-it_validation --run
+
+# Alternative on the remote NVIDIA machine.
+uv run --locked python code/student_baseline.py --student-model gemma3-270m-it --device cuda --split validation --prompt-version v3 --teacher-run output/baseline_v3/teacher_all --output output/baseline_v3/student_gemma3-270m-it_validation_cuda --run
 ```
 
-History uses concurrency 1. MPS and CUDA each require the corresponding GPU-enabled process; all current serving devices use FP32. Choose one serving configuration for the formal baseline and adapter comparisons, and use separate output directories when switching devices or environments. Repeating a command in the same environment resumes committed attempts. Export-only commands, remote CUDA setup and the pilot reproduction commands are documented in [README](README.md). The local Gemma 3 download requires an authorized Hugging Face account. Credentials stay in local environment/account configuration and are never saved to experiment artifacts.
+Teacher concurrency defaults to 1 for serial collection and can be raised for any selection; raw completion timestamps are retained and exports follow original input order. MPS and CUDA require the corresponding GPU-enabled process; all current serving devices use FP32. Use one serving configuration for baseline/adapter comparisons and separate output directories after device, source or environment changes. Repeating a command with the same frozen config resumes attempts. Gemma downloads require authorized Hugging Face access; credentials are never saved in artifacts.
 
 ### Planned training, evaluation and cost stages
 
-The stages below describe the target interface; the `mortgage_exp` package and its config file are not implemented yet. Baseline/history collection and prefix manifests are implemented; Gemma 3 LoRA training, majority/TF–IDF baselines, held-out test evaluation, bootstrap selection reports and cost replay remain to be built. A real adapter save/reload is still an outstanding acceptance check.
+The stages below describe the later target interface; the `mortgage_exp` package is not implemented yet. Full-cohort Teacher labeling, Student baseline inference on the three partitions, retry/resume and Teacher pairing are implemented. Training-subset selection, Gemma 3 LoRA, majority/TF–IDF baselines, bootstrap reports and cost replay remain to be built. Collection contains no training-prefix artifacts. Final test evaluation is available explicitly through `--split test` and should be run after model selection is frozen.
 
 Provide these stages or equivalent documented invocations. Each uses the same run ID and versioned configuration, with the Gemma 4/Gemma 3 pairing specified above. Include reproducible dependency pins or a lockfile, configuration and README commands. Expose model endpoint, revisions, raw-data paths, GPU rate and API prices as configuration. Read credentials from the environment.
 
@@ -218,7 +218,7 @@ Provide these stages or equivalent documented invocations. Each uses the same ru
 | Check | Evidence that the implementation works |
 | :---- | :---- |
 | Data and leakage | Reproduce or reconcile the cohort and each split. Assert disjoint IDs and normalized-text hashes across splits. Every training ID must join to the history split and an eligible Teacher attempt. |
-| Triggers and restart | Use fixture milestones 2 and 4\. Script arrivals 1–5 as valid A, invalid then valid B, two timeouts, valid C, valid D. Expect jobs at arrivals 2 and 5, seven attempts, four training examples, and prefix IDs \[1, 2\] and \[1, 2, 4, 5\]. Restart after arrival 2 and reproduce the same final memberships and job counts. |
+| Collection and restart | Script multiple partitions with valid replies, an invalid-then-valid reply, exhausted timeouts and a paused service error. Verify all attempts survive interruption, finished cases are not repeated, CSV order and splits match the manifest, and no training-prefix tables/files are created. Test later training triggers separately when that stage exists. |
 | Training and scoring | A real small-prefix adapter reloads and predicts through the normal classifier. Every registered model produces exactly one final prediction or failure per evaluation ID. All five classes appear in the metrics even when a model never predicts a class. |
 | Cost accounting | In a unit fixture with compilation cost \$2.00, Teacher \$0.05 per call and Student \$0.01, assert break-even at the 50th post-readiness call. A 49-call horizon ends \$0.04 short. Exercise the no-savings and training-failure branches. |
 | Hand-off artifacts | Export `cohort_manifest.json` (or the documented manifest path), `metrics.csv`, `selection.json`, `policy_costs.csv`, `break_even.csv`, the quality and cumulative-cost figures, and a report with measured results, failures and limitations. Save a complete ledger and rerun instructions. A smoke run with synthetic responses establishes software correctness only. |

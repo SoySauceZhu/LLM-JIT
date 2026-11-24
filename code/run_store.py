@@ -10,9 +10,7 @@ from importlib.metadata import version
 from pathlib import Path
 from tempfile import TemporaryDirectory
 
-from mortgage_data import COHORT_HASH, COHORT_SPLIT_COUNTS, DATA, HEAD, REVISION, TAIL, TOKENIZER, manifest_cases, sha256
-
-MILESTONES = (100, 200, 400, 800, 1600, 3200, 6400)
+from mortgage_data import COHORT_HASH, COHORT_SPLIT_COUNTS, DATA, HEAD, REVISION, TAIL, TOKENIZER, manifest_cases
 
 
 @contextmanager
@@ -34,14 +32,14 @@ def read_config(run):
         return json.loads(db.execute("SELECT config FROM run WHERE id=1").fetchone()[0])
 
 
-def make_config(cases, split, seed, prompt, *, backend, model, decoding, **extra):
+def make_config(cases, split, prompt, *, backend, model, decoding, **extra):
     packages = ("openai", "python-dotenv", "huggingface-hub", "tokenizers", "httpx")
     if backend == "student":
         packages += ("torch", "transformers")
     return {
-        "schema_version": 2, "backend": backend, "model": model, "decoding": decoding,
+        "schema_version": 3, "backend": backend, "model": model, "decoding": decoding,
         **prompt, "tokenizer": TOKENIZER, "revision": REVISION, "head": HEAD, "tail": TAIL,
-        "split": split, "seed": seed if split == "development" else None,
+        "split": split,
         "cases": manifest_cases(cases), "data_sha256": hashlib.sha256(DATA.read_bytes()).hexdigest(),
         "data_path": "data/mortgage_complaint.csv", "cohort_ordered_ids_sha256": COHORT_HASH,
         "cohort_split_counts": COHORT_SPLIT_COUNTS,
@@ -66,37 +64,6 @@ def initialize(db, config):
             recorded_at TEXT DEFAULT CURRENT_TIMESTAMP, concurrency INTEGER NOT NULL DEFAULT 1,
             first_token_choice TEXT)""")
         db.execute("CREATE INDEX IF NOT EXISTS by_complaint ON attempts(complaint_id)")
-        db.execute("""CREATE TABLE IF NOT EXISTS history_traces (
-            success_index INTEGER PRIMARY KEY, arrival_index INTEGER NOT NULL UNIQUE,
-            complaint_id TEXT NOT NULL UNIQUE, attempt_id INTEGER NOT NULL UNIQUE,
-            teacher_label TEXT NOT NULL, input_sha256 TEXT NOT NULL,
-            sequence_no INTEGER NOT NULL, received_at_utc TEXT NOT NULL)""")
-        db.execute("""CREATE TABLE IF NOT EXISTS prefixes (
-            milestone INTEGER PRIMARY KEY, arrival_index INTEGER NOT NULL,
-            members TEXT NOT NULL, sha256 TEXT NOT NULL)""")
-        db.execute("CREATE TABLE IF NOT EXISTS progress (id INTEGER PRIMARY KEY, cursor INTEGER NOT NULL)")
-        db.execute("INSERT OR IGNORE INTO progress VALUES (1, 0)")
-
-
-def record_history(db, case, attempt_id, label, milestones):
-    """Called in the final attempt transaction, only by the serial history collector."""
-    arrival = case["arrival_index"]
-    cursor = db.execute("SELECT cursor FROM progress WHERE id=1").fetchone()[0]
-    if arrival != cursor + 1:
-        raise ValueError("History must commit in frozen arrival order")
-    if label:
-        success = db.execute("SELECT COUNT(*) FROM history_traces").fetchone()[0] + 1
-        db.execute("INSERT INTO history_traces VALUES (?, ?, ?, ?, ?, ?, ?, ?)", (
-            success, arrival, case["complaint_id"], attempt_id, label, case["input_sha256"],
-            case["sequence_no"], case["received_at_utc"],
-        ))
-        if success in milestones:
-            cursor_rows = db.execute("SELECT * FROM history_traces ORDER BY success_index")
-            members = [dict(zip([c[0] for c in cursor_rows.description], row)) for row in cursor_rows]
-            serialized = json.dumps(members, sort_keys=True)
-            db.execute("INSERT INTO prefixes VALUES (?, ?, ?, ?)",
-                       (success, arrival, serialized, sha256(serialized)))
-    db.execute("UPDATE progress SET cursor=? WHERE id=1", (arrival,))
 
 
 def attempts_by_case(db):

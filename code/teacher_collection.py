@@ -1,6 +1,5 @@
 """Run independent Teacher requests with bounded concurrency and a resumable ledger."""
 
-import json
 import sqlite3
 import time
 from collections import deque
@@ -11,10 +10,10 @@ from threading import Event, Lock
 from openai import APIError, APITimeoutError
 
 from teacher_client import parse_reply, request_label
-from run_store import record_history, single_runner
+from run_store import single_runner
 
 
-def collect_case(db, client, case, used, concurrency, stop, predict, history_milestones=None):
+def collect_case(db, client, case, used, concurrency, stop, predict):
     """Return True for a terminal case. Leave interrupted work eligible for resume."""
     cid = case["complaint_id"]
     for attempt_number in range(used, 2):
@@ -39,16 +38,13 @@ def collect_case(db, client, case, used, concurrency, stop, predict, history_mil
 
         seconds = time.monotonic() - start
         with db:
-            inserted = db.execute("""INSERT INTO attempts
+            db.execute("""INSERT INTO attempts
                 (complaint_id, status, raw_reply, label, detail, response_id, response_model,
                  prompt_tokens, completion_tokens, seconds, concurrency)
                 VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)""",
                 (cid, status, raw, label, detail, response_id, response_model,
                  usage.prompt_tokens if usage else None, usage.completion_tokens if usage else None,
                  seconds, concurrency))
-            if history_milestones is not None and (status == "ok" or
-                    (status != "paused" and attempt_number == 1)):
-                record_history(db, case, inserted.lastrowid, label, history_milestones)
         if status == "paused":
             raise SystemExit(f"Paused at {cid}: {detail}\nResume using the same output directory.")
         if status == "ok":
@@ -59,10 +55,8 @@ def collect_case(db, client, case, used, concurrency, stop, predict, history_mil
 def collect(db, db_path, client, cases, concurrency, *, predict=None):
     if predict is None:
         predict = request_label
-    config = json.loads(db.execute("SELECT config FROM run WHERE id=1").fetchone()[0])
-    history_milestones = config["milestones"] if config["split"] == "history" else None
-    if concurrency < 1 or (history_milestones is not None and concurrency != 1):
-        raise ValueError("History collection requires concurrency 1; all concurrency must be positive")
+    if concurrency < 1:
+        raise ValueError("Concurrency must be positive")
     # Paused service errors do not consume the two classification attempts.
     history = db.execute("""SELECT complaint_id, COUNT(*), MAX(status = 'ok')
         FROM attempts WHERE status != 'paused' GROUP BY complaint_id""")
@@ -87,8 +81,7 @@ def collect(db, db_path, client, cases, concurrency, *, predict=None):
                     if not pending:
                         return
                     case, prior_attempts = pending.popleft()
-                if collect_case(writer, client, case, prior_attempts, concurrency, stop, predict,
-                                history_milestones):
+                if collect_case(writer, client, case, prior_attempts, concurrency, stop, predict):
                     with lock:
                         completed += 1
                         if completed % 10 == 0 or completed == len(cases):

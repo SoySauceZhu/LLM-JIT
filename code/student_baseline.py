@@ -1,4 +1,4 @@
-"""Preview, run or export mortgage Student development/validation baselines."""
+"""Preview, run or export mortgage Student baselines on a chronological partition."""
 
 import argparse
 import json
@@ -9,7 +9,7 @@ from contextlib import closing
 from pathlib import Path
 
 from evaluation import score
-from mortgage_data import REVISION, TOKENIZER, default_output, load_development, load_experiment, prepare_cases, select_rows
+from mortgage_data import COHORT_SPLIT_COUNTS, REVISION, TOKENIZER, default_output, load_experiment, prepare_cases, select_rows
 from mortgage_prompt import DEFAULT_VERSION, LABELS, ROOT, SUPPORTED_VERSIONS, build_messages, load_prompt, parse_label
 from run_store import (
     attempts_by_case, final_attempt, initialize, make_config, progress_metrics, read_config,
@@ -27,10 +27,10 @@ STUDENT_MODELS = {
 }
 
 
-def student_config(cases, split, seed, prompt, student_model="smollm2-135m", device="cpu"):
+def student_config(cases, split, prompt, student_model="smollm2-135m", device="cpu"):
     profile = STUDENT_MODELS[student_model]
     extra = {"generation_stop_tokens": profile["stop_tokens"]} if "stop_tokens" in profile else {}
-    return make_config(cases, split, seed, prompt, backend="student", model=profile["model"],
+    return make_config(cases, split, prompt, backend="student", model=profile["model"],
                        decoding={"do_sample": False, "max_tokens": 16,
                                  "eos_policy": "model_and_tokenizer"}, device=device,
                        dtype="torch.float32", threads=4, batch_size=1, max_attempts=2,
@@ -39,10 +39,10 @@ def student_config(cases, split, seed, prompt, student_model="smollm2-135m", dev
                        chat_template_kwargs=profile["chat_template_kwargs"], **extra)
 
 
-def student_output(student_model, split, version, size=None, seed=42):
+def student_output(student_model, split, version):
     # Preserve the existing SmolLM2 path while isolating additional models.
     backend = "student" if student_model == "smollm2-135m" else f"student_{student_model}"
-    return default_output(backend, split, version, size, seed)
+    return default_output(backend, split, version)
 
 
 def generation_stop_ids(model_eos, tokenizer_eos, extra_stop_ids=()):
@@ -107,7 +107,7 @@ def load_teacher_labels(run, config, *, required=False):
     teacher = read_config(run)
     if teacher.get("backend", "teacher") != "teacher":
         raise ValueError("--teacher-run must point to a Teacher ledger")
-    for key in ("split", "tokenizer", "revision", "head", "tail", "system_prompt", "user_template", "prompt_file"):
+    for key in ("tokenizer", "revision", "head", "tail", "system_prompt", "user_template", "prompt_file"):
         if teacher.get(key) != config.get(key):
             raise ValueError(f"Teacher configuration mismatch: {key}")
     for key, empty in (("examples", []), ("final_instruction", "")):
@@ -116,7 +116,14 @@ def load_teacher_labels(run, config, *, required=False):
     if teacher["decoding"]["max_tokens"] != config["decoding"]["max_tokens"]:
         raise ValueError("Teacher output budget differs")
     expected, actual = config["cases"], teacher["cases"]
+    if teacher.get("schema_version") == 3 and teacher["split"] is None:
+        # An all-cohort Teacher ledger supplies only the selected Student partition.
+        actual = [case for case in actual if case["split"] == config["split"]]
+    elif teacher.get("split") != config.get("split"):
+        raise ValueError("Teacher configuration mismatch: split")
     identity = ("complaint_id", "reference_label", "input_sha256", "clipped", "student_tokens_before_clip")
+    if teacher.get("schema_version") == 3 and config.get("schema_version") == 3:
+        identity += ("split",)
     if len(expected) != len(actual) or any(
             any(a.get(key) != b.get(key) for key in identity) for a, b in zip(expected, actual)):
         raise ValueError("Teacher inputs, order or references differ from the Student manifest")
@@ -199,7 +206,7 @@ def export_results(db, output, teacher_run, *, require_teacher=False):
     config = json.loads(db.execute("SELECT config FROM run WHERE id=1").fetchone()[0])
     labels, pairing_status = load_teacher_labels(teacher_run, config, required=require_teacher)
     grouped = attempts_by_case(db)
-    fields = ["complaint_id", "reference_label", "sequence_no", "received_at_utc", "arrival_index",
+    fields = ["complaint_id", "split", "reference_label", "sequence_no", "received_at_utc", "arrival_index",
               "input_sha256", "student_tokens_before_clip", "clipped", "teacher_label",
               "student_label", "status", "first_token_choice", "first_reply", "last_reply",
               "attempts", "prompt_tokens_all_attempts", "generated_tokens_all_attempts", "seconds"]
@@ -245,9 +252,7 @@ def main():
     parser.add_argument("--student-model", choices=STUDENT_MODELS, default="smollm2-135m")
     parser.add_argument("--device", choices=("cpu", "mps", "cuda"), default="cpu",
                         help="Inference device: CPU, Apple Metal, or NVIDIA CUDA (all FP32)")
-    parser.add_argument("--split", choices=("development", "validation"), default="validation")
-    parser.add_argument("--size", type=int, help="Development sample only (default: 300)")
-    parser.add_argument("--seed", type=int, help="Development sampling seed only (default: 42)")
+    parser.add_argument("--split", choices=COHORT_SPLIT_COUNTS, default="validation")
     parser.add_argument("--prompt-version", choices=SUPPORTED_VERSIONS, default=DEFAULT_VERSION)
     parser.add_argument("--output", type=Path)
     parser.add_argument("--teacher-run", type=Path)
@@ -255,23 +260,17 @@ def main():
     action.add_argument("--run", action="store_true")
     action.add_argument("--export-only", action="store_true")
     args = parser.parse_args()
-    if args.split != "development" and (args.size is not None or args.seed is not None):
-        parser.error("--size and --seed are only supported for development")
-    seed = args.seed if args.seed is not None else 42
-    output = args.output or student_output(args.student_model, args.split, args.prompt_version, args.size, seed)
+    output = args.output or student_output(args.student_model, args.split, args.prompt_version)
     if args.export_only:
         config = read_config(output)
-        if config.get("schema_version") != 2 or config.get("backend") != "student":
-            parser.error("Export requires a new Student baseline ledger")
+        if config.get("schema_version") not in (2, 3) or config.get("backend") != "student":
+            parser.error("Export requires a schema 2 or 3 Student baseline ledger")
         version = Path(config["prompt_file"]).stem.rsplit("_", 1)[-1]
-        stored_seed = config["seed"] if config["seed"] is not None else 42
-        teacher_run = args.teacher_run or default_output(
-            "teacher", config["split"], version, len(config["cases"]), stored_seed)
+        teacher_run = args.teacher_run or default_output("teacher", None, version)
         with single_runner(output), closing(sqlite3.connect(output / "run.sqlite")) as db:
             export_results(db, output, teacher_run, require_teacher=args.teacher_run is not None)
         return
-    load_data = load_development if args.split == "development" else load_experiment
-    rows = select_rows(load_data(), args.split, args.size, seed)
+    rows = select_rows(load_experiment(), args.split)
     print(f"{args.split} n={len(rows)} counts={dict(Counter(r['reference_label'] for r in rows))} "
           f"model={args.student_model} prompt={args.prompt_version} output={output}")
     if not args.run:
@@ -279,8 +278,8 @@ def main():
         return
     prompt = load_prompt(args.prompt_version)
     cases = prepare_cases(rows)
-    config = student_config(cases, args.split, seed, prompt, args.student_model, args.device)
-    teacher_run = args.teacher_run or default_output("teacher", args.split, args.prompt_version, args.size, seed)
+    config = student_config(cases, args.split, prompt, args.student_model, args.device)
+    teacher_run = args.teacher_run or default_output("teacher", None, args.prompt_version)
     # Detect a wrong Teacher configuration before spending local inference time.
     load_teacher_labels(teacher_run, config, required=args.teacher_run is not None)
     output.mkdir(parents=True, exist_ok=True)

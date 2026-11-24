@@ -1,4 +1,4 @@
-"""Offline acceptance tests for full baselines, history prefixes and resume."""
+"""Offline acceptance tests for three partitions, full collection and resume."""
 
 import csv
 import json
@@ -16,7 +16,7 @@ import httpx
 from openai import APITimeoutError
 
 from mortgage_data import (
-    EXPERIMENT_SPLIT_COUNTS, ROOT, audit_rows, load_cohort, load_development,
+    EXPERIMENT_SPLIT_COUNTS, ROOT, audit_rows, load_cohort,
     load_experiment, manifest_cases, prepare_cases, select_rows, sha256,
 )
 from mortgage_prompt import build_messages, load_prompt
@@ -34,6 +34,7 @@ from test_teacher_collection import reply
 
 def fixture_cases():
     return [{"complaint_id": str(i), "text": text, "reference_label": "A",
+             "split": "validation",
              "sequence_no": i, "received_at_utc": f"2024-02-0{i}T00:00:00.000Z",
              "arrival_index": i, "input_sha256": sha256(text),
              "student_tokens_before_clip": 1, "clipped": False}
@@ -50,50 +51,45 @@ class TestDataAndCLI(unittest.TestCase):
     def setUpClass(cls):
         cls.rows = load_cohort()
 
-    def test_frozen_cohort_and_pilot_membership(self):
+    def test_frozen_cohort_has_exactly_three_splits_and_preserves_pilot_inputs(self):
         self.assertEqual(audit_rows(self.rows, reference_snapshot=True)["split_counts"],
-                         dict(development=957, history=8202, validation=1013, test=2024))
-        chosen = select_rows(self.rows, "development", 300, 42)
+                         dict(history=9159, validation=1013, test=2024))
         archived = read_config(ROOT / "output/gemma_dev_n300_s42_v1")["cases"]
-        self.assertEqual([r["complaint_id"] for r in chosen], [r["complaint_id"] for r in archived])
-        self.assertEqual(len(select_rows(self.rows, "history")), 8202)
+        by_id = {row["complaint_id"]: row for row in self.rows}
+        self.assertTrue(all(by_id[case["complaint_id"]]["split"] == "history" for case in archived))
+        self.assertEqual(len(select_rows(self.rows, "history")), 9159)
         self.assertEqual(len(select_rows(self.rows, "validation")), 1013)
 
-    def test_formal_data_excludes_january_and_preserves_frozen_splits(self):
-        formal, development = load_experiment(), load_development()
-        self.assertEqual(len(formal), 11239)
-        self.assertEqual(len(development), 957)
+    def test_formal_data_covers_all_rows_with_disjoint_chronological_partitions(self):
+        formal = load_experiment()
+        self.assertEqual(len(formal), 12196)
+        self.assertEqual(formal, self.rows)
         self.assertEqual({r["split"] for r in formal}, set(EXPERIMENT_SPLIT_COUNTS))
-        self.assertEqual({r["split"] for r in development}, {"development"})
-        for key in ("complaint_id", "text_sha256"):
-            formal_ids, dev_ids = ({r[key] for r in group} for group in (formal, development))
-            self.assertFalse(formal_ids & dev_ids)
-            self.assertEqual(formal_ids | dev_ids, {r[key] for r in self.rows})
         partitions = []
         for split, count in EXPERIMENT_SPLIT_COUNTS.items():
             part = select_rows(formal, split)
             self.assertEqual(len(part), count)
             self.assertEqual(part, select_rows(self.rows, split))
             partitions.append(part)
+        for key in ("complaint_id", "text_sha256"):
+            identifiers = [set(row[key] for row in part) for part in partitions]
+            self.assertEqual(sum(map(len, identifiers)), len(set.union(*identifiers)))
+            self.assertEqual(set.union(*identifiers), {row[key] for row in formal})
         self.assertLess(partitions[0][-1]["received_at_utc"], partitions[1][0]["received_at_utc"])
         self.assertLess(partitions[1][-1]["received_at_utc"], partitions[2][0]["received_at_utc"])
 
     def test_full_split_selection_keeps_arrival_order_without_sampling(self):
         expected = select_rows(self.rows, "history")
         self.assertEqual(select_rows(list(reversed(self.rows)), "history"), expected)
-        for split in EXPERIMENT_SPLIT_COUNTS:
-            self.assertEqual(select_rows(self.rows, split, seed=0),
-                             select_rows(self.rows, split, seed=42))
-        with self.assertRaisesRegex(ValueError, "only supported for development"):
-            select_rows(self.rows, "validation", size=10)
+        self.assertEqual(select_rows(list(reversed(self.rows))), self.rows)
 
     def test_unknown_or_unavailable_split_is_rejected(self):
         with self.assertRaisesRegex(ValueError, "Unknown split"):
             select_rows(self.rows, "typo")
-        with self.assertRaisesRegex(ValueError, "No rows available"):
+        with self.assertRaisesRegex(ValueError, "Unknown split"):
             select_rows(load_experiment(), "development")
         with self.assertRaisesRegex(ValueError, "No rows available"):
-            select_rows(load_development(), "history")
+            select_rows(select_rows(self.rows, "history"), "validation")
 
     def test_audit_rejects_duplicates_changed_text_and_reordered_stream(self):
         with self.assertRaisesRegex(ValueError, "Duplicate"):
@@ -107,7 +103,7 @@ class TestDataAndCLI(unittest.TestCase):
         with self.assertRaisesRegex(ValueError, "sequence order"):
             audit_rows(self.rows[:2][::-1])
         with self.assertRaisesRegex(ValueError, "temporal split"):
-            audit_rows([{**self.rows[0], "split": "history"}])
+            audit_rows([{**self.rows[0], "split": "validation"}])
 
     def test_same_head_tail_preparation_and_prompt_for_both_models(self):
         tokenizer = Mock()
@@ -119,6 +115,7 @@ class TestDataAndCLI(unittest.TestCase):
         self.assertTrue(case["clipped"])
         self.assertEqual(case["student_tokens_before_clip"], 3001)
         self.assertEqual(case["input_sha256"], sha256("identical clipped text"))
+        self.assertEqual(case["split"], "history")
         self.assertEqual(manifest_cases([case])[0]["input_sha256"], case["input_sha256"])
         for version in ("v1", "v2", "v3", "v4"):
             messages = build_messages(case["text"], load_prompt(version))
@@ -129,25 +126,26 @@ class TestDataAndCLI(unittest.TestCase):
     def test_previews_do_not_prepare_tokenizer_or_infer(self):
         import student_baseline
         import teacher_baseline
-        for module, split in ((teacher_baseline, "history"), (teacher_baseline, "validation"),
-                              (student_baseline, "validation"), (teacher_baseline, "development"),
-                              (student_baseline, "development")):
+        for module, split in ((teacher_baseline, None), (teacher_baseline, "history"),
+                              (teacher_baseline, "validation"), (teacher_baseline, "test"),
+                              (student_baseline, "history"), (student_baseline, "validation"),
+                              (student_baseline, "test")):
+            flags = [] if split is None else ["--split", split]
             with self.subTest(module=module.__name__, split=split), TemporaryDirectory() as tmp, \
                     patch.object(module, "prepare_cases") as prepare, \
                     patch.object(module, "load_experiment", return_value=self.rows) as formal, \
-                    patch.object(module, "load_development", return_value=self.rows) as pilot, \
-                    patch("sys.argv", [module.__name__, "--split", split, "--output", str(Path(tmp) / "run")]):
+                    patch("sys.argv", [module.__name__, *flags, "--output", str(Path(tmp) / "run")]):
                 module.main()
                 prepare.assert_not_called()
-                self.assertEqual(formal.call_count, int(split != "development"))
-                self.assertEqual(pilot.call_count, int(split == "development"))
+                formal.assert_called_once_with()
                 self.assertFalse((Path(tmp) / "run").exists())
 
-    def test_cli_rejects_sampling_and_parallel_history(self):
-        for script, flags in (("teacher_baseline.py", ["--split", "history", "--concurrency", "2"]),
+    def test_cli_rejects_removed_split_sampling_and_invalid_concurrency(self):
+        for script, flags in (("teacher_baseline.py", ["--concurrency", "0"]),
                               ("teacher_baseline.py", ["--size", "10"]),
                               ("student_baseline.py", ["--seed", "42"]),
-                              ("student_baseline.py", ["--split", "test"])):
+                              ("teacher_baseline.py", ["--split", "development"]),
+                              ("student_baseline.py", ["--split", "development"])):
             result = subprocess.run([sys.executable, str(ROOT / "code" / script), *flags],
                                     capture_output=True, text=True)
             self.assertEqual(result.returncode, 2, result.stderr)
@@ -201,7 +199,7 @@ class TestStudentCUDA(unittest.TestCase):
                 self.assertEqual(weights.call_args.kwargs["revision"], profile["revision"])
                 model.to.assert_called_once_with("cuda")
                 model.eval.assert_called_once_with()
-                config = student_config(fixture_cases(), "validation", 42, load_prompt("v3"), name, "cuda")
+                config = student_config(fixture_cases(), "validation", load_prompt("v3"), name, "cuda")
                 self.assertEqual(config["device"], "cuda")
                 self.assertEqual(config["dtype"], "torch.float32")
                 with closing(sqlite3.connect(":memory:")) as db:
@@ -233,7 +231,7 @@ class TestStudentCUDA(unittest.TestCase):
         self.assertEqual(result["first_token_choice"], "C")
 
 
-class TestHistory(unittest.TestCase):
+class TestFullTeacherCollection(unittest.TestCase):
     def setUp(self):
         tmp = TemporaryDirectory()
         self.addCleanup(tmp.cleanup)
@@ -242,81 +240,66 @@ class TestHistory(unittest.TestCase):
         self.db = sqlite3.connect(self.path)
         self.addCleanup(self.db.close)
         self.cases = fixture_cases()
-        self.config = initialize_teacher(self.db, self.cases, 42, split="history", milestones=(2, 4, 8))
+        for case, split in zip(self.cases, ("history", "history", "validation", "test", "test")):
+            case["split"] = split
+        self.config = initialize_teacher(self.db, self.cases)
 
-    def test_atomic_prefixes_survive_restart_and_count_successes(self):
-        calls = []
-        b_calls = 0
-
+    def test_resume_keeps_raw_attempts_without_training_tables_or_exports(self):
         def before_restart(client, text):
-            nonlocal b_calls
-            calls.append(text)
-            if text == "A":
-                return reply("A")
-            if text == "B":
-                b_calls += 1
-                return reply("not a label" if b_calls == 1 else "B")
+            if text in "AB":
+                return reply(text)
             raise KeyboardInterrupt()
 
         with self.assertRaises(KeyboardInterrupt):
             collect(self.db, self.path, None, self.cases, 1, predict=before_restart)
-        self.assertEqual(self.db.execute("SELECT cursor FROM progress").fetchone()[0], 2)
-        frozen_before = self.db.execute("SELECT * FROM prefixes").fetchall()
-        self.assertEqual(len(frozen_before), 1)
-        self.assertEqual(frozen_before[0][:2], (2, 2))
-        # Simulate a new process opening the existing ledger.
+        self.assertEqual(self.db.execute("SELECT COUNT(*) FROM attempts").fetchone()[0], 2)
         with closing(sqlite3.connect(self.path)) as resumed:
-            initialize_teacher(resumed, self.cases, 42, split="history", milestones=(2, 4, 8))
+            initialize_teacher(resumed, self.cases)
 
             def after_restart(client, text):
-                calls.append(text)
                 if text == "C":
                     raise APITimeoutError(request=httpx.Request("POST", "https://example.invalid"))
-                return reply({"D": "C", "E": "D"}[text])
+                return reply(text)
 
             collect(resumed, self.path, None, self.cases, 1, predict=after_restart)
-            final_prefixes = resumed.execute("SELECT * FROM prefixes ORDER BY milestone").fetchall()
-            self.assertEqual(final_prefixes[0], frozen_before[0])
-            self.assertEqual(final_prefixes[1][:2], (4, 5))
-            self.assertEqual(resumed.execute("SELECT COUNT(*) FROM attempts").fetchone()[0], 7)
-            self.assertEqual(resumed.execute("SELECT cursor FROM progress").fetchone()[0], 5)
-            self.assertEqual(resumed.execute("SELECT complaint_id FROM history_traces ORDER BY success_index").fetchall(),
-                             [("1",), ("2",), ("4",), ("5",)])
-            for n, arrival, members, digest in final_prefixes:
-                self.assertEqual(sha256(members), digest)
-                self.assertEqual(len(json.loads(members)), n)
+            self.assertEqual(resumed.execute("SELECT COUNT(*) FROM attempts").fetchone()[0], 6)
+            self.assertEqual(dict(resumed.execute("SELECT status, COUNT(*) FROM attempts GROUP BY status")),
+                             {"ok": 4, "timeout": 2})
             predictor = Mock(side_effect=AssertionError("must not repeat finished cases"))
             collect(resumed, self.path, None, self.cases, 1, predict=predictor)
             predictor.assert_not_called()
+            self.assertEqual({row[0] for row in resumed.execute("SELECT name FROM sqlite_master WHERE type='table'")},
+                             {"run", "attempts"})
             summary = export_teacher(resumed, self.cases, self.output)
         self.assertEqual(summary["n_terminal"], 5)
-        self.assertEqual(summary["usage"]["attempts_missing_usage"], 7)
+        self.assertEqual(summary["usage"]["attempts_missing_usage"], 6)
         self.assertIsNone(summary["usage"]["cost_usd"])
-        self.assertEqual(summary["history_successes"], 4)
-        self.assertFalse(summary["milestones"][-1]["reached"])
-        with (self.output / "history_labels.csv").open() as f:
-            reader = csv.DictReader(f)
-            self.assertNotIn("reference_label", reader.fieldnames)
-            self.assertEqual([r["teacher_label"] for r in reader], list("ABCD"))
-        self.assertTrue((self.output / "prefixes/n4.json").exists())
+        self.assertNotIn("milestones", summary)
+        self.assertNotIn("history_successes", summary)
+        self.assertFalse((self.output / "history_labels.csv").exists())
+        self.assertFalse((self.output / "prefixes").exists())
+        with (self.output / "predictions.csv").open() as stream:
+            rows = list(csv.DictReader(stream))
+        self.assertEqual([row["split"] for row in rows], [case["split"] for case in self.cases])
+        self.assertEqual([row["complaint_id"] for row in rows], [case["complaint_id"] for case in self.cases])
+        self.assertEqual(rows[2]["status"], "timeout")
+        self.assertTrue(summary["complete"])
 
-    def test_history_rejects_parallel_collection(self):
-        with self.assertRaisesRegex(ValueError, "concurrency 1"):
-            collect(self.db, self.path, None, self.cases, 2, predict=Mock())
-
-    def test_failed_order_commit_rolls_back_attempt(self):
-        with self.assertRaisesRegex(ValueError, "arrival order"):
-            collect(self.db, self.path, None, self.cases[1:], 1, predict=lambda *_: reply("A"))
-        self.assertEqual(self.db.execute("SELECT COUNT(*) FROM attempts").fetchone()[0], 0)
-        self.assertEqual(self.db.execute("SELECT COUNT(*) FROM history_traces").fetchone()[0], 0)
+    def test_partition_filter_can_collect_concurrently_without_prefix_logic(self):
+        collect(self.db, self.path, None, self.cases, 2, predict=lambda *_: reply("A"))
+        self.assertEqual(self.db.execute("SELECT COUNT(*) FROM attempts").fetchone()[0], 5)
+        with self.assertRaisesRegex(ValueError, "positive"):
+            collect(self.db, self.path, None, self.cases, 0, predict=Mock())
 
     def test_config_changes_refused_and_empty_exports_are_provisional(self):
         summary = export_teacher(self.db, self.cases, self.output)
         self.assertEqual(summary["n_pending"], 5)
         self.assertEqual(summary["n"], 0)
         self.assertIsNone(summary["accuracy"])
+        self.assertIsNone(self.config["split"])
+        self.assertEqual(self.config["schema_version"], 3)
         with self.assertRaisesRegex(ValueError, "configuration changed"):
-            initialize_teacher(self.db, self.cases, 42, load_prompt("v4"), split="history", milestones=(2, 4, 8))
+            initialize_teacher(self.db, self.cases, load_prompt("v4"))
         self.assertEqual(read_config(self.output), self.config)
 
 
@@ -329,14 +312,14 @@ class TestStudentAndPairing(unittest.TestCase):
         self.output.mkdir()
         self.teacher.mkdir()
         self.cases = fixture_cases()
-        self.config = student_config(self.cases, "validation", 42, load_prompt("v3"))
+        self.config = student_config(self.cases, "validation", load_prompt("v3"))
         self.db = sqlite3.connect(self.output / "run.sqlite")
         self.addCleanup(self.db.close)
         initialize(self.db, self.config)
 
     def teacher_collect(self, cases=None, prompt=None):
         with closing(sqlite3.connect(self.teacher / "run.sqlite")) as db:
-            initialize_teacher(db, cases or self.cases, 42, prompt or load_prompt("v3"), split="validation")
+            initialize_teacher(db, cases or self.cases, prompt or load_prompt("v3"), split="validation")
             collect(db, self.teacher / "run.sqlite", None, cases or self.cases, 1,
                     predict=lambda _, text: reply("A"))
 
@@ -397,7 +380,7 @@ class TestStudentAndPairing(unittest.TestCase):
 
     def test_incomplete_teacher_and_student_do_not_publish_full_agreement(self):
         with closing(sqlite3.connect(self.teacher / "run.sqlite")) as db:
-            initialize_teacher(db, self.cases, 42, split="validation")
+            initialize_teacher(db, self.cases, split="validation")
         self.assertEqual(load_teacher_labels(self.teacher, self.config)[1], "incomplete")
         collect_student(self.db, self.cases[:1], lambda _: generated("A"))
         self.teacher_collect()
@@ -405,6 +388,37 @@ class TestStudentAndPairing(unittest.TestCase):
         self.assertTrue(metrics["provisional"])
         self.assertIsNone(metrics["strict_generation"]["teacher_agreement_all_cases"])
         self.assertEqual(metrics["n_pending"], 4)
+
+    def test_all_cohort_teacher_pairs_selected_partition_despite_other_pending_cases(self):
+        history = {**self.cases[0], "complaint_id": "history-only", "split": "history"}
+        test = {**self.cases[-1], "complaint_id": "test-only", "split": "test"}
+        full_cases = [history, *self.cases, test]
+        with closing(sqlite3.connect(self.teacher / "run.sqlite")) as db:
+            initialize_teacher(db, full_cases)
+            # Only validation is complete; the unrelated partitions remain pending.
+            collect(db, self.teacher / "run.sqlite", None, self.cases, 1,
+                    predict=lambda *_: reply("A"))
+        before = (self.teacher / "run.sqlite").read_bytes()
+        labels, status = load_teacher_labels(self.teacher, self.config, required=True)
+        self.assertEqual(status, "complete")
+        self.assertEqual(labels, {case["complaint_id"]: "A" for case in self.cases})
+        self.assertEqual((self.teacher / "run.sqlite").read_bytes(), before)
+        changed = {**self.config, "cases": [dict(case) for case in self.config["cases"]]}
+        changed["cases"][0]["input_sha256"] = "different"
+        with self.assertRaisesRegex(ValueError, "inputs"):
+            load_teacher_labels(self.teacher, changed)
+        with closing(sqlite3.connect(self.teacher / "run.sqlite")) as db:
+            db.execute("DELETE FROM attempts WHERE complaint_id = ?", (self.cases[0]["complaint_id"],))
+            db.commit()
+        self.assertEqual(load_teacher_labels(self.teacher, self.config)[1], "incomplete")
+
+    def test_all_cohort_teacher_rejects_cross_partition_mismatches(self):
+        full_cases = [dict(case) for case in self.cases]
+        full_cases[0]["split"] = "history"
+        with closing(sqlite3.connect(self.teacher / "run.sqlite")) as db:
+            initialize_teacher(db, full_cases)
+        with self.assertRaisesRegex(ValueError, "inputs"):
+            load_teacher_labels(self.teacher, self.config)
 
     def test_pairing_rejects_prompt_order_and_input_changes(self):
         self.teacher_collect()
@@ -467,7 +481,7 @@ class TestStudentAndPairing(unittest.TestCase):
             predict_once(model, tokenizer, settings, list(range(5)), [])
 
     def test_qwen_profile_keeps_shared_clipping_and_teacher_pairing(self):
-        qwen = student_config(self.cases, "validation", 42, load_prompt("v3"), "qwen3.5-0.8b")
+        qwen = student_config(self.cases, "validation", load_prompt("v3"), "qwen3.5-0.8b")
         self.assertEqual(qwen["model"], "Qwen/Qwen3.5-0.8B")
         self.assertEqual(qwen["chat_template_kwargs"], {"enable_thinking": False})
         self.assertNotEqual(qwen["model_revision"], qwen["revision"])
@@ -501,7 +515,7 @@ class TestStudentAndPairing(unittest.TestCase):
         self.assertEqual(generation_stop_ids(None, 9), [9])
 
     def test_gemma_profile_preserves_inputs_and_has_an_independent_ledger(self):
-        gemma = student_config(self.cases, "validation", 42, load_prompt("v3"), "gemma3-270m-it")
+        gemma = student_config(self.cases, "validation", load_prompt("v3"), "gemma3-270m-it")
         self.assertEqual(gemma["model"], "google/gemma-3-270m-it")
         self.assertEqual(gemma["model_revision"], "ac82b4e820549b854eebf28ce6dedaf9fdfa17b3")
         self.assertEqual(gemma["chat_template_kwargs"], {})
@@ -569,7 +583,7 @@ class TestStudentAndPairing(unittest.TestCase):
 
     def test_failed_teacher_is_included_in_agreement_denominator(self):
         with closing(sqlite3.connect(self.teacher / "run.sqlite")) as db:
-            initialize_teacher(db, self.cases, 42, split="validation")
+            initialize_teacher(db, self.cases, split="validation")
             collect(db, self.teacher / "run.sqlite", None, self.cases, 1,
                     predict=lambda _, text: reply("invalid" if text == "A" else "A"))
         collect_student(self.db, self.cases, lambda _: generated("A"))
@@ -582,7 +596,9 @@ class TestTeacherEntrypoint(unittest.TestCase):
         import teacher_baseline
 
         cases = fixture_cases()
-        rows = [{**c, "split": "validation"} for c in cases]
+        for case, split in zip(cases, ("history", "history", "validation", "test", "test")):
+            case["split"] = split
+        rows = [dict(case) for case in cases]
         calls = []
 
         def predict(client, text, prompt):
@@ -605,9 +621,29 @@ class TestTeacherEntrypoint(unittest.TestCase):
             with patch.object(teacher_baseline, "request_label", return_value=reply("A")):
                 teacher_baseline.main()
             self.assertTrue(json.loads((Path(tmp) / "metrics.json").read_text())["complete"])
+            stored = read_config(tmp)
+            self.assertIsNone(stored["split"])
+            self.assertEqual({case["split"] for case in stored["cases"]}, {"history", "validation", "test"})
             client.reset_mock()
             teacher_baseline.main()
             client.assert_not_called()
+
+    def test_schema_two_student_can_export_without_changing_its_ledger(self):
+        source = ROOT / "output/gemma3_270m_dev_n300_s42_v3_cuda/run.sqlite"
+        original = source.read_bytes()
+        with TemporaryDirectory() as tmp:
+            ledger = Path(tmp) / "run.sqlite"
+            ledger.write_bytes(original)
+            stored = read_config(tmp)
+            self.assertEqual(stored["schema_version"], 2)
+            result = subprocess.run(
+                [sys.executable, str(ROOT / "code/student_baseline.py"), "--export-only", "--output", tmp,
+                 "--teacher-run", str(ROOT / "output/gemma_dev_n300_s42_v3")],
+                capture_output=True, text=True)
+            self.assertEqual(result.returncode, 0, result.stderr)
+            self.assertEqual(ledger.read_bytes(), original)
+            self.assertEqual(json.loads((Path(tmp) / "config.json").read_text()), stored)
+            self.assertTrue(json.loads((Path(tmp) / "metrics.json").read_text())["complete"])
 
 
 if __name__ == "__main__":

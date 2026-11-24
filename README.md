@@ -2,203 +2,155 @@
 
 [System and experiment design](https://docs.google.com/document/d/1LyIxZPZP4Ax1GHQ-LLyzqF2JipfCaxy5SB8kU0B53ug/edit?usp=sharing) · [Local experiment design](Experiment%20Design.md)
 
-The primary experiment is **Gemma 4 31B IT Teacher → Gemma 3 270M IT Student**, using the frozen v3 prompt. SmolLM2-135M and Qwen3.5-0.8B remain exploratory pilot comparisons. Main-study commands explicitly select `--student-model gemma3-270m-it`; the CLI's legacy default remains SmolLM2 for compatibility. The [experiment design](Experiment%20Design.md) records the model-selection rationale, pilot evidence and planned Gemma 3 LoRA learning curves.
+The main pairing is **Gemma 4 31B IT Teacher → Gemma 3 270M IT Student**, using the frozen v3 prompt. This stage records Teacher labels for the complete cohort and runs unadapted Student baselines. Training subsets and LoRA adapters are constructed in a later stage. SmolLM2-135M and Qwen3.5-0.8B remain exploratory comparisons.
 
-## Code layout
+## Environment
 
-| Module | Responsibility |
-|---|---|
-| `code/teacher_client.py` | SiliconFlow Gemma client and request settings |
-| `code/teacher_baseline.py` | Teacher preview, collection and export CLI |
-| `code/teacher_collection.py` | API scheduling, retries, pause/resume and chronological history commits |
-| `code/teacher_smoke.py` | One real API request on a development complaint |
-| `code/student_baseline.py` | Unadapted SmolLM2/Qwen/Gemma inference, resume and paired evaluation |
-| `code/mortgage_data.py` | Cohort audit, selection, frozen manifests and narrative clipping |
-| `code/mortgage_prompt.py` | Shared labels, prompts, messages and strict parsing |
-| `code/evaluation.py` | Shared classification metrics and Teacher agreement |
-| `code/run_store.py` | SQLite ledger, run locking, history prefixes and atomic file exports |
-
-The previous entry points `baseline_gemma.py`, `gemma_teacher.py`, `smoke_gemma.py` and `prerun_smollm2.py` have been renamed; use the commands below. Archived pilot outputs remain in their original directories.
-
-## Environment and frozen configuration
-
-Use [uv](https://docs.astral.sh/uv/getting-started/installation/) from the repository root. `.python-version` selects Python 3.12.10, `pyproject.toml` declares the direct dependencies, and `uv.lock` locks their transitive dependencies and platform-specific wheels. Commit all three files when changing the environment.
+Use [uv](https://docs.astral.sh/uv/getting-started/installation/) from the repository root. `.python-version` selects Python 3.12.10; `pyproject.toml` and `uv.lock` pin direct and transitive dependencies.
 
 ```bash
 uv sync --locked
 uv run --locked python -c "import torch; print(torch.__version__); print('CUDA:', torch.cuda.is_available()); print('MPS:', torch.backends.mps.is_available())"
 ```
 
-uv creates an isolated `.venv`; commands below use `uv run --locked` and need no manual activation. If migrating the old environment created with `--system-site-packages`, first run `mv .venv .venv-pip-backup` (only if that backup does not already exist), then run `uv sync --locked`. Both directories are git-ignored. Recreate the environment on each machine rather than copying a Mac virtual environment to Linux.
+uv creates an isolated `.venv`; no activation is required. The supported targets are Apple Silicon macOS (PyPI PyTorch 2.10.0 for CPU/MPS) and Linux x86_64 (official PyTorch 2.10.0+cu126). The NVIDIA driver must support CUDA 12.6; uv does not install the driver. The platform-specific source configuration follows [uv's PyTorch guide](https://docs.astral.sh/uv/guides/integration/pytorch/).
 
-The supported targets are Apple Silicon macOS and Linux x86_64. Mac uses PyTorch 2.10.0 from PyPI for CPU/MPS; Linux uses the official CUDA 12.6 build of the same version. This follows [uv's platform-specific PyTorch source configuration](https://docs.astral.sh/uv/guides/integration/pytorch/). On the remote RTX 6000 machine, check `nvidia-smi` and ensure its driver supports CUDA 12.6; uv manages Python packages, not the NVIDIA driver. Select NVIDIA inference explicitly with `--device cuda`; the default remains CPU. Actual inference checks GPU availability before loading Student weights/tokenizer and reports an error rather than silently switching devices. Preview and export do not require a GPU.
+The former environment is retained in the git-ignored `.venv-pip-backup/`. Recreate environments on each machine rather than copying them across platforms. `requirements.txt` has been replaced by the uv manifest and lockfile. Use `uv add PACKAGE` to change dependencies, verify with the offline tests, and commit both manifest and lockfile. Transformers 5.5.4 uses the pinned compatible huggingface-hub 1.11.0.
 
-Transformers 5.5.4 requires `huggingface-hub>=1.5.0,<2.0`; the project keeps the verified 1.11.0 pin. Use `uv run --locked hf auth login` for Gemma access so a global CLI installation cannot change project packages. Syncing installs libraries only; model weights/tokenizers download on the first real run. `requirements.txt` has been replaced by `pyproject.toml` and `uv.lock`.
+Teacher calls require `SILICONFLOW_API_KEY` in the repository `.env` or environment. Gemma Student weights require an authorized Hugging Face account:
 
-To change a dependency, use `uv add PACKAGE` (or edit its pin in `pyproject.toml`), run `uv lock` and `uv sync --locked`, and commit the updated manifest and lockfile. Run the offline checks below before starting an experiment. Environment changes can prevent resuming an existing frozen ledger; use a new output directory when its recorded configuration differs. Existing completed results remain available for export and Teacher pairing.
+```bash
+uv run --locked hf auth login
+```
 
-Put your SiliconFlow international key in `.env` as `SILICONFLOW_API_KEY`, or set that environment variable. Credentials are needed only for pending Teacher calls. Preview, export and local Student inference do not require an API key.
+Installing dependencies does not download model weights. Previews do not load tokenizers or models and make no API calls. A real Teacher run downloads only the shared clipping tokenizer if needed; Teacher weights stay with the API provider. Student runs download their pinned weights/tokenizers on demand. Keep credentials out of Git.
 
-Both models default to **v3** after the four prompt pilots. Use `--prompt-version v1`, `v2`, `v3` or `v4` to reproduce another version. Gemma uses `google/gemma-4-31B-it` at `https://api.siliconflow.com/v1`, temperature 0 and max_tokens 16. This is the provider's model identifier, not an immutable weights revision; the ledger records returned model identifiers, response IDs and timestamps. SmolLM2 uses `HuggingFaceTB/SmolLM2-135M-Instruct` at revision `12fd25f77366fa6b3b4b768ec3050bf629380bac`, CPU/FP32, four threads, batch size 1, greedy decoding and at most 16 generated tokens per attempt.
+## Data: exactly three splits
 
-Teacher and Student use the same prompt messages and visible narrative. Narratives over 3,000 tokens of the pinned Student tokenizer retain the first 2,000 and final 1,000. Model weights/tokenizer files are downloaded by Hugging Face only when needed by a real run. A preview does not load either.
+`data/mortgage_complaint.csv` contains **12,196** unique complaints. Both `load_cohort()` and `load_experiment()` return this complete, audited cohort.
 
-The immutable source `data/mortgage_complaint.csv` contains 12,196 unique complaints, including the archived January development cases. Its frozen 2026-11-21 ordered-ID SHA-256 is `3c59aa321b65ea493b579cd503af0aeb580fa9c28ee4cabe4b15d136ab123dfa`. Loading audits counts, chronological order, unique IDs/text hashes, text integrity and temporal splits against this source snapshot.
-
-The **formal experiment contains only 11,239 requests in three partitions**:
-
-| Partition | Receipt window | Requests | Role |
+| Split | Receipt window | Complaints | Later use |
 |---|---|---:|---|
-| `history` (training stream) | February–September | 8,202 | Ordered Teacher requests and training prefixes |
-| `validation` | October | 1,013 | Future requests for baseline/adapter comparison and selection |
-| `test` | November–December | 2,024 | Final held-out evaluation |
+| `history` | January–September | 9,159 | Teacher-labeled training history |
+| `validation` | October | 1,013 | Model comparison and selection |
+| `test` | November–December | 2,024 | Final evaluation |
 
-`mortgage_data.load_experiment()` returns these three partitions and excludes January. `load_development()` returns only the archived 957 January cases for explicit pilot reproduction or smoke checks. `load_cohort()` is the complete source-audit interface. The baseline CLIs select the appropriate loader: history/validation use formal data; only an explicit `--split development` uses January. The source CSV, fingerprints and existing run configurations retain their original values, so old pilot results remain reproducible. Final test scoring is reserved for the later evaluation stage and is not exposed by the current baseline CLIs.
+The former January partition (957 rows) is now part of `history`. Only those CSV split fields changed; IDs, dates, text, reference labels and row order are preserved. The ordered-ID SHA-256 remains `3c59aa321b65ea493b579cd503af0aeb580fa9c28ee4cabe4b15d136ab123dfa`; the full CSV byte hash changed and is recorded in each new run. Loading verifies counts, time boundaries, unique IDs/text hashes and text integrity.
 
-## Full baselines
+There is no fourth split or separate pilot loader in the current interface. The old split name and the former `--size`/`--seed` sampling options are rejected. Archived 300-case runs keep their original configurations and remain historical evidence; they are not rewritten to pretend they used the new partitioning.
 
-Without `--run`, either baseline CLI only previews the selected input and output path:
+## Teacher: label the full cohort
 
-```bash
-uv run --locked python code/teacher_baseline.py --split history
-uv run --locked python code/teacher_baseline.py --split validation
-uv run --locked python code/student_baseline.py --student-model gemma3-270m-it --split validation
-```
-
-Start the chronological history collection and the two validation baselines explicitly:
+Preview all 12,196 complaints:
 
 ```bash
-uv run --locked python code/teacher_baseline.py --split history --run
-uv run --locked python code/teacher_baseline.py --split validation --concurrency 4 --run
-uv run --locked python code/student_baseline.py --student-model gemma3-270m-it --device mps --split validation --run
+uv run --locked python code/teacher_baseline.py --prompt-version v3
 ```
 
-The default split is `validation`. History and validation always use the complete split in frozen stream order; `--size` and `--seed` are accepted only for development. History requires concurrency 1 so that prefix membership follows arrival order. Validation concurrency defaults to 1 and can be increased explicitly.
-
-Default output directories for v3:
-
-```text
-output/baseline_v3/teacher_history/
-output/baseline_v3/teacher_validation/
-output/baseline_v3/student_gemma3-270m-it_validation/
-```
-
-Use `--output PATH` to select another run directory. Rerun the same command to resume. Input hashes, prompt contents, model settings and environment are frozen in `run.sqlite`; changed configurations require another output directory. Validation Teacher concurrency may change on resume and is recorded for each attempt. Only one writer can operate on a run directory at a time.
-
-A timeout or invalid Teacher reply gets one retry; other API errors, including HTTP 429, pause collection. Follow any recorded `Retry-After` value and resume with lower validation concurrency. On Ctrl+C, collection stops scheduling new work, drains in-flight API requests and exports committed results. A hard process termination during an uncommitted API call may cause a repeated charge when resumed. Student commits each generation attempt, so an interruption between two attempts preserves the remaining retry budget. Local runtime errors pause instead of becoming classification failures.
-
-### Remote NVIDIA runs
-
-On the Linux x86_64 machine, sync the project and check CUDA before starting inference:
+Collect all labels into one run:
 
 ```bash
-uv sync --locked
-nvidia-smi
-uv run --locked python -c "import torch; assert torch.cuda.is_available(), 'CUDA unavailable'; print(torch.__version__, torch.version.cuda, torch.cuda.get_device_name(0))"
-
-# Reproduce the January pilot in a new CUDA ledger.
-uv run --locked python code/student_baseline.py --student-model gemma3-270m-it --device cuda --split development --size 300 --seed 42 --prompt-version v3 --output output/gemma3_270m_dev_n300_s42_v3_cuda --run
-
-# Run the full October validation baseline in a separate ledger.
-uv run --locked python code/student_baseline.py --student-model gemma3-270m-it --device cuda --split validation --prompt-version v3 --output output/baseline_v3/student_gemma3-270m-it_validation_cuda --run
+uv run --locked python code/teacher_baseline.py \
+  --prompt-version v3 \
+  --concurrency 1 \
+  --run
 ```
 
-Configure authorized Hugging Face access for Gemma before the first run. To pair the pilot with copied Teacher results, add `--teacher-run output/gemma_dev_n300_s42_v3`; validation automatically looks for `output/baseline_v3/teacher_validation`. Teacher collection can continue on another machine because it calls the API. Transfer completed Teacher directories, including `run.sqlite`, to reuse labels without more API calls. Keep CUDA outputs separate from CPU/MPS runs: device and environment are frozen in each ledger. CUDA retains FP32, batch size 1 and the same prompts, clipping and decoding. The CUDA path has offline fixture coverage; real RTX 6000 execution and performance still need verification on the remote machine.
+The default destination is `output/baseline_v3/teacher_all/`. Omitting `--split` means the complete cohort; the run configuration stores `split: null`, and every case retains its actual `history`, `validation` or `test` value. `all` in the directory name is a collection scope, not a fourth data split.
 
-## Comparing Student models
+An optional `--split history`, `--split validation` or `--split test` filters to that complete partition, using `teacher_history/`, `teacher_validation/` or `teacher_test/`. Concurrency defaults to 1 and may be raised for any selection; exported rows always follow the frozen input order, even if responses finish out of order. Per-attempt completion timestamps are retained. Use 1 for a serial collection.
 
-`--student-model` selects `smollm2-135m` (default), `qwen3.5-0.8b`, or `gemma3-270m-it`. Qwen uses the post-trained `Qwen/Qwen3.5-0.8B` checkpoint at revision `2fc06364715b967f1860aea9cf38778875588b17`, its native tokenizer/chat template and explicit `enable_thinking=False`. All Students default to CPU/FP32, four threads, greedy decoding, a 16-token limit and the same strict A–E parser. All three support `--device mps` for Apple Metal or `--device cuda` for NVIDIA acceleration where available, still in FP32; use a separate `--output` directory when changing devices. Device changes can change predictions and timings, so the chosen device is frozen in each run configuration. The text-only backbone is loaded with `AutoModelForCausalLM`; the vision tower is not used. Qwen's hybrid attention falls back to native PyTorch on this machine; optional CUDA kernels are not installed.
+The Teacher is `google/gemma-4-31B-it` at `https://api.siliconflow.com/v1`, with temperature 0 and max_tokens 16. Each request contains the shared v3 instructions, five demonstrations and one complaint. CFPB reference labels are not sent. A legal A–E reply is accepted even when it differs from the reference label. All prompts use the fixed SmolLM2 tokenizer for narrative clipping: above 3,000 tokens, retain the first 2,000 and last 1,000.
 
-The **clipping tokenizer stays fixed to SmolLM2 for all models**, preserving the exact narratives already seen by the Teacher. In `config.json`, `tokenizer`/`revision` identify this shared clipping tokenizer; `model_revision`, `inference_tokenizer` and `inference_tokenizer_revision` identify the selected Student. Token counts measured during inference use each model's native tokenizer.
+This command only records labels and attempts. It does not create training checkpoints, prefix manifests, training jobs or adapters. The current source CSV and manifest retain CFPB references for auditing/scoring; any future trainer must use only accepted Teacher labels as supervision and allowlist history IDs.
 
-Run Qwen on the same 300 January pilot complaints and pair with the archived v3 Teacher:
-
-```bash
-uv run --locked python code/student_baseline.py --student-model qwen3.5-0.8b --device mps --split development --size 300 --seed 42 --prompt-version v3 --teacher-run output/gemma_dev_n300_s42_v3 --output output/qwen35_dev_n300_s42_v3_mps --run
-```
-
-Omit `--output` to use `output/baseline_v3/student_qwen3.5-0.8b_development_n300_s42/`; full validation uses `student_qwen3.5-0.8b_validation/`. SmolLM2 retains its existing default directory. Model settings are frozen in the ledger, so another model cannot resume into the same run. Generation stops on both the native tokenizer end-of-turn ID and the model end-of-text ID. In this Qwen checkpoint those IDs differ; the terminal stop token is excluded from the parsed reply, while other generated special tokens remain visible to strict parsing. Qwen weights are cached under the git-ignored `.cache/huggingface/` directory. The first actual Qwen run requires downloading approximately 1.8 GB; previews and exports do not download weights. Existing matching Teacher labels can be reused without new API calls.
-
-The completed v3 300-case Qwen pilot, paired predictions and limitations are recorded in [the pilot report](result/pre-run%20300%20sample%20test/qwen3.5-0.8b-v3/note.md).
-
-### Gemma 3 270M IT
-
-`gemma3-270m-it` uses the instruction-tuned `google/gemma-3-270m-it` checkpoint at revision `ac82b4e820549b854eebf28ce6dedaf9fdfa17b3`. Its native chat template folds the initial system instruction into the first user turn and maps assistant turns to `model`. The shared instructions, five demonstrations and complaint text are passed through unchanged; no custom template or Qwen thinking option is applied. Generation also stops on the native `<end_of_turn>` token, in addition to the tokenizer/model EOS IDs. Loading uses `AutoModelForCausalLM` and the installed Transformers version already supports `gemma3_text`.
-
-Access to the [official model repository](https://huggingface.co/google/gemma-3-270m-it) requires reviewing the Gemma conditions and obtaining access with your Hugging Face account. Configure an authorized `HF_TOKEN` in the environment or run `uv run --locked hf auth login` before the first actual download. Credentials should stay local. Weights/tokenizer files use the git-ignored `.cache/huggingface/` cache; previews and offline fixture tests do not download them or require authentication. This integration has passed 32 offline tests and completed a real 300-case MPS/FP32 v3 pilot; see [the Gemma 3 pilot report](result/pre-run%20300%20sample%20test/gemma3-270m-it-v3/note.md) for results, paired predictions and limitations.
-
-Preview the same 300-case development sample:
-
-```bash
-uv run --locked python code/student_baseline.py --student-model gemma3-270m-it --split development --size 300 --seed 42 --prompt-version v3
-```
-
-After model access is configured, run with the archived Teacher labels:
-
-```bash
-uv run --locked python code/student_baseline.py --student-model gemma3-270m-it --device mps --split development --size 300 --seed 42 --prompt-version v3 --teacher-run output/gemma_dev_n300_s42_v3 --output output/gemma3_270m_dev_n300_s42_v3_mps --run
-```
-
-The default directory is `output/baseline_v3/student_gemma3-270m-it_development_n300_s42/`; full validation uses `student_gemma3-270m-it_validation/`. The same resume, export and Teacher-pairing rules apply. Metal acceleration is available through `--device mps` in a GPU-enabled execution environment; choose a separate output directory when changing the device.
-
-## Outputs, pairing and export
-
-Every run writes:
-
-- `run.sqlite`: frozen configuration and individual attempts, raw replies, labels, token usage, timings and statuses.
-- `config.json`: a readable configuration and ordered input manifest, without a second narrative copy.
-- `predictions.csv`: one row per selected complaint in frozen order, including pending cases.
-- `metrics.json`: completion status, terminal-case scores, five-class per-class metrics, confusion matrix with a failure column, and known usage across all attempts.
-
-Only terminal cases enter classification scores. An exhausted failure is incorrect; pending cases are not classified as failures. Partial reports include `complete=false`, `provisional=true`, `n_expected`, `n_terminal`, `n_pending` and `metric_denominator=terminal_cases`. Empty runs have null accuracy/F1. Final reports include all selected cases. Currency results remain `unpriced`; no API or hardware rates are guessed.
-
-Student automatically looks for the same-version Teacher run at its default path. Alternatively, pass `--teacher-run PATH`, including a compatible archived pilot directory. It checks ordered IDs, reference labels, clipped-input hashes, clipping metadata, tokenizer settings and exact prompt content before comparing labels. Missing/incomplete Teacher records leave agreement null; an explicitly missing path or mismatched configuration is an error. Full Teacher agreement is published only when both runs are complete, using all selected cases as the denominator and requiring matching legal labels. CFPB scores and Teacher agreement measure different things.
-
-The first-token A–E choice remains a separate diagnostic and never replaces a failed free-generation reply. Student output retains first/final replies and all attempts in the ledger.
-
-Regenerate reports from committed records, including after the Teacher finishes, without new inference:
-
-```bash
-uv run --locked python code/teacher_baseline.py --export-only --output output/baseline_v3/teacher_history
-uv run --locked python code/student_baseline.py --export-only --output output/baseline_v3/student_gemma3-270m-it_validation
-uv run --locked python code/student_baseline.py --export-only --output output/baseline_v3/student_gemma3-270m-it_validation --teacher-run output/baseline_v3/teacher_validation
-```
-
-With `--export-only --output`, the stored configuration controls the export. The destination files are staged and each replacement is atomic. New CLI runs do not overwrite or migrate archived pilot ledgers; pairing reads those archives in SQLite read-only mode.
-
-## History labels for later training
-
-Each final history outcome commits the attempt, replay cursor, any accepted label and any newly reached prefix in one transaction. Only a valid response becomes a training label, regardless of agreement with CFPB. Failure cases advance the arrival cursor without advancing the success index.
-
-History exports additionally contain:
-
-- `history_labels.csv`: success index, arrival index, complaint ID, accepted attempt ID, Teacher label, input hash, original sequence number and receipt timestamp. It contains no CFPB reference label or narrative.
-- `prefixes/n100.json`, `n200.json`, `n400.json`, `n800.json`, `n1600.json`, `n3200.json`, `n6400.json`: frozen cumulative members, trigger arrival and membership hash. The hash is SHA-256 of `json.dumps(members, sort_keys=True)` encoded as UTF-8.
-- `metrics.json` lists every milestone, including those not reached yet.
-
-Each prefix includes the earlier prefixes. A later trainer can join IDs to the original inputs and verify clipping/input hashes; it must consume these Teacher labels, not CFPB references. This stage does not train adapters or launch training jobs.
-
-## Development pilots and checks
-
-Reproduce the January stratified sample (default size 300, seed 42) in new run directories:
-
-```bash
-uv run --locked python code/teacher_baseline.py --split development --size 300 --seed 42 --prompt-version v3 --run --concurrency 4
-uv run --locked python code/student_baseline.py --student-model gemma3-270m-it --device mps --split development --size 300 --seed 42 --prompt-version v3 --run
-```
-
-Their default paths are `output/baseline_v3/teacher_development_n300_s42/` and `student_gemma3-270m-it_development_n300_s42/`. The seed-42 membership matches the archived 300-case pilot. To pair with an archive directly, supply the matching `--teacher-run output/gemma_dev_n300_s42_v3` to the Student command. The original SmolLM2 directories remain available for explicit `--student-model smollm2-135m` runs.
-
-A real single-call connectivity check, using shared clipping and the selected prompt:
+For one real connectivity check on the first history complaint:
 
 ```bash
 uv run --locked python code/teacher_smoke.py --prompt-version v3
 ```
 
-Run offline regression and acceptance tests (synthetic model replies; no API calls or model downloads):
+## Ledger, resume and outputs
+
+Every new run uses schema 3 and writes:
+
+| File | Contents |
+|---|---|
+| `run.sqlite` | `run`: frozen config and input manifest; `attempts`: every request/generation attempt, raw reply, parsed label, status, errors, timings and usage |
+| `config.json` | Frozen settings and ordered input manifest, including each case's real split; no duplicate narrative |
+| `predictions.csv` | One row per selected complaint, including pending/failed rows and split |
+| `metrics.json` | Progress, validity, reference-label scores and usage; aggregate all-cohort scores are collection diagnostics, not a validation/test comparison |
+
+New ledgers contain only the `run` and `attempts` business tables. No `history_traces`, `prefixes` or `progress` tables, `history_labels.csv` or prefix JSON files are created. A separate `runner.lock.sqlite` prevents simultaneous writers; it holds no classification or training records.
+
+Each attempt is committed immediately. Accepted labels and exhausted failures are determined from attempts, which also provide all information needed to select training subsets later. Reports are exported when collection finishes or exits normally. A timeout or invalid Teacher reply gets one retry; other API errors, including HTTP 429, pause the run. Respect a recorded `Retry-After` value before resuming. Paused service errors do not consume the classification retry budget. A Student runtime error also pauses rather than becoming a classification failure.
+
+Rerun the same command in the same environment to resume; completed complaints are skipped, including exhausted failures. On Ctrl+C, Teacher collection stops scheduling new requests, drains in-flight requests, saves and exports. A hard kill during an uncommitted call may cause a repeated API charge. A fully complete run needs no API credentials when rerun. Token usage is recorded, but dollar costs stay unpriced until rates are supplied.
+
+Changing the source snapshot, device, model, prompt or frozen environment requires a new `--output` directory. Schema 2 ledgers cannot resume into schema 3 and are not migrated or modified automatically. Their existing exports remain readable; basic export-only operations support schemas 2 and 3 without rewriting the stored ledger or regenerating old training-prefix artifacts.
+
+```bash
+uv run --locked python code/teacher_baseline.py \
+  --export-only --output output/baseline_v3/teacher_all
+```
+
+## Student baselines and Teacher pairing
+
+Always explicitly select `--student-model gemma3-270m-it` for the main study. The legacy CLI model default is SmolLM2. Student defaults to the complete `validation` partition; `--split history` and `--split test` select their respective complete partitions. Run final test scoring only after model selection is frozen.
+
+```bash
+# Preview; no model download or inference.
+uv run --locked python code/student_baseline.py \
+  --student-model gemma3-270m-it --split validation
+
+# Remote NVIDIA validation run.
+nvidia-smi
+uv run --locked python -c "import torch; assert torch.cuda.is_available(), 'CUDA unavailable'; print(torch.__version__, torch.version.cuda, torch.cuda.get_device_name(0))"
+uv run --locked python code/student_baseline.py \
+  --student-model gemma3-270m-it \
+  --device cuda --split validation --prompt-version v3 \
+  --output output/baseline_v3/student_gemma3-270m-it_validation_cuda \
+  --run
+```
+
+Use `--device mps` for Apple Metal or `--device cpu`; all devices use FP32, four CPU threads, batch size 1, greedy decoding and at most 16 generated tokens per attempt. Model and inputs move to the selected device. Unavailable accelerators cause an error before Student weight/tokenizer loading, with no silent CPU fallback. Use separate output directories when changing devices. The CUDA integration has offline fixture coverage and a completed archived 300-case remote run.
+
+Student automatically reads `output/baseline_v3/teacher_all/`, or an explicit `--teacher-run PATH`. An all-cohort Teacher ledger is filtered by the Student's real split, then matched by ordered IDs, input hashes, reference labels, clipping and exact prompt settings. Only that partition must have terminal Teacher outcomes; unrelated pending partitions do not block pairing. A single-partition Teacher ledger must match the complete selected inputs exactly. Archived Teacher ledgers are read-only and remain usable with matching archived Student manifests.
+
+An absent default Teacher ledger or incomplete selected Teacher partition leaves agreement null. A missing explicit path or incompatible manifest is an error. Accepted legal labels count toward Teacher agreement; exhausted failures count as nonmatches. Only terminal Student cases enter classification scores, with pending cases excluded and `complete=false`/`provisional=true` until completion. All five classes are included in macro-F1. The first-token A–E diagnostic is reported separately and never replaces a failed generated reply.
+
+Re-export after Teacher completion without rerunning Student inference:
+
+```bash
+uv run --locked python code/student_baseline.py \
+  --export-only \
+  --output output/baseline_v3/student_gemma3-270m-it_validation_cuda \
+  --teacher-run output/baseline_v3/teacher_all
+```
+
+| Student | Model | Pinned revision |
+|---|---|---|
+| `gemma3-270m-it` | `google/gemma-3-270m-it` | `ac82b4e820549b854eebf28ce6dedaf9fdfa17b3` |
+| `smollm2-135m` | `HuggingFaceTB/SmolLM2-135M-Instruct` | `12fd25f77366fa6b3b4b768ec3050bf629380bac` |
+| `qwen3.5-0.8b` | `Qwen/Qwen3.5-0.8B` | `2fc06364715b967f1860aea9cf38778875588b17` |
+
+Each Student uses its native tokenizer/chat template while narrative clipping stays fixed to SmolLM2. Gemma's template folds the system instruction into the first user turn and generation also stops at native `<end_of_turn>`. Qwen uses `enable_thinking=False`, the text-only backbone, and both tokenizer/model EOS IDs. Only the terminal stop token is removed before strict parsing. Qwen/Gemma caches use the git-ignored `.cache/huggingface/`; SmolLM2 uses the default Hugging Face cache.
+
+## Code and checks
+
+| Module | Responsibility |
+|---|---|
+| `code/mortgage_data.py` | Three-partition cohort audit, complete selections, clipping and manifests |
+| `code/mortgage_prompt.py` | Shared labels, versioned prompts, messages and strict parsing |
+| `code/teacher_client.py` | SiliconFlow client and request settings |
+| `code/teacher_baseline.py` / `code/teacher_collection.py` | Full-cohort collection, retries, concurrency, resume and exports |
+| `code/student_baseline.py` | Student inference, resume, Teacher pairing and scoring |
+| `code/evaluation.py` / `code/run_store.py` | Metrics, raw attempt ledger, locking and atomic exports |
+
+Run offline checks without API calls or model downloads:
 
 ```bash
 uv run --locked python -m unittest discover -s code -p 'test_*.py'
 ```
 
-LoRA training, TF–IDF baselines, final test scoring and deployment cost replay are subsequent stages.
+Historical evidence: [Gemma 3 pilot](result/pre-run%20300%20sample%20test/gemma3-270m-it-v3/note.md) · [Qwen pilot](result/pre-run%20300%20sample%20test/qwen3.5-0.8b-v3/note.md). Their original metadata remains in archived output/report directories. LoRA, training subset selection, TF–IDF baselines and deployment cost replay are later stages; Teacher collection does not choose their training subsets.

@@ -22,7 +22,7 @@ class TestMortgagePrompt(unittest.TestCase):
         request_label(client, text)
         sent = client.chat.completions.create.call_args.kwargs["messages"]
         with closing(sqlite3.connect(":memory:")) as db:
-            initialize(db, [], 42)
+            initialize(db, [])
             stored = json.loads(db.execute("SELECT config FROM run").fetchone()[0])
         self.assertEqual(sent, build_messages(text, stored))
         self.assertEqual([m["role"] for m in sent], ["system"] + ["user", "assistant"] * 5 + ["user"])

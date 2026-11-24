@@ -1,4 +1,4 @@
-"""Send one development complaint to the SiliconFlow Teacher.
+"""Send the first history complaint to the SiliconFlow Teacher.
 
 Install dependencies with: uv sync --locked
 Set SILICONFLOW_API_KEY to a key from cloud.siliconflow.com in the environment
@@ -9,7 +9,7 @@ Run from the repository root with: uv run --locked python code/teacher_smoke.py
 import argparse
 from openai import APIError
 
-from mortgage_data import load_development, prepare_cases
+from mortgage_data import load_experiment, prepare_cases, select_rows
 from mortgage_prompt import DEFAULT_VERSION, SUPPORTED_VERSIONS, load_prompt
 from teacher_client import make_client, parse_reply, request_label
 
@@ -18,7 +18,7 @@ def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--prompt-version", choices=SUPPORTED_VERSIONS, default=DEFAULT_VERSION)
     args = parser.parse_args()
-    sample = load_development()[0]
+    sample = select_rows(load_experiment(), "history")[0]
     case = prepare_cases([sample])[0]
 
     try:

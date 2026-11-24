@@ -1,8 +1,7 @@
-"""Formal training/validation/test data, archived development data and shared clipping."""
+"""Three chronological data partitions and shared narrative clipping."""
 
 import csv
 import hashlib
-import random
 from collections import Counter
 
 from mortgage_prompt import LABELS, ROOT
@@ -11,10 +10,9 @@ DATA = ROOT / "data/mortgage_complaint.csv"
 TOKENIZER = "HuggingFaceTB/SmolLM2-135M-Instruct"
 REVISION = "12fd25f77366fa6b3b4b768ec3050bf629380bac"
 HEAD, TAIL = 2000, 1000
-# The immutable source snapshot includes January so old pilots remain reproducible.
-COHORT_SPLIT_COUNTS = {"development": 957, "history": 8202, "validation": 1013, "test": 2024}
-EXPERIMENT_SPLIT_COUNTS = {split: COHORT_SPLIT_COUNTS[split]
-                           for split in ("history", "validation", "test")}
+# January belongs to history; complaint IDs, narratives and order are unchanged.
+COHORT_SPLIT_COUNTS = {"history": 9159, "validation": 1013, "test": 2024}
+EXPERIMENT_SPLIT_COUNTS = COHORT_SPLIT_COUNTS.copy()
 COHORT_HASH = "3c59aa321b65ea493b579cd503af0aeb580fa9c28ee4cabe4b15d136ab123dfa"
 
 
@@ -26,7 +24,7 @@ def audit_rows(rows, *, reference_snapshot=False):
     """Audit metadata and text identity without scoring any split."""
     ids, hashes = set(), set()
     previous_sequence = previous_time_id = None
-    months = {"development": {1}, "history": set(range(2, 10)),
+    months = {"history": set(range(1, 10)),
               "validation": {10}, "test": {11, 12}}
     for row in rows:
         cid, digest = row["complaint_id"], row["text_sha256"]
@@ -50,12 +48,12 @@ def audit_rows(rows, *, reference_snapshot=False):
     counts = dict(Counter(row["split"] for row in rows))
     fingerprint = sha256("".join(row["complaint_id"] + "\n" for row in rows))
     if reference_snapshot and (counts != COHORT_SPLIT_COUNTS or fingerprint != COHORT_HASH):
-        raise ValueError("Cohort differs from the frozen 2026-11-21 snapshot")
+        raise ValueError("Cohort differs from the frozen three-partition snapshot")
     return {"split_counts": counts, "ordered_ids_sha256": fingerprint}
 
 
 def load_cohort(path=DATA):
-    """Read and audit the complete source snapshot, including archived January cases."""
+    """Read and audit all 12,196 complaints in their three partitions."""
     with path.open(encoding="utf-8-sig", newline="") as f:
         rows = list(csv.DictReader(f))
     audit_rows(rows, reference_snapshot=True)
@@ -63,39 +61,19 @@ def load_cohort(path=DATA):
 
 
 def load_experiment(path=DATA):
-    """Return only the chronological training stream, validation and held-out test."""
-    return [row for row in load_cohort(path) if row["split"] in EXPERIMENT_SPLIT_COUNTS]
+    """Return the complete chronological history, validation and test cohort."""
+    return load_cohort(path)
 
 
-def load_development(path=DATA):
-    """Read January only for explicit pilot reproduction and development smoke checks."""
-    return [row for row in load_cohort(path) if row["split"] == "development"]
-
-
-def select_rows(rows, split, size=None, seed=42):
-    if split not in COHORT_SPLIT_COUNTS:
+def select_rows(rows, split=None):
+    """Select a complete partition, or all partitions when split is None."""
+    if split is not None and split not in COHORT_SPLIT_COUNTS:
         raise ValueError(f"Unknown split: {split}")
-    selected = sorted((row for row in rows if row["split"] == split),
+    selected = sorted((row for row in rows if split is None or row["split"] == split),
                       key=lambda row: int(row["sequence_no"]))
     if not selected:
         raise ValueError(f"No rows available for split {split}; use the corresponding data loader")
-    if split != "development":
-        if size is not None:
-            raise ValueError("--size is only supported for development")
-        return selected
-    size = 300 if size is None else size
-    groups = {label: [r for r in selected if r["reference_label"] == label] for label in LABELS}
-    total = len(selected)
-    if not 1 <= size <= total:
-        raise ValueError(f"--size must be between 1 and {total}")
-    quotas = {label: size * len(group) for label, group in groups.items()}
-    counts = {label: quota // total for label, quota in quotas.items()}
-    by_remainder = sorted(LABELS, key=lambda label: -(quotas[label] % total))
-    for label in by_remainder[:size - sum(counts.values())]:
-        counts[label] += 1
-    rng = random.Random(seed)
-    return sorted([r for label in LABELS for r in rng.sample(groups[label], counts[label])],
-                  key=lambda r: int(r["sequence_no"]))
+    return selected
 
 
 def prepare_cases(rows, tokenizer=None):
@@ -113,6 +91,7 @@ def prepare_cases(rows, tokenizer=None):
         if clipped:
             text = tokenizer.decode(ids[:HEAD] + ids[-TAIL:], skip_special_tokens=False)
         cases.append({
+            "split": row["split"],
             "complaint_id": row["complaint_id"], "reference_label": row["reference_label"],
             "sequence_no": int(row["sequence_no"]), "received_at_utc": row["received_at_utc"],
             "arrival_index": index, "text": text, "input_sha256": sha256(text),
@@ -126,6 +105,5 @@ def manifest_cases(cases):
              "input_sha256": sha256(case["text"])} for case in cases]
 
 
-def default_output(backend, split, version, size=None, seed=42):
-    suffix = f"_n{size or 300}_s{seed}" if split == "development" else ""
-    return ROOT / "output" / f"baseline_{version}" / f"{backend}_{split}{suffix}"
+def default_output(backend, split, version):
+    return ROOT / "output" / f"baseline_{version}" / f"{backend}_{split or 'all'}"

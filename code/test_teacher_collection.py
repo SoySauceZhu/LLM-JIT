@@ -31,9 +31,10 @@ class TestTeacherCollection(unittest.TestCase):
         self.db = sqlite3.connect(self.path)
         self.addCleanup(self.db.close)
         self.cases = [dict(complaint_id=str(i), text=label, reference_label=label,
+                           split=("history", "history", "validation", "test", "test")[i],
                            clipped=False, student_tokens_before_clip=1)
                       for i, label in enumerate("ABCDE")]
-        initialize(self.db, self.cases, 42)
+        initialize(self.db, self.cases)
 
     def test_overlap_keeps_order_and_retry_budget(self):
         third_started = Event()
