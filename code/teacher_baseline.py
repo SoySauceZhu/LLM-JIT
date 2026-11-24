@@ -9,7 +9,7 @@ from functools import partial
 from pathlib import Path
 
 from evaluation import score
-from mortgage_data import default_output, load_cohort, prepare_cases, select_rows
+from mortgage_data import default_output, load_development, load_experiment, prepare_cases, select_rows
 from mortgage_prompt import DEFAULT_PROMPT, DEFAULT_VERSION, SUPPORTED_VERSIONS, load_prompt
 from run_store import (
     MILESTONES, attempts_by_case, final_attempt, initialize as initialize_store,
@@ -102,7 +102,8 @@ def main():
         with single_runner(output), closing(sqlite3.connect(output / "run.sqlite")) as db:
             export_results(db, config["cases"], output)
         return
-    rows = select_rows(load_cohort(), args.split, args.size, seed)
+    load_data = load_development if args.split == "development" else load_experiment
+    rows = select_rows(load_data(), args.split, args.size, seed)
     print(f"{args.split} n={len(rows)} counts={dict(Counter(r['reference_label'] for r in rows))} "
           f"prompt={args.prompt_version} output={output}")
     if not args.run:

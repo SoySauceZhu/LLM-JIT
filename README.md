@@ -40,7 +40,17 @@ Both models default to **v3** after the four prompt pilots. Use `--prompt-versio
 
 Teacher and Student use the same prompt messages and visible narrative. Narratives over 3,000 tokens of the pinned Student tokenizer retain the first 2,000 and final 1,000. Model weights/tokenizer files are downloaded by Hugging Face only when needed by a real run. A preview does not load either.
 
-The existing `data/mortgage_complaint.csv` is the frozen 2026-11-21 cohort: 12,196 unique complaints, with ordered-ID SHA-256 `3c59aa321b65ea493b579cd503af0aeb580fa9c28ee4cabe4b15d136ab123dfa`. Loading checks counts, chronological order, unique IDs/text hashes, text integrity and date-based splits. The partitions are development=957, history=8,202, validation=1,013 and test=2,024. This implementation exposes development/history/validation for the Teacher and development/validation for the Student. The final test split is reserved for later evaluation; the audit checks its integrity but does not score it.
+The immutable source `data/mortgage_complaint.csv` contains 12,196 unique complaints, including the archived January development cases. Its frozen 2026-11-21 ordered-ID SHA-256 is `3c59aa321b65ea493b579cd503af0aeb580fa9c28ee4cabe4b15d136ab123dfa`. Loading audits counts, chronological order, unique IDs/text hashes, text integrity and temporal splits against this source snapshot.
+
+The **formal experiment contains only 11,239 requests in three partitions**:
+
+| Partition | Receipt window | Requests | Role |
+|---|---|---:|---|
+| `history` (training stream) | February–September | 8,202 | Ordered Teacher requests and training prefixes |
+| `validation` | October | 1,013 | Future requests for baseline/adapter comparison and selection |
+| `test` | November–December | 2,024 | Final held-out evaluation |
+
+`mortgage_data.load_experiment()` returns these three partitions and excludes January. `load_development()` returns only the archived 957 January cases for explicit pilot reproduction or smoke checks. `load_cohort()` is the complete source-audit interface. The baseline CLIs select the appropriate loader: history/validation use formal data; only an explicit `--split development` uses January. The source CSV, fingerprints and existing run configurations retain their original values, so old pilot results remain reproducible. Final test scoring is reserved for the later evaluation stage and is not exposed by the current baseline CLIs.
 
 ## Full baselines
 

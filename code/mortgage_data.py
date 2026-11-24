@@ -1,4 +1,4 @@
-"""Frozen CFPB cohort selection and shared Student-tokenizer clipping."""
+"""Formal training/validation/test data, archived development data and shared clipping."""
 
 import csv
 import hashlib
@@ -11,7 +11,10 @@ DATA = ROOT / "data/mortgage_complaint.csv"
 TOKENIZER = "HuggingFaceTB/SmolLM2-135M-Instruct"
 REVISION = "12fd25f77366fa6b3b4b768ec3050bf629380bac"
 HEAD, TAIL = 2000, 1000
-SPLIT_COUNTS = {"development": 957, "history": 8202, "validation": 1013, "test": 2024}
+# The immutable source snapshot includes January so old pilots remain reproducible.
+COHORT_SPLIT_COUNTS = {"development": 957, "history": 8202, "validation": 1013, "test": 2024}
+EXPERIMENT_SPLIT_COUNTS = {split: COHORT_SPLIT_COUNTS[split]
+                           for split in ("history", "validation", "test")}
 COHORT_HASH = "3c59aa321b65ea493b579cd503af0aeb580fa9c28ee4cabe4b15d136ab123dfa"
 
 
@@ -46,20 +49,36 @@ def audit_rows(rows, *, reference_snapshot=False):
         previous_sequence, previous_time_id = sequence, time_id
     counts = dict(Counter(row["split"] for row in rows))
     fingerprint = sha256("".join(row["complaint_id"] + "\n" for row in rows))
-    if reference_snapshot and (counts != SPLIT_COUNTS or fingerprint != COHORT_HASH):
+    if reference_snapshot and (counts != COHORT_SPLIT_COUNTS or fingerprint != COHORT_HASH):
         raise ValueError("Cohort differs from the frozen 2026-11-21 snapshot")
     return {"split_counts": counts, "ordered_ids_sha256": fingerprint}
 
 
 def load_cohort(path=DATA):
+    """Read and audit the complete source snapshot, including archived January cases."""
     with path.open(encoding="utf-8-sig", newline="") as f:
         rows = list(csv.DictReader(f))
     audit_rows(rows, reference_snapshot=True)
     return rows
 
 
+def load_experiment(path=DATA):
+    """Return only the chronological training stream, validation and held-out test."""
+    return [row for row in load_cohort(path) if row["split"] in EXPERIMENT_SPLIT_COUNTS]
+
+
+def load_development(path=DATA):
+    """Read January only for explicit pilot reproduction and development smoke checks."""
+    return [row for row in load_cohort(path) if row["split"] == "development"]
+
+
 def select_rows(rows, split, size=None, seed=42):
-    selected = [row for row in rows if row["split"] == split]
+    if split not in COHORT_SPLIT_COUNTS:
+        raise ValueError(f"Unknown split: {split}")
+    selected = sorted((row for row in rows if row["split"] == split),
+                      key=lambda row: int(row["sequence_no"]))
+    if not selected:
+        raise ValueError(f"No rows available for split {split}; use the corresponding data loader")
     if split != "development":
         if size is not None:
             raise ValueError("--size is only supported for development")

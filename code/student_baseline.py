@@ -9,7 +9,7 @@ from contextlib import closing
 from pathlib import Path
 
 from evaluation import score
-from mortgage_data import REVISION, TOKENIZER, default_output, load_cohort, prepare_cases, select_rows
+from mortgage_data import REVISION, TOKENIZER, default_output, load_development, load_experiment, prepare_cases, select_rows
 from mortgage_prompt import DEFAULT_VERSION, LABELS, ROOT, SUPPORTED_VERSIONS, build_messages, load_prompt, parse_label
 from run_store import (
     attempts_by_case, final_attempt, initialize, make_config, progress_metrics, read_config,
@@ -264,7 +264,8 @@ def main():
         with single_runner(output), closing(sqlite3.connect(output / "run.sqlite")) as db:
             export_results(db, output, teacher_run, require_teacher=args.teacher_run is not None)
         return
-    rows = select_rows(load_cohort(), args.split, args.size, seed)
+    load_data = load_development if args.split == "development" else load_experiment
+    rows = select_rows(load_data(), args.split, args.size, seed)
     print(f"{args.split} n={len(rows)} counts={dict(Counter(r['reference_label'] for r in rows))} "
           f"model={args.student_model} prompt={args.prompt_version} output={output}")
     if not args.run:

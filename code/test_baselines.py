@@ -15,7 +15,10 @@ from unittest.mock import Mock, patch
 import httpx
 from openai import APITimeoutError
 
-from mortgage_data import ROOT, audit_rows, load_cohort, manifest_cases, prepare_cases, select_rows, sha256
+from mortgage_data import (
+    EXPERIMENT_SPLIT_COUNTS, ROOT, audit_rows, load_cohort, load_development,
+    load_experiment, manifest_cases, prepare_cases, select_rows, sha256,
+)
 from mortgage_prompt import build_messages, load_prompt
 from run_store import attempts_by_case, initialize, read_config
 from student_baseline import (
@@ -56,6 +59,42 @@ class TestDataAndCLI(unittest.TestCase):
         self.assertEqual(len(select_rows(self.rows, "history")), 8202)
         self.assertEqual(len(select_rows(self.rows, "validation")), 1013)
 
+    def test_formal_data_excludes_january_and_preserves_frozen_splits(self):
+        formal, development = load_experiment(), load_development()
+        self.assertEqual(len(formal), 11239)
+        self.assertEqual(len(development), 957)
+        self.assertEqual({r["split"] for r in formal}, set(EXPERIMENT_SPLIT_COUNTS))
+        self.assertEqual({r["split"] for r in development}, {"development"})
+        for key in ("complaint_id", "text_sha256"):
+            formal_ids, dev_ids = ({r[key] for r in group} for group in (formal, development))
+            self.assertFalse(formal_ids & dev_ids)
+            self.assertEqual(formal_ids | dev_ids, {r[key] for r in self.rows})
+        partitions = []
+        for split, count in EXPERIMENT_SPLIT_COUNTS.items():
+            part = select_rows(formal, split)
+            self.assertEqual(len(part), count)
+            self.assertEqual(part, select_rows(self.rows, split))
+            partitions.append(part)
+        self.assertLess(partitions[0][-1]["received_at_utc"], partitions[1][0]["received_at_utc"])
+        self.assertLess(partitions[1][-1]["received_at_utc"], partitions[2][0]["received_at_utc"])
+
+    def test_full_split_selection_keeps_arrival_order_without_sampling(self):
+        expected = select_rows(self.rows, "history")
+        self.assertEqual(select_rows(list(reversed(self.rows)), "history"), expected)
+        for split in EXPERIMENT_SPLIT_COUNTS:
+            self.assertEqual(select_rows(self.rows, split, seed=0),
+                             select_rows(self.rows, split, seed=42))
+        with self.assertRaisesRegex(ValueError, "only supported for development"):
+            select_rows(self.rows, "validation", size=10)
+
+    def test_unknown_or_unavailable_split_is_rejected(self):
+        with self.assertRaisesRegex(ValueError, "Unknown split"):
+            select_rows(self.rows, "typo")
+        with self.assertRaisesRegex(ValueError, "No rows available"):
+            select_rows(load_experiment(), "development")
+        with self.assertRaisesRegex(ValueError, "No rows available"):
+            select_rows(load_development(), "history")
+
     def test_audit_rejects_duplicates_changed_text_and_reordered_stream(self):
         with self.assertRaisesRegex(ValueError, "Duplicate"):
             audit_rows([self.rows[0], self.rows[0]])
@@ -91,12 +130,17 @@ class TestDataAndCLI(unittest.TestCase):
         import student_baseline
         import teacher_baseline
         for module, split in ((teacher_baseline, "history"), (teacher_baseline, "validation"),
-                              (student_baseline, "validation")):
+                              (student_baseline, "validation"), (teacher_baseline, "development"),
+                              (student_baseline, "development")):
             with self.subTest(module=module.__name__, split=split), TemporaryDirectory() as tmp, \
                     patch.object(module, "prepare_cases") as prepare, \
+                    patch.object(module, "load_experiment", return_value=self.rows) as formal, \
+                    patch.object(module, "load_development", return_value=self.rows) as pilot, \
                     patch("sys.argv", [module.__name__, "--split", split, "--output", str(Path(tmp) / "run")]):
                 module.main()
                 prepare.assert_not_called()
+                self.assertEqual(formal.call_count, int(split != "development"))
+                self.assertEqual(pilot.call_count, int(split == "development"))
                 self.assertFalse((Path(tmp) / "run").exists())
 
     def test_cli_rejects_sampling_and_parallel_history(self):
@@ -468,7 +512,7 @@ class TestTeacherEntrypoint(unittest.TestCase):
             return reply("A")
 
         with TemporaryDirectory() as tmp, \
-                patch.object(teacher_baseline, "load_cohort", return_value=rows), \
+                patch.object(teacher_baseline, "load_experiment", return_value=rows), \
                 patch.object(teacher_baseline, "prepare_cases", return_value=cases), \
                 patch.object(teacher_baseline, "make_client") as client, \
                 patch("sys.argv", ["teacher_baseline", "--run", "--output", tmp]), \

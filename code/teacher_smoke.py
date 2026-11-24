@@ -9,7 +9,7 @@ Run from the repository root with: python3 code/teacher_smoke.py
 import argparse
 from openai import APIError
 
-from mortgage_data import load_cohort, prepare_cases
+from mortgage_data import load_development, prepare_cases
 from mortgage_prompt import DEFAULT_VERSION, SUPPORTED_VERSIONS, load_prompt
 from teacher_client import make_client, parse_reply, request_label
 
@@ -18,7 +18,7 @@ def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--prompt-version", choices=SUPPORTED_VERSIONS, default=DEFAULT_VERSION)
     args = parser.parse_args()
-    sample = next(r for r in load_cohort() if r["split"] == "development")
+    sample = load_development()[0]
     case = prepare_cases([sample])[0]
 
     try:

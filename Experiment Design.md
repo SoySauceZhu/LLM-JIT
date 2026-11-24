@@ -14,7 +14,7 @@ Measure accuracy, five-class macro-F1, per-class recall and false-positive rate,
 
 # Dataset
 
-**Selected dataset:** the audited 2024 CFPB mortgage complaint cohort, with 12,196 unique nonblank narratives and the temporal splits specified below. The model sees only the narrative. CFPB reference labels are used for evaluation; accepted Teacher predictions provide training supervision.
+**Selected dataset:** the audited 2024 CFPB mortgage complaint source snapshot has 12,196 unique nonblank narratives. The formal experiment uses **11,239 requests in three chronological partitions** (training stream, validation and test); the 957 January development cases are retained separately as earlier pilot data. The model sees only the narrative. CFPB reference labels are used for evaluation; accepted Teacher predictions provide training supervision.
 
 Earlier dataset candidates, retained as background:
 
@@ -134,7 +134,7 @@ Enforce unique `(run_id, complaint_id)` and `(run_id, success_index)` in accepte
 
 ## Step 1\. Rebuild the cohort and freeze the splits
 
-Use the existing audited CSV and frozen split membership for the main run. The steps below document provenance and reproduction; a new data download is not needed to start the current baselines.
+Use the existing audited CSV and frozen split membership for the main run. Formal data loading uses `load_experiment()`, which returns only `history` (training stream), `validation` and `test`. The 957 January development cases are excluded from this experiment and are available only through `load_development()` for explicit pilot/smoke work. The complete CSV and its fingerprint remain unchanged for source auditing and old-run compatibility. The steps below document provenance and reproduction; a new data download is not needed to start the current baselines.
 
 1. Download the live metadata CSV for `Product = Mortgage` and UTC receipt dates from 2024-01-01 through 2024-12-31. Retain complaint ID, receipt timestamp, product and issue. Download narrative archive exports 5, 6, 7 and 8 and stream the quoted CSV inside each ZIP. The ordinary metadata export omits the narrative. [Filtered metadata](https://www.consumerfinance.gov/data-research/consumer-complaints/search/?date_received_min=2024-01-01&date_received_max=2024-12-31&product=Mortgage) · [Official narrative archive](https://www.consumerfinance.gov/foia-requests/foia-electronic-reading-room/cfpb-consumer-complaint-database-narratives-archive/)  
 2. Inner-join on numeric complaint ID. Normalize text to Unicode NFC, collapse whitespace to single spaces, trim and drop empty text. Sort by the live metadata's UTC receipt timestamp and then numeric complaint ID. Keep the earliest occurrence of each SHA-256 normalized-text hash. Apply the issue mapping and save the two Parquet files. Use only the narrative as model input.  
@@ -142,8 +142,7 @@ Use the existing audited CSV and frozen split membership for the main run. The s
 
 | Receipt window and role | A | B | C | D | E | Total |
 | :---- | :---- | :---- | :---- | :---- | :---- | :---- |
-| January · development and configuration | 85 | 60 | 548 | 216 | 48 | 957 |
-| February–September · chronological Teacher history | 849 | 600 | 4,573 | 1,854 | 326 | 8,202 |
+| February–September · training request stream (`history`) | 849 | 600 | 4,573 | 1,854 | 326 | 8,202 |
 | October · select a candidate | 106 | 84 | 562 | 215 | 46 | 1,013 |
 | November–December · final held-out evaluation | 207 | 149 | 1,204 | 389 | 75 | 2,024 |
 

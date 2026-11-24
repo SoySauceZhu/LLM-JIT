@@ -10,7 +10,7 @@ from importlib.metadata import version
 from pathlib import Path
 from tempfile import TemporaryDirectory
 
-from mortgage_data import COHORT_HASH, DATA, HEAD, REVISION, SPLIT_COUNTS, TAIL, TOKENIZER, manifest_cases, sha256
+from mortgage_data import COHORT_HASH, COHORT_SPLIT_COUNTS, DATA, HEAD, REVISION, TAIL, TOKENIZER, manifest_cases, sha256
 
 MILESTONES = (100, 200, 400, 800, 1600, 3200, 6400)
 
@@ -44,7 +44,7 @@ def make_config(cases, split, seed, prompt, *, backend, model, decoding, **extra
         "split": split, "seed": seed if split == "development" else None,
         "cases": manifest_cases(cases), "data_sha256": hashlib.sha256(DATA.read_bytes()).hexdigest(),
         "data_path": "data/mortgage_complaint.csv", "cohort_ordered_ids_sha256": COHORT_HASH,
-        "cohort_split_counts": SPLIT_COUNTS,
+        "cohort_split_counts": COHORT_SPLIT_COUNTS,
         "environment": {"python": platform.python_version(), "platform": platform.platform(),
                         **{p: version(p) for p in packages}}, **extra,
     }
