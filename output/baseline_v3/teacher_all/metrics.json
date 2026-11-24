@@ -1,0 +1,111 @@
+{
+  "n": 591,
+  "valid_rate": 1.0,
+  "accuracy": 0.8240270727580372,
+  "macro_f1": 0.6953878385541945,
+  "per_class": {
+    "A": {
+      "support": 43,
+      "recall": 0.4883720930232558,
+      "fpr": 0.014598540145985401,
+      "f1": 0.5833333333333334
+    },
+    "B": {
+      "support": 34,
+      "recall": 0.3235294117647059,
+      "fpr": 0.00718132854578097,
+      "f1": 0.4489795918367347
+    },
+    "C": {
+      "support": 350,
+      "recall": 0.9428571428571428,
+      "fpr": 0.26556016597510373,
+      "f1": 0.8870967741935484
+    },
+    "D": {
+      "support": 134,
+      "recall": 0.7761194029850746,
+      "fpr": 0.0525164113785558,
+      "f1": 0.7938931297709924
+    },
+    "E": {
+      "support": 30,
+      "recall": 0.7,
+      "fpr": 0.0071301247771836,
+      "f1": 0.7636363636363637
+    }
+  },
+  "correct": 487,
+  "teacher_matches": null,
+  "teacher_agreement_all_cases": null,
+  "predicted_counts": {
+    "C": 394,
+    "A": 29,
+    "D": 128,
+    "E": 25,
+    "B": 15
+  },
+  "confusion_rows_reference_columns_prediction": {
+    "A": {
+      "A": 21,
+      "B": 2,
+      "C": 16,
+      "D": 3,
+      "E": 1,
+      "FAIL": 0
+    },
+    "B": {
+      "A": 7,
+      "B": 11,
+      "C": 12,
+      "D": 3,
+      "E": 1,
+      "FAIL": 0
+    },
+    "C": {
+      "A": 0,
+      "B": 2,
+      "C": 330,
+      "D": 17,
+      "E": 1,
+      "FAIL": 0
+    },
+    "D": {
+      "A": 1,
+      "B": 0,
+      "C": 28,
+      "D": 104,
+      "E": 1,
+      "FAIL": 0
+    },
+    "E": {
+      "A": 0,
+      "B": 0,
+      "C": 8,
+      "D": 1,
+      "E": 21,
+      "FAIL": 0
+    }
+  },
+  "n_expected": 12196,
+  "n_terminal": 591,
+  "n_pending": 11605,
+  "complete": false,
+  "provisional": true,
+  "metric_denominator": "terminal_cases",
+  "clipped": 51,
+  "usage": {
+    "attempts": 596,
+    "known_prompt_tokens": 642487,
+    "known_completion_tokens": 1182,
+    "attempts_missing_usage": 5,
+    "attempt_seconds": 313.5538054950266,
+    "cost_usd": null,
+    "pricing_status": "unpriced"
+  },
+  "attempts_by_concurrency": {
+    "1": 57,
+    "3": 182,
+    "5": 357
+  }
+}
