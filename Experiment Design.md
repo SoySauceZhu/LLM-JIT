@@ -2,19 +2,21 @@
 
 # Overall target
 
-We want to optimize the repeatedly called function `is_fraud(email)`.
+Optimize a repeatedly called LLM function by compiling its accumulated Teacher-labeled history into a smaller local model with LoRA. The selected function for Experiment 1 is `classify_mortgage(text) -> A,B,C,D,E`.
 
-Initially, a large teacher model handles every income emails. Suppose emails about law-enforcement are getting more frequent over time. The system can use previous emails on that topic and the teacher's judgment to train the LoRA adapter for the smaller model. After deployed, the smaller model handles law related emails and the rest topics go to the teacher. Each topics are expected to have both SCAM and NO\_SCAM (genuine) emails.
+Initially, **Gemma 4 31B IT** handles mortgage complaints. As successful Teacher calls accumulate, the experiment trains independent LoRA adapters for **Gemma 3 270M IT**, the primary Student, on increasingly large chronological prefixes. Each train-once policy then hands subsequent mortgage requests to its adapted Student after training and loading finish.
 
 # Target at this phase
 
-evaluate whether a small model fine-tuned with LoRA on past teacher-labeled emails can approach the teacher’s fraud-detection performance on new emails within one predefined topic, such as court and law-enforcement notices. 
+Evaluate whether Gemma 3 270M IT, fine-tuned only on past Gemma 4 31B IT labels, can approach the Teacher's five-class classification quality on later CFPB mortgage complaints.
 
-We measure how fraud **detection accuracy and false-positive rates change** as more training emails become available. We also estimate how **many future emails the student must handle to recover its training cost**. For this phase, we **assume the emails have already been grouped by topic.** (Dataset includes emails in only one topic, e.g. law-enforcement)
+Measure accuracy, five-class macro-F1, per-class recall and false-positive rate, valid-output rate, and agreement with the Teacher as training history grows. Estimate how many subsequent requests are needed to recover training, validation and loading costs. All requests already belong to the mortgage topic; topic discovery and confidence-based routing remain outside this experiment.
 
 # Dataset
 
-Options:
+**Selected dataset:** the audited 2024 CFPB mortgage complaint cohort, with 12,196 unique nonblank narratives and the temporal splits specified below. The model sees only the narrative. CFPB reference labels are used for evaluation; accepted Teacher predictions provide training supervision.
+
+Earlier dataset candidates, retained as background:
 
 * **Recruitment Tex**t: EMSCAD (https\://www\.kaggle.com/datasets/amruthjithrajvr/recruitment-scam)  
 * Email: University Scam Emails Corpus ([https\://shomir.net/data/university\_scams/index.html](https://shomir.net/data/university_scams/index.html)). E.g. Recruitment-related (885)  
@@ -23,9 +25,7 @@ Options:
 * Online shopping review: ([https\://github.com/SophonPlus/ChineseNlpCorpus/tree/master/datasets/online\_shopping\_10\_cats](https://github.com/SophonPlus/ChineseNlpCorpus/tree/master/datasets/online_shopping_10_cats))  
 * Consumer Financial Protection Bureau: CFPB dataset on housing complaints ([https\://www\.consumerfinance.gov/complaint/data-use/](https://www.consumerfinance.gov/complaint/data-use/))
 
-Some of the dataset uses non-binary but limited classes. E.g. CFPB classifies customer complaints about housing mortgages into 5 classes. 
-
-We could use the CFPB dataset and focus solely on the housing mortgage cluster. In this case, the AI function will predict one of the following labels.
+The mortgage task maps the raw CFPB issues into the five categories defined below.
 
 ![][image1]
 
@@ -35,13 +35,14 @@ We could use the CFPB dataset and focus solely on the housing mortgage cluster. 
 
 # How to measure cost:
 
-* API calling price. E.g. Qwen3-32B costs roughly 8x more than Qwen3-0.6B  
-* FLOPS: Teacher’s cost is the FLOPS of input and output. Student’s cost is the FLOPS of training \+ input+output
+* Hosted Teacher: billed input and output tokens across all attempts, multiplied by recorded, dated API prices. Leave dollar results unpriced until the applicable rates are supplied.
+* Local Student: measured training, validation, loading and serving time with the actual device, precision and utilization assumptions. Use the configured GPU hourly rate for rented compute; record an explicit pricing assumption for local Metal hardware.
+* FLOPs may be reported separately when measured or explicitly estimated. Parameter counts and pilot wall times alone do not establish monetary savings.
 
 # System design
 
 **Scope of the first implementation.**   
-Since I didn’t find a *scam email related dataset*  that meets our requirements very much, I’d like to suggest the CFPB customer complaints dataset. The experiment focuses on the mortgage complaints topic in CFPB, a five-classification problem. The implementation takes one complaint at a time, collects the Teacher's answers, and measures what a smaller model learns from increasingly long prefixes of that history. 
+The experiment focuses on the mortgage complaints topic in CFPB, a five-class classification problem. The implementation takes one complaint at a time, collects Gemma 4's answers, and measures what a smaller Gemma 3 model learns from increasingly long prefixes of that history.
 
 Topic discovery and per-request confidence routing is NOT included in this experiment. (not this phase) 
 
@@ -49,7 +50,7 @@ Topic discovery and per-request confidence routing is NOT included in this exper
 
 Implement `classify_mortgage(text) -> Literal["A", "B", "C", "D", "E"]`. Use the same public function for the Teacher, the unadapted Student and each Student with a LoRA adapter. Select the backend through configuration. 
 
-A successful request returns exactly one label. Failed request after several retries returns a typed failure to the *replay runner*.
+A successful request returns exactly one label. Allow one retry after a timeout or invalid output; an exhausted request returns a typed failure to the replay runner. Other service errors pause collection for later resume.
 
 | Code | Meaning to give the model | Exact CFPB `Issue` mapping for the evaluator |
 | :---- | :---- | :---- |
@@ -65,7 +66,7 @@ For example, “I paid on time, but the servicer applied my payment to another a
 
 ![][image2]
 
-IMPORTANT: Notably, after my review some of the reference labels are mis-classified. But I don’t think that matters that much. Since we are investigating “whether the student can catch up with the teacher”, as long as the student gives the same accuracy as teacher LLM it would be okay.
+CFPB reference labels are consumer-selected categories and can disagree with a reasonable reading of the narrative. Report reference-label quality and Teacher agreement separately: equal accuracy does not imply that the two models make the same predictions. A valid Teacher label remains eligible for history training even when it disagrees with CFPB.
 
 ## Four components and their interfaces
 
@@ -80,11 +81,41 @@ Use a Python CLI, SQLite and a single GPU worker. A sequential collection loop m
 
 ## Model configuration
 
-Use Qwen3-32B as the candidate Teacher and Qwen3-0.6B as the Student. A version-pinned Teacher API and a locally trained Student are the default. A local Teacher can implement the same interface if the selected weights are available. Record the actual backend, model and tokenizer revisions, precision, prompt version and decoding settings. Profile the chosen serving configuration. A hosted API incurs token charges while a local endpoint consumes GPU time. 
+**Primary pairing, selected on November 23, 2026: Gemma 4 31B IT Teacher → Gemma 3 270M IT Student.** This defines the main Gemma-family distillation study. The main learning curves, candidate selection and cost replay use Gemma 3; the SmolLM2 and Qwen pilots remain exploratory comparisons. Additional LoRA sweeps for those models would be a separately declared extension.
 
-Freeze a prompt on the January pilot. Start with “Read the mortgage complaint. Choose the one issue that best describes the consumer's main problem. Return exactly one letter, A through E.” Append the five definitions above and delimit the narrative as input data. Both models receive the same visible text. Cap the narrative at 3,000 Student-tokenizer tokens, preserving the first 2,000 and final 1,000 if necessary. Record whether clipping occurred. Use greedy decoding or the closest supported deterministic setting and a short output budget. Trim surrounding whitespace and accept only a full match of `[A-E]`.
+| Role | Model and backend | Frozen configuration |
+| :---- | :---- | :---- |
+| Teacher | `google/gemma-4-31B-it`, SiliconFlow international API at `https://api.siliconflow.com/v1` | temperature 0, max_tokens 16; retain endpoint, returned model identifier, response ID, timestamps and token usage for every attempt |
+| Primary Student | `google/gemma-3-270m-it`, local `Gemma3ForCausalLM` | revision `ac82b4e820549b854eebf28ce6dedaf9fdfa17b3`; native tokenizer and chat template; greedy generation, max_new_tokens 16 |
+| Shared prompt | `code/prompts/mortgage_v3.toml` | freeze complete system instructions, five synthetic demonstrations and user template before history collection |
+| Shared narrative clipping | `HuggingFaceTB/SmolLM2-135M-Instruct` tokenizer | revision `12fd25f77366fa6b3b4b768ec3050bf629380bac`; maximum 3,000 narrative tokens, keeping the first 2,000 and final 1,000 |
+
+The Teacher endpoint exposes a hosted model identifier rather than an immutable weights revision. Record the actual returned identifiers and collection dates and disclose any observable changes. The local Student and both tokenizer roles are version-pinned. Gemma 3 weights are downloaded through the authorized Hugging Face account and then used locally; API charges apply to Teacher requests.
+
+**Keep the clipping tokenizer frozen when changing the primary Student.** All models receive the same clipped complaint text and shared instructions; each uses its native chat formatting and inference tokenizer. Gemma 3's native template incorporates the system instruction into the first user turn and renders assistant turns as `model`. Stop generation on native EOS/end-of-turn tokens, remove only the terminal stop token, trim surrounding whitespace and accept only a full match of `[A-E]`. An immediate end-of-turn with no letter is invalid; the first-token A–E diagnostic never replaces a failed free-generation answer.
+
+The Gemma 3 pilot used MPS/FP32, four CPU threads and batch size 1; the Qwen pilot used MPS/FP32, while SmolLM2 used CPU/FP32. Freeze and record the device, precision and library versions for each formal run. Validate the selected LoRA training device and precision with a small save/reload smoke before scaling up; a serving pilot does not establish training compatibility. Evaluate each Gemma 3 adapter and its unadapted baseline under the same serving configuration. Obtain matched serving measurements before comparing costs across hardware.
+
+### January pilot evidence and model-selection context
+
+All rows below use the same 300 development complaints, proportional reference-label sampling with seed 42, and v3 instructions. Input order, narrative hashes and clipping were verified. All scores use a denominator of 300, including exhausted failures.
+
+| Model | Accuracy | Five-class macro-F1 | Valid output | Agreement with Teacher |
+| :---- | ----: | ----: | ----: | ----: |
+| Gemma 4 31B IT Teacher | 80.00% | 0.6788 | 300/300 | — |
+| **Gemma 3 270M IT, primary Student** | **29.00%** | **0.1631** | **260/300** | **31.00%** |
+| Qwen3.5-0.8B, exploratory Student | 30.33% | 0.1774 | 300/300 | 31.00% |
+| SmolLM2-135M-Instruct, exploratory Student | 16.00% | 0.1298 | 293/300 | 13.33% |
+
+The main-model choice prioritizes the Gemma-family Teacher–Student pairing and a smaller local Student. The pilot scores above remain part of that decision's evidence. Gemma 3 produced 40 empty final replies after retries and predicted no B or E labels. Its first-token five-choice diagnostic reached only 30.67% accuracy, so format recovery alone would not close the classification gap. Always predicting reference-majority class C gives 57.33% on this pilot; this is a diagnostic, not the later history-Teacher-trained majority baseline.
+
+Treat valid-output rate, B/E recall and Teacher agreement as visible learning outcomes throughout fine-tuning. These pilots do not establish that a Gemma 3 adapter will approach Gemma 4. The sample is reused development data: 25 cases participated in v2 prompt development, and later prompt variants were informed by pilot failures. Freeze v3 and the primary model now; use October for candidate selection and November–December for final held-out results.
+
+[Gemma 3 pilot and four-model comparison](result/pre-run%20300%20sample%20test/gemma3-270m-it-v3/note.md) · [Qwen pilot](result/pre-run%20300%20sample%20test/qwen3.5-0.8b-v3/note.md) · [Gemma Teacher v3 pilot](result/pre-run%20300%20sample%20test/gemma/v3/note.md)
 
 ## Persistent data and restart behavior
+
+The table specifies the target layout for the full training/evaluation system. The current baseline implementation uses the audited `data/mortgage_complaint.csv` and one `run.sqlite` per output directory, with `run`, `attempts`, `history_traces`, `prefixes` and `progress` tables. History exports contain `history_labels.csv` without CFPB labels and immutable prefix manifests. Separate input/reference Parquet files, training jobs, adapter artifacts and deployment cost ledgers remain planned. The trainer must join history labels only to allowlisted input columns and must not use CFPB labels as supervision.
 
 | Location | Minimum fields or contents |
 | :---- | :---- |
@@ -103,6 +134,8 @@ Enforce unique `(run_id, complaint_id)` and `(run_id, success_index)` in accepte
 
 ## Step 1\. Rebuild the cohort and freeze the splits
 
+Use the existing audited CSV and frozen split membership for the main run. The steps below document provenance and reproduction; a new data download is not needed to start the current baselines.
+
 1. Download the live metadata CSV for `Product = Mortgage` and UTC receipt dates from 2024-01-01 through 2024-12-31. Retain complaint ID, receipt timestamp, product and issue. Download narrative archive exports 5, 6, 7 and 8 and stream the quoted CSV inside each ZIP. The ordinary metadata export omits the narrative. [Filtered metadata](https://www.consumerfinance.gov/data-research/consumer-complaints/search/?date_received_min=2024-01-01&date_received_max=2024-12-31&product=Mortgage) · [Official narrative archive](https://www.consumerfinance.gov/foia-requests/foia-electronic-reading-room/cfpb-consumer-complaint-database-narratives-archive/)  
 2. Inner-join on numeric complaint ID. Normalize text to Unicode NFC, collapse whitespace to single spaces, trim and drop empty text. Sort by the live metadata's UTC receipt timestamp and then numeric complaint ID. Keep the earliest occurrence of each SHA-256 normalized-text hash. Apply the issue mapping and save the two Parquet files. Use only the narrative as model input.  
 3. Reconcile against the **November 21, 2026 reference snapshot**. Of 21,438 metadata records, 12,209 matched nonblank narratives and 12,196 remained after removing 13 repeated texts. The expected SHA-256 of the retained decimal IDs, in stream order, UTF-8 and one ID per line ending in a newline, is `3c59aa321b65ea493b579cd503af0aeb580fa9c28ee4cabe4b15d136ab123dfa`. If an official refresh changes the result, save the new snapshot and report the discrepancy and its cause. Never discard arbitrary rows to force the reference count.
@@ -116,13 +149,15 @@ Enforce unique `(run_id, complaint_id)` and `(run_id, success_index)` in accepte
 
 ## Step 2\. Verify the pipeline and establish baselines
 
-Use a small January sample to verify the prompt, parsing, retry logic and saved-adapter reload. Freeze the configuration and a seed (default 42\) before history collection. Run the Teacher and the original Student as fixed baselines. Include a majority-class baseline from the history Teacher labels and a TF–IDF plus logistic regression classifier fitted on the same Teacher-labeled prefixes as LoRA. Fit the vocabulary on each training prefix alone. Record each baseline's actual supervision and cost. An independent fixture with a scripted Teacher can exercise the orchestration before using paid calls. Its outputs belong only in test artifacts.
+Use the completed January pilots to freeze v3, the Gemma 4 Teacher and the Gemma 3 primary Student; retain seed 42. Complete a disposable January-only or synthetic Gemma 3 LoRA train/save/reload smoke before large-scale history collection. Its adapter and examples do not enter the main experiment, whose candidates all start from the untouched pinned Gemma 3 base.
+
+Run the Teacher and original Gemma 3 as fixed baselines on all 1,013 October cases. Include a majority-class baseline from history Teacher labels and a TF–IDF plus logistic regression classifier fitted on the same Teacher-labeled prefixes as LoRA. Fit each vocabulary on its prefix alone. Record supervision and cost for every baseline. The archived Qwen and SmolLM2 development results provide exploratory context; the primary Gemma 3 study does not require training their adapters. An independent scripted Teacher fixture exercises orchestration without paid calls; its outputs belong only in test artifacts.
 
 ## Step 3\. Collect the stream and train candidates
 
 Replay February–September in order, one complaint per request. The default cumulative milestones are **100, 200, 400, 800, 1,600, 3,200 and 6,400 successful, distinct Teacher calls**. At success 100, freeze the first 100 accepted traces. At success 200, freeze the first 200, including the original 100\. Continue the same way. If three complaints exhaust their retries, success 100 could occur at arrival 103\. Store both the success index and the arrival index. Preserve and count every failure. Mark any unreached milestone in the results.
 
-For every prefix, create `(classification prompt with narrative, teacher_label)` pairs, initialize the same untouched Student base, and fine-tune one fresh adapter. Use LoRA rank 8, alpha 16 and dropout 0.05 on query and value projections. Start with AdamW, learning rate 0.0002, three epochs and effective batch size 8\. As pilot defaults use constant learning rate, zero weight decay and no warmup. Use gradient accumulation if necessary. Fix and record the precision and epoch shuffle seed. Compute loss only on the answer and its termination, excluding prompt and padding. Save the ordered training IDs, label histogram, update count, duration, GPU time and adapter checksum. Reload the artifact and obtain a legal label on the fixed smoke input before enabling it. [LoRA implementation reference](https://huggingface.co/docs/peft/en/package_reference/lora)
+For every prefix, create `(v3 classification messages with narrative, teacher_label)` pairs, initialize the same untouched Gemma 3 270M IT checkpoint, and fine-tune one fresh adapter. Use the native Gemma 3 chat template for training and inference. Apply LoRA to the attention `q_proj` and `v_proj` modules, with rank 8, alpha 16 and dropout 0.05; freeze the base weights. Start with AdamW, learning rate 0.0002, three epochs and effective batch size 8\. These are proposed training defaults pending the Gemma 3 adapter smoke, with constant learning rate, zero weight decay and no warmup. Use gradient accumulation if necessary. Fix and record precision and epoch shuffle seed 42. Compute loss only on the answer and native `<end_of_turn>` termination, excluding prompt and padding. Save ordered training IDs, label histogram, update count, duration, device time and adapter checksum. Reload the saved artifact through the normal Gemma 3 classifier and obtain a legal label on the fixed smoke input before enabling it. [LoRA implementation reference](https://huggingface.co/docs/peft/en/package_reference/lora)
 
 The CLI may finish collection before draining queued training jobs. Freeze each prefix when its success index is reached. For cost simulation, use the historical trigger time and measured job duration, independent of the research worker queue.
 
@@ -130,13 +165,13 @@ The **collection run** keeps the Teacher active to acquire a common history for 
 
 ## Step 4\. Measure classification quality
 
-Score the Teacher, original Student, baselines and each reachable adapter on the same October cases. Report accuracy, five-class macro-F1, per-class recall and one-versus-rest false-positive rate, confusion counts, valid-output rate and agreement with the Teacher. Use the consumer-selected category for accuracy and F1. Score an exhausted failure as incorrect and as a false negative for its true class. Include a failure column in the confusion matrix. Report Teacher agreement over all cases, counting only matching valid predictions in the numerator.
+Score Gemma 4, original Gemma 3, the non-LLM baselines and each reachable Gemma 3 adapter on the same October cases. Report accuracy, five-class macro-F1, per-class recall and one-versus-rest false-positive rate, confusion counts, valid-output rate and agreement with the Teacher. Use the consumer-selected category for accuracy and F1. Score an exhausted failure as incorrect and as a false negative for its true class. Include a failure column in the confusion matrix. Report Teacher agreement over all cases, counting only matching valid predictions in the numerator; also report empty final replies separately because they affected 40/300 Gemma 3 pilot cases.
 
-For the first run, use an editable, predeclared default quality tolerance of **0.02 absolute macro-F1** below the October Teacher. Select the smallest training prefix meeting it. If none qualifies, record that outcome. If the unadapted Student already qualifies, report it as the zero-training option. Keep per-class results visible, especially credit reporting (75 held-out examples). Freeze the selection before opening the final labels. Evaluate the prespecified learning curves and the chosen model on the November–December test set in one final pass. Compute paired 95% bootstrap intervals for quality differences by resampling the same complaints for all models (2,000 replicates, seed 42). This threshold is an experimental choice, and attaining it is an empirical outcome.
+For the first run, retain the predeclared quality tolerance of **0.02 absolute macro-F1** below the October Gemma 4 Teacher. Select the smallest Gemma 3 training prefix meeting it. If none qualifies, record that outcome. If unadapted Gemma 3 already qualifies, report it as the zero-training option. Compute the threshold from the October Teacher score, not the January pilot score. Keep per-class results visible, especially credit reporting (75 held-out examples). Freeze the selection before opening the final labels. Evaluate the prespecified Gemma 3 learning curves and the chosen model on the November–December test set in one final pass. Compute paired 95% bootstrap intervals for quality differences by resampling the same complaints for all models (2,000 replicates, seed 42). This threshold is an experimental choice, and attaining it is an empirical outcome.
 
 ## Step 5\. Calculate how long each training decision takes to pay back
 
-Replay the same February–December arrivals under always-Teacher, always-original-Student, and each train-once policy. In each train-once policy, the Teacher serves through training and loading. Model readiness time equals the triggering receipt timestamp plus measured training, required validation and loading time, assuming an immediately available dedicated worker. Route subsequent arrivals at or after readiness to that Student. Handle same-time events in the frozen stream order; the complaint that triggered training always used the Teacher. Charge failed training and leave the Teacher serving if the adapter cannot be activated.
+Replay the same February–December arrivals under always-Gemma-4, always-original-Gemma-3, and each Gemma-3 train-once policy. In each train-once policy, Gemma 4 serves through training and loading. Model readiness time equals the triggering receipt timestamp plus measured training, required validation and loading time, assuming an immediately available dedicated worker. Route subsequent arrivals at or after readiness to that Gemma 3 adapter. Handle same-time events in the frozen stream order; the complaint that triggered training always used the Teacher. Charge failed training and leave the Teacher serving if the adapter cannot be activated.
 
 For each request, store the cost of every serving attempt, model chosen, incremental training spend, cumulative policy spend and cumulative always-Teacher spend. Use billed tokens and dated prices for APIs, and measured GPU-seconds times count-adjusted hourly rates divided by 3,600 for local runs. Record concurrency, batch size and treatment of idle capacity. Collect matched per-request serving costs or label the sampling method and estimates explicitly. Keep unavailable prices or usage values explicit and mark the affected dollar results unpriced until rates are supplied. Keep extra benchmark calls and the cost of training the other six research candidates in a separate research ledger.
 
@@ -144,7 +179,30 @@ The observed break-even is the first post-readiness request where cumulative pol
 
 ## Run interface and acceptance criteria
 
-Provide these CLI stages or equivalent documented invocations. Each uses the same run ID and versioned configuration. Include the dependency lockfile, configuration and README commands needed to recreate the run. Expose model endpoint, revisions, raw-data paths, GPU rate and API prices as configuration. Read credentials from the environment.
+### Available baseline and history commands
+
+Activate the project environment, which pins compatible dependencies, then use the following explicit main-study model selection. The Student CLI retains its legacy SmolLM2 default for compatibility, so primary Gemma 3 runs always specify `--student-model gemma3-270m-it`.
+
+```bash
+source .venv/bin/activate
+
+# Preview only; omit --run to avoid inference.
+python3 code/teacher_baseline.py --split history --prompt-version v3
+python3 code/student_baseline.py --student-model gemma3-270m-it --split validation --prompt-version v3
+
+# Chronological Teacher history and full October baselines.
+python3 code/teacher_baseline.py --split history --prompt-version v3 --run
+python3 code/teacher_baseline.py --split validation --prompt-version v3 --concurrency 4 --run
+python3 code/student_baseline.py --student-model gemma3-270m-it --device mps --split validation --prompt-version v3 --teacher-run output/baseline_v3/teacher_validation --output output/baseline_v3/student_gemma3-270m-it_validation --run
+```
+
+History uses concurrency 1. The MPS command needs a GPU-enabled process; use a separate output directory for a CPU run. Repeating a command resumes committed attempts. Export-only commands, additional environment setup and the pilot reproduction commands are documented in [README](README.md). The local Gemma 3 download requires an authorized Hugging Face account. Credentials stay in local environment/account configuration and are never saved to experiment artifacts.
+
+### Planned training, evaluation and cost stages
+
+The stages below describe the target interface; the `mortgage_exp` package and its config file are not implemented yet. Baseline/history collection and prefix manifests are implemented; Gemma 3 LoRA training, majority/TF–IDF baselines, held-out test evaluation, bootstrap selection reports and cost replay remain to be built. A real adapter save/reload is still an outstanding acceptance check.
+
+Provide these stages or equivalent documented invocations. Each uses the same run ID and versioned configuration, with the Gemma 4/Gemma 3 pairing specified above. Include reproducible dependency pins or a lockfile, configuration and README commands. Expose model endpoint, revisions, raw-data paths, GPU rate and API prices as configuration. Read credentials from the environment.
 
 `python -m mortgage_exp prepare  --config configs/cfpb_2024.yaml --run-id exp1`  
 `python -m mortgage_exp smoke    --config configs/cfpb_2024.yaml --run-id exp1`  

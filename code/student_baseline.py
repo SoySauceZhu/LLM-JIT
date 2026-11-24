@@ -1,4 +1,4 @@
-"""Preview, run or export SmolLM2 and Qwen development/validation baselines."""
+"""Preview, run or export mortgage Student development/validation baselines."""
 
 import argparse
 import json
@@ -21,18 +21,22 @@ STUDENT_MODELS = {
     "qwen3.5-0.8b": {"model": "Qwen/Qwen3.5-0.8B",
                      "revision": "2fc06364715b967f1860aea9cf38778875588b17",
                      "chat_template_kwargs": {"enable_thinking": False}},
+    "gemma3-270m-it": {"model": "google/gemma-3-270m-it",
+                       "revision": "ac82b4e820549b854eebf28ce6dedaf9fdfa17b3",
+                       "chat_template_kwargs": {}, "stop_tokens": ["<end_of_turn>"]},
 }
 
 
 def student_config(cases, split, seed, prompt, student_model="smollm2-135m", device="cpu"):
     profile = STUDENT_MODELS[student_model]
+    extra = {"generation_stop_tokens": profile["stop_tokens"]} if "stop_tokens" in profile else {}
     return make_config(cases, split, seed, prompt, backend="student", model=profile["model"],
                        decoding={"do_sample": False, "max_tokens": 16,
                                  "eos_policy": "model_and_tokenizer"}, device=device,
                        dtype="torch.float32", threads=4, batch_size=1, max_attempts=2,
                        student_model=student_model, model_revision=profile["revision"],
                        inference_tokenizer=profile["model"], inference_tokenizer_revision=profile["revision"],
-                       chat_template_kwargs=profile["chat_template_kwargs"])
+                       chat_template_kwargs=profile["chat_template_kwargs"], **extra)
 
 
 def student_output(student_model, split, version, size=None, seed=42):
@@ -41,10 +45,11 @@ def student_output(student_model, split, version, size=None, seed=42):
     return default_output(backend, split, version, size, seed)
 
 
-def generation_stop_ids(model_eos, tokenizer_eos):
-    """Some Qwen configs stop on end-of-text but chat replies end on im_end."""
+def generation_stop_ids(model_eos, tokenizer_eos, extra_stop_ids=()):
+    """Stop on both end-of-text and the native chat end-of-turn markers."""
     model_ids = model_eos if isinstance(model_eos, (list, tuple)) else [model_eos]
-    return list(dict.fromkeys(n for n in [tokenizer_eos, *model_ids] if n is not None)) or None
+    return list(dict.fromkeys(n for n in [tokenizer_eos, *model_ids, *extra_stop_ids]
+                              if n is not None)) or None
 
 
 def load_student(student_model, device="cpu"):
@@ -56,16 +61,31 @@ def load_student(student_model, device="cpu"):
     if device == "mps" and not torch.backends.mps.is_available():
         raise ValueError("Metal GPU is unavailable in this process; use --device cpu or a GPU-enabled execution environment")
     kwargs = {"revision": profile["revision"]}
-    if student_model == "qwen3.5-0.8b":
+    if student_model != "smollm2-135m":
         kwargs["cache_dir"] = ROOT / ".cache/huggingface"
     torch.set_num_threads(4)
-    tokenizer = AutoTokenizer.from_pretrained(profile["model"], **kwargs)
-    model = AutoModelForCausalLM.from_pretrained(
-        profile["model"], dtype=torch.float32, **kwargs).to(device).eval()
+    try:
+        tokenizer = AutoTokenizer.from_pretrained(profile["model"], **kwargs)
+        model = AutoModelForCausalLM.from_pretrained(
+            profile["model"], dtype=torch.float32, **kwargs).to(device).eval()
+    except OSError as exc:
+        if student_model == "gemma3-270m-it" and "gated" in str(exc).lower():
+            raise RuntimeError(
+                "Gemma model access is required. Review the conditions at "
+                "https://huggingface.co/google/gemma-3-270m-it and configure an authorized "
+                "HF_TOKEN or run `hf auth login` locally, then resume the same command."
+            ) from exc
+        raise
     encoded = [tokenizer.encode(label, add_special_tokens=False) for label in LABELS]
     if any(len(tokens) != 1 for tokens in encoded):
         raise ValueError("First-token diagnostic requires single-token letters")
-    eos = generation_stop_ids(model.generation_config.eos_token_id, tokenizer.eos_token_id)
+    extra_stop_ids = []
+    for token in profile.get("stop_tokens", ()):
+        if token not in tokenizer.get_vocab():
+            raise ValueError(f"Native chat stop token is missing from the tokenizer: {token}")
+        extra_stop_ids.append(tokenizer.convert_tokens_to_ids(token))
+    eos = generation_stop_ids(model.generation_config.eos_token_id, tokenizer.eos_token_id,
+                              extra_stop_ids)
     settings = GenerationConfig(do_sample=False, max_new_tokens=16, eos_token_id=eos,
                                 pad_token_id=tokenizer.pad_token_id,
                                 return_dict_in_generate=True, output_scores=True)

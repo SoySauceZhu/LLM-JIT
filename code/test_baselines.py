@@ -22,6 +22,7 @@ from student_baseline import (
     collect_student, export_results as export_student, load_teacher_labels, predict_once, student_config,
     student_output,
     generation_stop_ids,
+    load_student, STUDENT_MODELS,
 )
 from teacher_baseline import export_results as export_teacher, initialize as initialize_teacher
 from teacher_collection import collect
@@ -374,6 +375,63 @@ class TestStudentAndPairing(unittest.TestCase):
         self.assertEqual(generation_stop_ids(248044, 248046), [248046, 248044])
         self.assertEqual(generation_stop_ids([8, 9], 9), [9, 8])
         self.assertEqual(generation_stop_ids(None, 9), [9])
+
+    def test_gemma_profile_preserves_inputs_and_has_an_independent_ledger(self):
+        gemma = student_config(self.cases, "validation", 42, load_prompt("v3"), "gemma3-270m-it")
+        self.assertEqual(gemma["model"], "google/gemma-3-270m-it")
+        self.assertEqual(gemma["model_revision"], "ac82b4e820549b854eebf28ce6dedaf9fdfa17b3")
+        self.assertEqual(gemma["chat_template_kwargs"], {})
+        self.assertEqual(gemma["generation_stop_tokens"], ["<end_of_turn>"])
+        self.assertEqual(gemma["cases"], self.config["cases"])
+        self.assertEqual(gemma["tokenizer"], self.config["tokenizer"])
+        self.teacher_collect()
+        self.assertEqual(load_teacher_labels(self.teacher, gemma)[1], "complete")
+        paths = {student_output(name, "validation", "v3") for name in STUDENT_MODELS}
+        self.assertEqual(len(paths), 3)
+        with self.assertRaisesRegex(ValueError, "configuration changed"):
+            initialize(self.db, gemma)
+
+    def test_gemma_loader_stops_on_native_end_of_turn_and_decodes_a_letter(self):
+        import torch
+
+        tokenizer = Mock(eos_token_id=1, pad_token_id=0)
+        tokenizer.encode.side_effect = lambda letter, **_: [ord(letter) - ord("A") + 10]
+        tokenizer.get_vocab.return_value = {"<end_of_turn>": 106}
+        tokenizer.convert_tokens_to_ids.return_value = 106
+        tokenizer.apply_chat_template.return_value = {"input_ids": torch.tensor([[2]])}
+        tokenizer.decode.return_value = "A"
+        model = Mock(device=torch.device("cpu"))
+        model.to.return_value.eval.return_value = model
+        model.generation_config = SimpleNamespace(eos_token_id=1)
+        model.config = SimpleNamespace(max_position_embeddings=32768)
+        logits = torch.zeros((1, 15))
+        logits[0, 10] = 10
+        model.generate.return_value = SimpleNamespace(sequences=torch.tensor([[2, 10, 106]]),
+                                                       scores=(logits,))
+        with patch("transformers.AutoTokenizer.from_pretrained", return_value=tokenizer) as loader, \
+                patch("transformers.AutoModelForCausalLM.from_pretrained", return_value=model) as weights:
+            loaded, native, settings, label_ids = load_student("gemma3-270m-it")
+        self.assertIs(loaded, model)
+        loader.assert_called_once_with("google/gemma-3-270m-it",
+                                       revision=STUDENT_MODELS["gemma3-270m-it"]["revision"],
+                                       cache_dir=ROOT / ".cache/huggingface")
+        self.assertEqual(weights.call_args.kwargs["revision"], loader.call_args.kwargs["revision"])
+        self.assertEqual(settings.eos_token_id, [1, 106])
+        self.assertEqual(settings.max_new_tokens, 16)
+        messages = build_messages("A payment was applied incorrectly.", load_prompt("v3"))
+        result = predict_once(loaded, native, settings, label_ids, messages)
+        self.assertEqual(result["raw_reply"], "A")
+        self.assertEqual(result["first_token_choice"], "A")
+        self.assertEqual(tokenizer.apply_chat_template.call_args.args[0], messages)
+        tokenizer.decode.assert_called_once_with([10], skip_special_tokens=False,
+                                                clean_up_tokenization_spaces=False)
+
+    def test_gemma_gated_access_error_explains_local_authentication(self):
+        with patch("transformers.AutoTokenizer.from_pretrained", side_effect=OSError("gated repo")), \
+                patch("transformers.AutoModelForCausalLM.from_pretrained") as weights:
+            with self.assertRaisesRegex(RuntimeError, "HF_TOKEN.*hf auth login"):
+                load_student("gemma3-270m-it")
+            weights.assert_not_called()
 
     def test_archived_ledger_cannot_be_migrated_by_a_new_run(self):
         with closing(sqlite3.connect(":memory:")) as db:

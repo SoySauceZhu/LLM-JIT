@@ -1,0 +1,3076 @@
+{
+  "backend": "student",
+  "batch_size": 1,
+  "cases": [
+    {
+      "arrival_index": 1,
+      "clipped": false,
+      "complaint_id": "8085676",
+      "input_sha256": "a958f37860f116ef39a52697f4d91b270feaff42fadb04eea89494077a23a2b4",
+      "received_at_utc": "2024-01-01T00:45:14.000Z",
+      "reference_label": "C",
+      "sequence_no": 1,
+      "student_tokens_before_clip": 91
+    },
+    {
+      "arrival_index": 2,
+      "clipped": false,
+      "complaint_id": "8085526",
+      "input_sha256": "5fb5640844dcefcbd6ce3982041e67cb7a229f246cd712385d8ab63bb99a9d52",
+      "received_at_utc": "2024-01-01T00:54:36.000Z",
+      "reference_label": "B",
+      "sequence_no": 2,
+      "student_tokens_before_clip": 154
+    },
+    {
+      "arrival_index": 3,
+      "clipped": false,
+      "complaint_id": "8086764",
+      "input_sha256": "43522a2b570127a36163d27fb31ede0cf5b489c58c381657994ea453268e5ebf",
+      "received_at_utc": "2024-01-01T11:37:13.000Z",
+      "reference_label": "C",
+      "sequence_no": 3,
+      "student_tokens_before_clip": 39
+    },
+    {
+      "arrival_index": 4,
+      "clipped": false,
+      "complaint_id": "8088502",
+      "input_sha256": "67522ecdea1e9109b4bf04412c4ad1405f03b663ef3d7d4483a57a5e831e8820",
+      "received_at_utc": "2024-01-01T21:44:50.000Z",
+      "reference_label": "D",
+      "sequence_no": 9,
+      "student_tokens_before_clip": 194
+    },
+    {
+      "arrival_index": 5,
+      "clipped": false,
+      "complaint_id": "8087882",
+      "input_sha256": "64fbfe39a653a13bd6966530b754076dc9790e571b247f7ebdd08dcc9c451ecf",
+      "received_at_utc": "2024-01-02T00:26:56.000Z",
+      "reference_label": "C",
+      "sequence_no": 11,
+      "student_tokens_before_clip": 301
+    },
+    {
+      "arrival_index": 6,
+      "clipped": false,
+      "complaint_id": "8090985",
+      "input_sha256": "89977f758652ca38d813afcbf40b712ccc18dbc8b0b6716ddc7e86b7be44dee3",
+      "received_at_utc": "2024-01-02T14:20:37.000Z",
+      "reference_label": "D",
+      "sequence_no": 18,
+      "student_tokens_before_clip": 214
+    },
+    {
+      "arrival_index": 7,
+      "clipped": false,
+      "complaint_id": "8089139",
+      "input_sha256": "3fb26d30661e4c8558968c9c25d9faac9780215d6d3e498aa4ef8c7d20085f9a",
+      "received_at_utc": "2024-01-02T15:23:30.000Z",
+      "reference_label": "C",
+      "sequence_no": 20,
+      "student_tokens_before_clip": 222
+    },
+    {
+      "arrival_index": 8,
+      "clipped": false,
+      "complaint_id": "8091211",
+      "input_sha256": "34e8f19ce20445f76e2ce4d7413a33dc2a5535c5a88bed73cf8cf82d82e1220b",
+      "received_at_utc": "2024-01-02T15:50:06.000Z",
+      "reference_label": "D",
+      "sequence_no": 26,
+      "student_tokens_before_clip": 43
+    },
+    {
+      "arrival_index": 9,
+      "clipped": false,
+      "complaint_id": "8095341",
+      "input_sha256": "194d6e6d383473538d3ed034393c5f94d9ae749ca7b57edd3200ad669a67cdf0",
+      "received_at_utc": "2024-01-02T18:24:26.000Z",
+      "reference_label": "E",
+      "sequence_no": 36,
+      "student_tokens_before_clip": 72
+    },
+    {
+      "arrival_index": 10,
+      "clipped": false,
+      "complaint_id": "8092915",
+      "input_sha256": "0f3f89696ea05d810d4da10dd9bb0ab4b561bb3a20a27655bb5c28bff48cce4d",
+      "received_at_utc": "2024-01-02T20:24:40.000Z",
+      "reference_label": "A",
+      "sequence_no": 44,
+      "student_tokens_before_clip": 1879
+    },
+    {
+      "arrival_index": 11,
+      "clipped": false,
+      "complaint_id": "8094252",
+      "input_sha256": "7beee0b1bfef0698ff04696e6d931d5c8e23de329e4e4e45f215f5cafd2e54e6",
+      "received_at_utc": "2024-01-02T20:43:22.000Z",
+      "reference_label": "C",
+      "sequence_no": 46,
+      "student_tokens_before_clip": 143
+    },
+    {
+      "arrival_index": 12,
+      "clipped": false,
+      "complaint_id": "8093967",
+      "input_sha256": "5c7ba9b2cbeeeb9864c4cc510e5523c95b9b44eb45c8ed756c7fed137e77fdf5",
+      "received_at_utc": "2024-01-02T21:39:41.000Z",
+      "reference_label": "C",
+      "sequence_no": 52,
+      "student_tokens_before_clip": 519
+    },
+    {
+      "arrival_index": 13,
+      "clipped": false,
+      "complaint_id": "8093369",
+      "input_sha256": "af9293d8b83fdf96af24d2a2f2572921efc7242ca827650808b9e9df74c98952",
+      "received_at_utc": "2024-01-02T22:26:43.000Z",
+      "reference_label": "C",
+      "sequence_no": 56,
+      "student_tokens_before_clip": 455
+    },
+    {
+      "arrival_index": 14,
+      "clipped": false,
+      "complaint_id": "8093151",
+      "input_sha256": "1657b4f536fe4c5cb77540b8b053e2456490c3a0fbeaed4b04a47bda3c83074a",
+      "received_at_utc": "2024-01-02T23:26:24.000Z",
+      "reference_label": "D",
+      "sequence_no": 57,
+      "student_tokens_before_clip": 269
+    },
+    {
+      "arrival_index": 15,
+      "clipped": false,
+      "complaint_id": "8093196",
+      "input_sha256": "16f7d52aae1d42c5b9e69c59360dff876c53ef0e9d671a299fee42c50f8a133a",
+      "received_at_utc": "2024-01-02T23:29:28.000Z",
+      "reference_label": "C",
+      "sequence_no": 58,
+      "student_tokens_before_clip": 93
+    },
+    {
+      "arrival_index": 16,
+      "clipped": false,
+      "complaint_id": "8092991",
+      "input_sha256": "7e6d707c19b6b317a7987a447892aeed2bfbaff3a9c07c1b55a7c838c220e1c3",
+      "received_at_utc": "2024-01-03T00:02:26.000Z",
+      "reference_label": "A",
+      "sequence_no": 61,
+      "student_tokens_before_clip": 212
+    },
+    {
+      "arrival_index": 17,
+      "clipped": false,
+      "complaint_id": "8092880",
+      "input_sha256": "7cf305dde41eff3730e860137646bb6ed56288026d8ff63377eb04fc2ed13d2f",
+      "received_at_utc": "2024-01-03T00:39:36.000Z",
+      "reference_label": "C",
+      "sequence_no": 62,
+      "student_tokens_before_clip": 199
+    },
+    {
+      "arrival_index": 18,
+      "clipped": false,
+      "complaint_id": "8092181",
+      "input_sha256": "355ce91db2b83573ed71ef26bde19f2138ea0dade0320f7e4cba438ccee27f74",
+      "received_at_utc": "2024-01-03T02:04:36.000Z",
+      "reference_label": "D",
+      "sequence_no": 67,
+      "student_tokens_before_clip": 369
+    },
+    {
+      "arrival_index": 19,
+      "clipped": false,
+      "complaint_id": "8092262",
+      "input_sha256": "d4a9a47fc593b3d46171be82bbc86e67d61e41b7109f259485ebe14f697f19fb",
+      "received_at_utc": "2024-01-03T03:14:00.000Z",
+      "reference_label": "C",
+      "sequence_no": 69,
+      "student_tokens_before_clip": 119
+    },
+    {
+      "arrival_index": 20,
+      "clipped": false,
+      "complaint_id": "8092096",
+      "input_sha256": "4df2fd5144a7e4b72c84c3d4fe92c5e4c15c21a949cb19b24dafe8b1a57e7b9d",
+      "received_at_utc": "2024-01-03T03:41:27.000Z",
+      "reference_label": "C",
+      "sequence_no": 72,
+      "student_tokens_before_clip": 2165
+    },
+    {
+      "arrival_index": 21,
+      "clipped": false,
+      "complaint_id": "8089678",
+      "input_sha256": "774cfe03715aa217603a6a8a7ac89f476e011d31c7d6b1a2d43af9b06328f99d",
+      "received_at_utc": "2024-01-03T04:33:25.000Z",
+      "reference_label": "C",
+      "sequence_no": 73,
+      "student_tokens_before_clip": 353
+    },
+    {
+      "arrival_index": 22,
+      "clipped": false,
+      "complaint_id": "8100758",
+      "input_sha256": "3e181d9e3684bc6546f8f8ec6ed36bb6a170bbb0ed31775c1cd838957b99beb3",
+      "received_at_utc": "2024-01-03T13:21:19.000Z",
+      "reference_label": "C",
+      "sequence_no": 75,
+      "student_tokens_before_clip": 200
+    },
+    {
+      "arrival_index": 23,
+      "clipped": false,
+      "complaint_id": "8101202",
+      "input_sha256": "de2cf6c767f3a13b53ec5067a1be34962cdaac96bb7db3e502b37d360ab3bd17",
+      "received_at_utc": "2024-01-03T14:00:51.000Z",
+      "reference_label": "E",
+      "sequence_no": 77,
+      "student_tokens_before_clip": 22
+    },
+    {
+      "arrival_index": 24,
+      "clipped": false,
+      "complaint_id": "8099852",
+      "input_sha256": "8a5aec9642701b14295f147e73271336451c43507dd4dd9c78d69941c12d342f",
+      "received_at_utc": "2024-01-03T17:22:25.000Z",
+      "reference_label": "D",
+      "sequence_no": 85,
+      "student_tokens_before_clip": 273
+    },
+    {
+      "arrival_index": 25,
+      "clipped": false,
+      "complaint_id": "8098916",
+      "input_sha256": "9adcca31345e0b78b7a5043ca297e3e3eebbd733dbe1d81483adc301e8a58363",
+      "received_at_utc": "2024-01-03T18:14:52.000Z",
+      "reference_label": "C",
+      "sequence_no": 86,
+      "student_tokens_before_clip": 223
+    },
+    {
+      "arrival_index": 26,
+      "clipped": false,
+      "complaint_id": "8099404",
+      "input_sha256": "73d48e1a84c539eec7ffd5b448ea1a7b9f7ac525678649abf5294c67f7571aab",
+      "received_at_utc": "2024-01-03T18:36:35.000Z",
+      "reference_label": "D",
+      "sequence_no": 87,
+      "student_tokens_before_clip": 512
+    },
+    {
+      "arrival_index": 27,
+      "clipped": false,
+      "complaint_id": "8097409",
+      "input_sha256": "ab8ef24b8622b8d727691b033ddc3b26181055289ec3ed65445b0e61b592d554",
+      "received_at_utc": "2024-01-03T21:17:49.000Z",
+      "reference_label": "C",
+      "sequence_no": 91,
+      "student_tokens_before_clip": 313
+    },
+    {
+      "arrival_index": 28,
+      "clipped": false,
+      "complaint_id": "8098167",
+      "input_sha256": "4d192397c160bb69410a55d53e2de7c3722c92e3b1a9e4c3f6459aacde2c6c98",
+      "received_at_utc": "2024-01-03T21:18:15.000Z",
+      "reference_label": "C",
+      "sequence_no": 92,
+      "student_tokens_before_clip": 329
+    },
+    {
+      "arrival_index": 29,
+      "clipped": false,
+      "complaint_id": "8098238",
+      "input_sha256": "be93a39fe7a2ec15ea8c72a68b6aecbeb639c47296e37bcc9ae9eb26a876dfcc",
+      "received_at_utc": "2024-01-03T21:20:41.000Z",
+      "reference_label": "C",
+      "sequence_no": 93,
+      "student_tokens_before_clip": 253
+    },
+    {
+      "arrival_index": 30,
+      "clipped": false,
+      "complaint_id": "8098078",
+      "input_sha256": "3204e79550cfccee4ae9718cf713dc92e6f96d09666be630cded3a064e64450c",
+      "received_at_utc": "2024-01-03T21:34:15.000Z",
+      "reference_label": "D",
+      "sequence_no": 94,
+      "student_tokens_before_clip": 206
+    },
+    {
+      "arrival_index": 31,
+      "clipped": false,
+      "complaint_id": "8097718",
+      "input_sha256": "ee7fadb21c8a934ccd32a7145cbb3d3cf30c0958ed08fbd9284c65131bca6e32",
+      "received_at_utc": "2024-01-03T21:36:14.000Z",
+      "reference_label": "B",
+      "sequence_no": 95,
+      "student_tokens_before_clip": 1077
+    },
+    {
+      "arrival_index": 32,
+      "clipped": false,
+      "complaint_id": "8101679",
+      "input_sha256": "7aa59216725653c6fc36237c5286c5d8b955c907dbcca99dd72f0fc7a24cd08a",
+      "received_at_utc": "2024-01-04T02:31:43.000Z",
+      "reference_label": "C",
+      "sequence_no": 102,
+      "student_tokens_before_clip": 424
+    },
+    {
+      "arrival_index": 33,
+      "clipped": false,
+      "complaint_id": "8096758",
+      "input_sha256": "1b68669a0a9e6cefa6ae3c16710687f5b103fe4c6db13c8d41409dd7106333b7",
+      "received_at_utc": "2024-01-04T02:57:41.000Z",
+      "reference_label": "C",
+      "sequence_no": 103,
+      "student_tokens_before_clip": 443
+    },
+    {
+      "arrival_index": 34,
+      "clipped": false,
+      "complaint_id": "8108025",
+      "input_sha256": "47dc59ba9072289af130e46e571a219aeb5ff79c24f04a9d1814a742c3d0f472",
+      "received_at_utc": "2024-01-04T15:17:58.000Z",
+      "reference_label": "D",
+      "sequence_no": 113,
+      "student_tokens_before_clip": 639
+    },
+    {
+      "arrival_index": 35,
+      "clipped": false,
+      "complaint_id": "8102702",
+      "input_sha256": "a0e35c033c6a075bf75c230efd9c05958e4cb55f06f13b7d0697d041e3b82ecb",
+      "received_at_utc": "2024-01-04T15:25:06.000Z",
+      "reference_label": "C",
+      "sequence_no": 114,
+      "student_tokens_before_clip": 551
+    },
+    {
+      "arrival_index": 36,
+      "clipped": false,
+      "complaint_id": "8107533",
+      "input_sha256": "9e6ea8ee5399ff438bbded04716cf5eaf255b9f6712335d78e91624e0d055bf2",
+      "received_at_utc": "2024-01-04T15:46:51.000Z",
+      "reference_label": "B",
+      "sequence_no": 115,
+      "student_tokens_before_clip": 165
+    },
+    {
+      "arrival_index": 37,
+      "clipped": false,
+      "complaint_id": "8102646",
+      "input_sha256": "a0b719e05c6d6f5c1eba0a5c9ae00cd0ce9e003526cd1dc3dec3b3bd149e6fda",
+      "received_at_utc": "2024-01-04T16:11:25.000Z",
+      "reference_label": "C",
+      "sequence_no": 116,
+      "student_tokens_before_clip": 134
+    },
+    {
+      "arrival_index": 38,
+      "clipped": false,
+      "complaint_id": "8107467",
+      "input_sha256": "51d5611e532a19803b6c76b3411771f8410c417fde7fda2ace377964e97899dc",
+      "received_at_utc": "2024-01-04T17:24:30.000Z",
+      "reference_label": "D",
+      "sequence_no": 118,
+      "student_tokens_before_clip": 552
+    },
+    {
+      "arrival_index": 39,
+      "clipped": false,
+      "complaint_id": "8107481",
+      "input_sha256": "0e04a18e02117ef1aa384880974d87a8be738a4baec601a26163033e044f9f5c",
+      "received_at_utc": "2024-01-04T17:31:24.000Z",
+      "reference_label": "C",
+      "sequence_no": 119,
+      "student_tokens_before_clip": 365
+    },
+    {
+      "arrival_index": 40,
+      "clipped": false,
+      "complaint_id": "8105897",
+      "input_sha256": "3260c71f3521a4eaeccda61c8bcffae271a705a03ce351a0c42ca42f0f41407d",
+      "received_at_utc": "2024-01-04T21:52:36.000Z",
+      "reference_label": "E",
+      "sequence_no": 123,
+      "student_tokens_before_clip": 758
+    },
+    {
+      "arrival_index": 41,
+      "clipped": false,
+      "complaint_id": "8105254",
+      "input_sha256": "fb2e41bac0f6d0e136ce0835d4ce0eeb8818b252acb26b895cd49c7d6273ae7a",
+      "received_at_utc": "2024-01-04T21:58:11.000Z",
+      "reference_label": "D",
+      "sequence_no": 126,
+      "student_tokens_before_clip": 453
+    },
+    {
+      "arrival_index": 42,
+      "clipped": false,
+      "complaint_id": "8104453",
+      "input_sha256": "2ab2d1efb7047d39641af1a4bf635599dad5249f3da972c3abc9efb68aea2f3b",
+      "received_at_utc": "2024-01-05T00:46:40.000Z",
+      "reference_label": "E",
+      "sequence_no": 129,
+      "student_tokens_before_clip": 207
+    },
+    {
+      "arrival_index": 43,
+      "clipped": false,
+      "complaint_id": "8103963",
+      "input_sha256": "777bba8bb9a01f64e7abb6076b616ab67918f39f9a27aa7f2b9426fe108547c1",
+      "received_at_utc": "2024-01-05T01:36:06.000Z",
+      "reference_label": "D",
+      "sequence_no": 131,
+      "student_tokens_before_clip": 213
+    },
+    {
+      "arrival_index": 44,
+      "clipped": false,
+      "complaint_id": "8103941",
+      "input_sha256": "8b924a0111d89f17c901896f2bb0937dfd4f849b1aaf4ccaa0354778beaec038",
+      "received_at_utc": "2024-01-05T01:55:08.000Z",
+      "reference_label": "B",
+      "sequence_no": 132,
+      "student_tokens_before_clip": 94
+    },
+    {
+      "arrival_index": 45,
+      "clipped": false,
+      "complaint_id": "8103900",
+      "input_sha256": "6e0f791ab4d7ef4ccb0762b8e279fcc442320e2d54f02e7eac1f2b7a5cc0b34f",
+      "received_at_utc": "2024-01-05T02:23:36.000Z",
+      "reference_label": "B",
+      "sequence_no": 133,
+      "student_tokens_before_clip": 86
+    },
+    {
+      "arrival_index": 46,
+      "clipped": false,
+      "complaint_id": "8113195",
+      "input_sha256": "33f97435bcac6088b5457c4fd2d2e48a2925ffec7b8439770e5d818c9579e08c",
+      "received_at_utc": "2024-01-05T12:55:13.000Z",
+      "reference_label": "C",
+      "sequence_no": 137,
+      "student_tokens_before_clip": 636
+    },
+    {
+      "arrival_index": 47,
+      "clipped": false,
+      "complaint_id": "8112659",
+      "input_sha256": "fcb6340c421df9134a2d81888604b7ea5a0e4a39f6828d8acb9fc89c4b5ef9a8",
+      "received_at_utc": "2024-01-05T16:04:33.000Z",
+      "reference_label": "C",
+      "sequence_no": 139,
+      "student_tokens_before_clip": 534
+    },
+    {
+      "arrival_index": 48,
+      "clipped": false,
+      "complaint_id": "8112154",
+      "input_sha256": "75bd4604e4924b6b4c195289b91813e7caf043e15431b136760f70fd4dcf89b5",
+      "received_at_utc": "2024-01-05T17:12:19.000Z",
+      "reference_label": "C",
+      "sequence_no": 140,
+      "student_tokens_before_clip": 804
+    },
+    {
+      "arrival_index": 49,
+      "clipped": false,
+      "complaint_id": "8112190",
+      "input_sha256": "36ccdba6b8322f45158304ab3704096f53c769c8828e2d747fe4d4182b8d8f77",
+      "received_at_utc": "2024-01-05T17:22:03.000Z",
+      "reference_label": "C",
+      "sequence_no": 141,
+      "student_tokens_before_clip": 502
+    },
+    {
+      "arrival_index": 50,
+      "clipped": false,
+      "complaint_id": "8111672",
+      "input_sha256": "7251ecf0ce2d0b51d0cb573451d3af0c188a002008dfd59defd58419015134ab",
+      "received_at_utc": "2024-01-05T17:46:45.000Z",
+      "reference_label": "C",
+      "sequence_no": 143,
+      "student_tokens_before_clip": 105
+    },
+    {
+      "arrival_index": 51,
+      "clipped": false,
+      "complaint_id": "8112338",
+      "input_sha256": "9804912ca12c46893a2ccf38379f7ddfccf702f547e234d1a63f053b1887c79d",
+      "received_at_utc": "2024-01-05T18:47:08.000Z",
+      "reference_label": "D",
+      "sequence_no": 148,
+      "student_tokens_before_clip": 446
+    },
+    {
+      "arrival_index": 52,
+      "clipped": false,
+      "complaint_id": "8115678",
+      "input_sha256": "28ffdbd838124b2a53ecf7bb40cf9fff197bf1a87cfa1b15d757f003614e9198",
+      "received_at_utc": "2024-01-05T18:47:23.000Z",
+      "reference_label": "E",
+      "sequence_no": 149,
+      "student_tokens_before_clip": 66
+    },
+    {
+      "arrival_index": 53,
+      "clipped": false,
+      "complaint_id": "8110942",
+      "input_sha256": "a7a0adc8e605b1500acaa855bc1380cfc921d5579371211caa2e3d1c6fd76fa5",
+      "received_at_utc": "2024-01-05T20:25:19.000Z",
+      "reference_label": "D",
+      "sequence_no": 151,
+      "student_tokens_before_clip": 189
+    },
+    {
+      "arrival_index": 54,
+      "clipped": false,
+      "complaint_id": "8110977",
+      "input_sha256": "e53a3d69f966d698923cc57eebd699c90cfdbac89847dbacc553b1500e3abe86",
+      "received_at_utc": "2024-01-05T21:27:31.000Z",
+      "reference_label": "C",
+      "sequence_no": 159,
+      "student_tokens_before_clip": 267
+    },
+    {
+      "arrival_index": 55,
+      "clipped": false,
+      "complaint_id": "8117101",
+      "input_sha256": "5aa31fa32c9dd538dcd5405fb0d054691af9f12585b99060c33d6425820fcfe0",
+      "received_at_utc": "2024-01-06T17:42:53.000Z",
+      "reference_label": "B",
+      "sequence_no": 170,
+      "student_tokens_before_clip": 319
+    },
+    {
+      "arrival_index": 56,
+      "clipped": false,
+      "complaint_id": "8118111",
+      "input_sha256": "0af7c61573a45ab5c4a8db1a4f46fe7f865123d352aae536977d0e0969b1e6a5",
+      "received_at_utc": "2024-01-06T23:07:11.000Z",
+      "reference_label": "C",
+      "sequence_no": 176,
+      "student_tokens_before_clip": 448
+    },
+    {
+      "arrival_index": 57,
+      "clipped": false,
+      "complaint_id": "8118842",
+      "input_sha256": "1f179c50f1e229e6a0ccb9e4779419516c7019091d0d75b001dc48eaafd83fd1",
+      "received_at_utc": "2024-01-07T05:23:44.000Z",
+      "reference_label": "C",
+      "sequence_no": 178,
+      "student_tokens_before_clip": 766
+    },
+    {
+      "arrival_index": 58,
+      "clipped": false,
+      "complaint_id": "8119124",
+      "input_sha256": "99a14c92d68c469a8d912b7f7a7a20e8b88f642dda860978738f122fc204a52c",
+      "received_at_utc": "2024-01-07T08:48:13.000Z",
+      "reference_label": "C",
+      "sequence_no": 179,
+      "student_tokens_before_clip": 149
+    },
+    {
+      "arrival_index": 59,
+      "clipped": false,
+      "complaint_id": "8121065",
+      "input_sha256": "ac7bdaeb21c988f6d11418921e56ca67024b52d00992525297417a232c456336",
+      "received_at_utc": "2024-01-07T23:37:00.000Z",
+      "reference_label": "C",
+      "sequence_no": 189,
+      "student_tokens_before_clip": 549
+    },
+    {
+      "arrival_index": 60,
+      "clipped": false,
+      "complaint_id": "8121628",
+      "input_sha256": "c29f061e14dcd3f5412bb016ab3dce0c8cb1cf5b44ed5830902777b2a3348eed",
+      "received_at_utc": "2024-01-08T03:26:39.000Z",
+      "reference_label": "A",
+      "sequence_no": 192,
+      "student_tokens_before_clip": 1082
+    },
+    {
+      "arrival_index": 61,
+      "clipped": false,
+      "complaint_id": "8125816",
+      "input_sha256": "f0f8602b600a56a786e76eac6b90900d0f6787d0f84df073de58364c7456c8a0",
+      "received_at_utc": "2024-01-08T07:43:05.000Z",
+      "reference_label": "D",
+      "sequence_no": 195,
+      "student_tokens_before_clip": 235
+    },
+    {
+      "arrival_index": 62,
+      "clipped": false,
+      "complaint_id": "8125864",
+      "input_sha256": "1b5788cdf33c699325a6092e8fb0f70237382f879e84e82706ec42813a11b1bd",
+      "received_at_utc": "2024-01-08T08:04:37.000Z",
+      "reference_label": "C",
+      "sequence_no": 196,
+      "student_tokens_before_clip": 85
+    },
+    {
+      "arrival_index": 63,
+      "clipped": false,
+      "complaint_id": "8126816",
+      "input_sha256": "cc55b14e4c727e7854e23bb0bf1d6bd373cd6e12f684f73965b9cdda600e02c1",
+      "received_at_utc": "2024-01-08T16:01:10.000Z",
+      "reference_label": "D",
+      "sequence_no": 199,
+      "student_tokens_before_clip": 274
+    },
+    {
+      "arrival_index": 64,
+      "clipped": false,
+      "complaint_id": "8128901",
+      "input_sha256": "a5597a9de3b8eef4dbf5d67fb19a2beca6a1165a23333d937df2ae9e7a6fc214",
+      "received_at_utc": "2024-01-08T16:05:33.000Z",
+      "reference_label": "D",
+      "sequence_no": 200,
+      "student_tokens_before_clip": 57
+    },
+    {
+      "arrival_index": 65,
+      "clipped": false,
+      "complaint_id": "8122791",
+      "input_sha256": "bbed7977c0bea6aa90993b57bafe5e605c19e23e9764304d0b287419a6fb754c",
+      "received_at_utc": "2024-01-08T18:46:00.000Z",
+      "reference_label": "D",
+      "sequence_no": 212,
+      "student_tokens_before_clip": 89
+    },
+    {
+      "arrival_index": 66,
+      "clipped": false,
+      "complaint_id": "8122478",
+      "input_sha256": "4f02492eab98acd5c8b1e688083a4a1d26d607682b8d0f2d49723a9056301613",
+      "received_at_utc": "2024-01-08T19:17:19.000Z",
+      "reference_label": "C",
+      "sequence_no": 215,
+      "student_tokens_before_clip": 141
+    },
+    {
+      "arrival_index": 67,
+      "clipped": false,
+      "complaint_id": "8122168",
+      "input_sha256": "112101a7bd89fa7f57b15b56e00c587a07c3dc2ae8e3c0453e4a069ffba952ac",
+      "received_at_utc": "2024-01-08T19:48:24.000Z",
+      "reference_label": "C",
+      "sequence_no": 216,
+      "student_tokens_before_clip": 158
+    },
+    {
+      "arrival_index": 68,
+      "clipped": false,
+      "complaint_id": "8122856",
+      "input_sha256": "1dd324d7f3532f5dba47241ebd81d8aae8d9ceff745b2adf8ae235b8cab047cc",
+      "received_at_utc": "2024-01-08T20:32:31.000Z",
+      "reference_label": "D",
+      "sequence_no": 221,
+      "student_tokens_before_clip": 643
+    },
+    {
+      "arrival_index": 69,
+      "clipped": false,
+      "complaint_id": "8122920",
+      "input_sha256": "d12bf8b7aac0c19bc02f6023ed454358d3ec9e6b7ec3cb4dcd42f8d0cd39fe23",
+      "received_at_utc": "2024-01-08T21:02:13.000Z",
+      "reference_label": "D",
+      "sequence_no": 222,
+      "student_tokens_before_clip": 338
+    },
+    {
+      "arrival_index": 70,
+      "clipped": false,
+      "complaint_id": "8122924",
+      "input_sha256": "a1879cc6b206870bd5d8f453c817e6fbca50f886ee7d9cd2daca39d36fe5c42b",
+      "received_at_utc": "2024-01-08T21:04:06.000Z",
+      "reference_label": "C",
+      "sequence_no": 223,
+      "student_tokens_before_clip": 146
+    },
+    {
+      "arrival_index": 71,
+      "clipped": false,
+      "complaint_id": "8123236",
+      "input_sha256": "21b572f7de517b43d665761a7822e314f69a6b42821204c589f3a1d0e3869578",
+      "received_at_utc": "2024-01-08T21:27:11.000Z",
+      "reference_label": "C",
+      "sequence_no": 224,
+      "student_tokens_before_clip": 235
+    },
+    {
+      "arrival_index": 72,
+      "clipped": false,
+      "complaint_id": "8123231",
+      "input_sha256": "240f17a5eeeaca9fd99b5731b6fd62457a5157ef302ba5413b522773cadbccf8",
+      "received_at_utc": "2024-01-08T21:53:07.000Z",
+      "reference_label": "C",
+      "sequence_no": 226,
+      "student_tokens_before_clip": 396
+    },
+    {
+      "arrival_index": 73,
+      "clipped": false,
+      "complaint_id": "8123599",
+      "input_sha256": "d886e2b2bc9c4d9da2ef4593f26091a37a788b95164a5692d70c648598f304c0",
+      "received_at_utc": "2024-01-08T22:07:56.000Z",
+      "reference_label": "D",
+      "sequence_no": 228,
+      "student_tokens_before_clip": 125
+    },
+    {
+      "arrival_index": 74,
+      "clipped": false,
+      "complaint_id": "8131214",
+      "input_sha256": "c734e064b4d797d702a3ac7c491ccf534f80617d180c0a1f087445b0ae297ac3",
+      "received_at_utc": "2024-01-08T22:44:18.000Z",
+      "reference_label": "B",
+      "sequence_no": 233,
+      "student_tokens_before_clip": 93
+    },
+    {
+      "arrival_index": 75,
+      "clipped": false,
+      "complaint_id": "8124022",
+      "input_sha256": "108b9814f64a2b62b0cb6acd12abe5d046cf75c60ee3b592b88ab774014615b2",
+      "received_at_utc": "2024-01-08T23:04:49.000Z",
+      "reference_label": "C",
+      "sequence_no": 235,
+      "student_tokens_before_clip": 485
+    },
+    {
+      "arrival_index": 76,
+      "clipped": false,
+      "complaint_id": "8124024",
+      "input_sha256": "d6aa3eea7e3957d005a5022881db60f2424257a1f6b0be2e7a0d2a333de1e912",
+      "received_at_utc": "2024-01-08T23:07:59.000Z",
+      "reference_label": "C",
+      "sequence_no": 236,
+      "student_tokens_before_clip": 164
+    },
+    {
+      "arrival_index": 77,
+      "clipped": false,
+      "complaint_id": "8124014",
+      "input_sha256": "be1ff723d01ae13e6fb4a65aea67b9c3c83cc49d3ee92fc93e44c2315d1dc375",
+      "received_at_utc": "2024-01-08T23:10:35.000Z",
+      "reference_label": "C",
+      "sequence_no": 237,
+      "student_tokens_before_clip": 294
+    },
+    {
+      "arrival_index": 78,
+      "clipped": false,
+      "complaint_id": "8124046",
+      "input_sha256": "e3d1c4d712d919d1f33a7712e7548f5534da262dea47b09eb46f41eaf6f63689",
+      "received_at_utc": "2024-01-08T23:37:47.000Z",
+      "reference_label": "A",
+      "sequence_no": 239,
+      "student_tokens_before_clip": 63
+    },
+    {
+      "arrival_index": 79,
+      "clipped": false,
+      "complaint_id": "8124419",
+      "input_sha256": "8e7039cba0ac48c568a4a6578be50711ca2684f28fdb6b761b0bb14544b65c81",
+      "received_at_utc": "2024-01-09T00:00:05.000Z",
+      "reference_label": "E",
+      "sequence_no": 240,
+      "student_tokens_before_clip": 897
+    },
+    {
+      "arrival_index": 80,
+      "clipped": false,
+      "complaint_id": "8124349",
+      "input_sha256": "63d3f05f4f3d21325bc2bd567f372d810fb5fa27252c782af144e7e7c403fe2b",
+      "received_at_utc": "2024-01-09T00:09:05.000Z",
+      "reference_label": "C",
+      "sequence_no": 241,
+      "student_tokens_before_clip": 476
+    },
+    {
+      "arrival_index": 81,
+      "clipped": false,
+      "complaint_id": "8135916",
+      "input_sha256": "604b5b6673b4800b3a0649b062755631042c7e6276a996ff838a1044e4f5f9da",
+      "received_at_utc": "2024-01-09T11:44:44.000Z",
+      "reference_label": "D",
+      "sequence_no": 249,
+      "student_tokens_before_clip": 266
+    },
+    {
+      "arrival_index": 82,
+      "clipped": false,
+      "complaint_id": "8136441",
+      "input_sha256": "bd1e2f064050ecceb822e3ac04815e770d34515b82c94336d1b4b474ed632a12",
+      "received_at_utc": "2024-01-09T15:31:37.000Z",
+      "reference_label": "D",
+      "sequence_no": 257,
+      "student_tokens_before_clip": 190
+    },
+    {
+      "arrival_index": 83,
+      "clipped": false,
+      "complaint_id": "8129475",
+      "input_sha256": "182880b9631b5278fb2dd69c2c2d39ed856443435fb02ecb5b60e2150dc54077",
+      "received_at_utc": "2024-01-09T15:50:49.000Z",
+      "reference_label": "D",
+      "sequence_no": 258,
+      "student_tokens_before_clip": 209
+    },
+    {
+      "arrival_index": 84,
+      "clipped": false,
+      "complaint_id": "8136450",
+      "input_sha256": "8569deefb8ae487b8b15df22fa88f74c5916dc7d3b4d4240c34b24c068754d6d",
+      "received_at_utc": "2024-01-09T16:08:43.000Z",
+      "reference_label": "E",
+      "sequence_no": 262,
+      "student_tokens_before_clip": 292
+    },
+    {
+      "arrival_index": 85,
+      "clipped": false,
+      "complaint_id": "8130256",
+      "input_sha256": "a1576d1bb1c03a24fbfd68412c5a6f2f1117daa914451fbab98d16e618b0f28d",
+      "received_at_utc": "2024-01-09T18:10:35.000Z",
+      "reference_label": "C",
+      "sequence_no": 266,
+      "student_tokens_before_clip": 451
+    },
+    {
+      "arrival_index": 86,
+      "clipped": false,
+      "complaint_id": "8129774",
+      "input_sha256": "f7436971beb33870e14f8ab26df11ea179c958e37498414d5da9879b09b3df25",
+      "received_at_utc": "2024-01-09T18:19:49.000Z",
+      "reference_label": "C",
+      "sequence_no": 268,
+      "student_tokens_before_clip": 363
+    },
+    {
+      "arrival_index": 87,
+      "clipped": false,
+      "complaint_id": "8130799",
+      "input_sha256": "5b3c8622d498255cd33ff1e5cb48fd10a4c2e14fa65b51727c9ea0121d1ecd3d",
+      "received_at_utc": "2024-01-09T19:42:17.000Z",
+      "reference_label": "A",
+      "sequence_no": 274,
+      "student_tokens_before_clip": 575
+    },
+    {
+      "arrival_index": 88,
+      "clipped": false,
+      "complaint_id": "8130918",
+      "input_sha256": "c713a600a204625ad4e13b26215cbbce2c081ba9caefb6975aad2e62020e47d2",
+      "received_at_utc": "2024-01-09T20:45:39.000Z",
+      "reference_label": "A",
+      "sequence_no": 277,
+      "student_tokens_before_clip": 884
+    },
+    {
+      "arrival_index": 89,
+      "clipped": false,
+      "complaint_id": "8130919",
+      "input_sha256": "2c39addf6082462c160a996ff775b2c01072883d23f189179c8e648f025d6dcc",
+      "received_at_utc": "2024-01-09T20:45:50.000Z",
+      "reference_label": "E",
+      "sequence_no": 278,
+      "student_tokens_before_clip": 266
+    },
+    {
+      "arrival_index": 90,
+      "clipped": false,
+      "complaint_id": "8131082",
+      "input_sha256": "075220dc8bdbadfd56e8b94b6a530e3e9affe20ecb00fdacb0f87481cd3d5487",
+      "received_at_utc": "2024-01-09T21:02:55.000Z",
+      "reference_label": "C",
+      "sequence_no": 281,
+      "student_tokens_before_clip": 146
+    },
+    {
+      "arrival_index": 91,
+      "clipped": false,
+      "complaint_id": "8133050",
+      "input_sha256": "f099a13c5c0ff82016365db0a6061beb57f2052196400104f97705b0ff1f51ea",
+      "received_at_utc": "2024-01-10T01:29:58.000Z",
+      "reference_label": "C",
+      "sequence_no": 288,
+      "student_tokens_before_clip": 300
+    },
+    {
+      "arrival_index": 92,
+      "clipped": false,
+      "complaint_id": "8133328",
+      "input_sha256": "c78b0586f231890eac07ba6ec33e5af7831b4592e0c1b64a2aba3898ab6c075d",
+      "received_at_utc": "2024-01-10T02:39:32.000Z",
+      "reference_label": "D",
+      "sequence_no": 289,
+      "student_tokens_before_clip": 273
+    },
+    {
+      "arrival_index": 93,
+      "clipped": false,
+      "complaint_id": "8139131",
+      "input_sha256": "3cc1831e0190e19b3b217dc91dc785d199a74276f09349bd835c2b3f418c211d",
+      "received_at_utc": "2024-01-10T13:05:05.000Z",
+      "reference_label": "C",
+      "sequence_no": 295,
+      "student_tokens_before_clip": 209
+    },
+    {
+      "arrival_index": 94,
+      "clipped": false,
+      "complaint_id": "8139928",
+      "input_sha256": "2e313b40a016d150a3572ec013e70913d3af1820a99e833622a5f463c86a87c5",
+      "received_at_utc": "2024-01-10T15:06:18.000Z",
+      "reference_label": "C",
+      "sequence_no": 300,
+      "student_tokens_before_clip": 253
+    },
+    {
+      "arrival_index": 95,
+      "clipped": false,
+      "complaint_id": "8139932",
+      "input_sha256": "4dc602b48e6f4ac54a65d003bfdd4951d90e9451627b7b4cc23439d928aab64e",
+      "received_at_utc": "2024-01-10T15:40:11.000Z",
+      "reference_label": "C",
+      "sequence_no": 301,
+      "student_tokens_before_clip": 209
+    },
+    {
+      "arrival_index": 96,
+      "clipped": false,
+      "complaint_id": "8140244",
+      "input_sha256": "c7d01ddc080fcf80c4e536fa1cd51a73f31861c21aa6e13491ca048a4f930a84",
+      "received_at_utc": "2024-01-10T16:22:59.000Z",
+      "reference_label": "C",
+      "sequence_no": 303,
+      "student_tokens_before_clip": 18
+    },
+    {
+      "arrival_index": 97,
+      "clipped": false,
+      "complaint_id": "8138476",
+      "input_sha256": "5b690a661715008aafb447671518d484585769b7deef312e557c657c23c408cc",
+      "received_at_utc": "2024-01-10T20:58:14.000Z",
+      "reference_label": "C",
+      "sequence_no": 320,
+      "student_tokens_before_clip": 771
+    },
+    {
+      "arrival_index": 98,
+      "clipped": false,
+      "complaint_id": "8139648",
+      "input_sha256": "e4cc725deabdef74672d85a293bba6bb6b146e72f38953083086a4c25f20ae0f",
+      "received_at_utc": "2024-01-10T22:18:10.000Z",
+      "reference_label": "B",
+      "sequence_no": 323,
+      "student_tokens_before_clip": 1144
+    },
+    {
+      "arrival_index": 99,
+      "clipped": false,
+      "complaint_id": "8139671",
+      "input_sha256": "1311b2c3af52359936bc1e05a63cbb96d0e9aa35edb5d4ed2c19a03fe5d7b61d",
+      "received_at_utc": "2024-01-10T22:40:58.000Z",
+      "reference_label": "C",
+      "sequence_no": 324,
+      "student_tokens_before_clip": 421
+    },
+    {
+      "arrival_index": 100,
+      "clipped": false,
+      "complaint_id": "8145362",
+      "input_sha256": "49be1cfd5dd11bf8049899229fc9a87ae84290d0e68f2131aa15a2499b50f2cd",
+      "received_at_utc": "2024-01-11T12:33:35.000Z",
+      "reference_label": "D",
+      "sequence_no": 333,
+      "student_tokens_before_clip": 308
+    },
+    {
+      "arrival_index": 101,
+      "clipped": false,
+      "complaint_id": "8145507",
+      "input_sha256": "b5c3019fdbf6a1b1051673da71bcf628c1ec352b50d6bf5d3d28c1b61ce5391a",
+      "received_at_utc": "2024-01-11T14:22:30.000Z",
+      "reference_label": "B",
+      "sequence_no": 335,
+      "student_tokens_before_clip": 192
+    },
+    {
+      "arrival_index": 102,
+      "clipped": false,
+      "complaint_id": "8145915",
+      "input_sha256": "717d49172f8ff5060e3608deaf89b9056d43865b55090e82ab41fd9489fe027b",
+      "received_at_utc": "2024-01-11T16:25:06.000Z",
+      "reference_label": "A",
+      "sequence_no": 340,
+      "student_tokens_before_clip": 284
+    },
+    {
+      "arrival_index": 103,
+      "clipped": false,
+      "complaint_id": "8144570",
+      "input_sha256": "1523def357c3943c0abf3d34928650e3dd4bf0154c641690119ac910caab3d2c",
+      "received_at_utc": "2024-01-11T16:50:54.000Z",
+      "reference_label": "D",
+      "sequence_no": 342,
+      "student_tokens_before_clip": 353
+    },
+    {
+      "arrival_index": 104,
+      "clipped": false,
+      "complaint_id": "8151195",
+      "input_sha256": "a6b70921e1bdd9ba99b33d4dc64a3b5b83a8073d2d3e2a0d80b6a15044652e79",
+      "received_at_utc": "2024-01-11T18:34:43.000Z",
+      "reference_label": "C",
+      "sequence_no": 346,
+      "student_tokens_before_clip": 287
+    },
+    {
+      "arrival_index": 105,
+      "clipped": false,
+      "complaint_id": "8151231",
+      "input_sha256": "56cbfd04872fa0943c517f90f44a736df11a9af5b374cfaedc69d7576cda452f",
+      "received_at_utc": "2024-01-11T20:07:15.000Z",
+      "reference_label": "B",
+      "sequence_no": 353,
+      "student_tokens_before_clip": 411
+    },
+    {
+      "arrival_index": 106,
+      "clipped": false,
+      "complaint_id": "8151340",
+      "input_sha256": "75eee6aecaac1714d29ce4372f8a61fcee58275192db954b28b229807c13ef18",
+      "received_at_utc": "2024-01-11T20:49:10.000Z",
+      "reference_label": "C",
+      "sequence_no": 355,
+      "student_tokens_before_clip": 113
+    },
+    {
+      "arrival_index": 107,
+      "clipped": false,
+      "complaint_id": "8152448",
+      "input_sha256": "ea999ec82fc1190fdc8a0ab68869ba5a6c9c34e7fc63dda7cefaee2317ebee46",
+      "received_at_utc": "2024-01-11T21:45:09.000Z",
+      "reference_label": "D",
+      "sequence_no": 360,
+      "student_tokens_before_clip": 133
+    },
+    {
+      "arrival_index": 108,
+      "clipped": false,
+      "complaint_id": "8151949",
+      "input_sha256": "f01a5c6490d0fbaade882755236d21cdb03942dfd27a020f61705f58b7e5af23",
+      "received_at_utc": "2024-01-12T00:41:25.000Z",
+      "reference_label": "C",
+      "sequence_no": 364,
+      "student_tokens_before_clip": 39
+    },
+    {
+      "arrival_index": 109,
+      "clipped": false,
+      "complaint_id": "8151648",
+      "input_sha256": "a92b5ca348ed258c56cd103beec185355522f3ee851ecd8191c406a3b0afb279",
+      "received_at_utc": "2024-01-12T02:23:47.000Z",
+      "reference_label": "D",
+      "sequence_no": 367,
+      "student_tokens_before_clip": 91
+    },
+    {
+      "arrival_index": 110,
+      "clipped": false,
+      "complaint_id": "8148612",
+      "input_sha256": "f58f823a27876a115a20c41cdea68ee538d1ab9103c469bc7e836e56cafc0b8b",
+      "received_at_utc": "2024-01-12T02:48:56.000Z",
+      "reference_label": "C",
+      "sequence_no": 369,
+      "student_tokens_before_clip": 331
+    },
+    {
+      "arrival_index": 111,
+      "clipped": false,
+      "complaint_id": "8149105",
+      "input_sha256": "83adfd031b3ae5aa333210560ab0db3b5416154f07b028d498c924a9a516d3b8",
+      "received_at_utc": "2024-01-12T04:09:18.000Z",
+      "reference_label": "C",
+      "sequence_no": 371,
+      "student_tokens_before_clip": 635
+    },
+    {
+      "arrival_index": 112,
+      "clipped": false,
+      "complaint_id": "8150517",
+      "input_sha256": "78500b7b846bb127c361403215356b46162d884bfe6bf607305fbca255fb1747",
+      "received_at_utc": "2024-01-12T14:05:08.000Z",
+      "reference_label": "C",
+      "sequence_no": 377,
+      "student_tokens_before_clip": 443
+    },
+    {
+      "arrival_index": 113,
+      "clipped": false,
+      "complaint_id": "8229077",
+      "input_sha256": "dd1b2bfb7e0a329bd61a162c7c57fe2c3c07c64b2bf10b41a0968f7fa902e21b",
+      "received_at_utc": "2024-01-12T15:06:45.000Z",
+      "reference_label": "C",
+      "sequence_no": 380,
+      "student_tokens_before_clip": 296
+    },
+    {
+      "arrival_index": 114,
+      "clipped": false,
+      "complaint_id": "8173401",
+      "input_sha256": "30505fdc818566644f802ae2a4211bc66f9580e42427938e9727cc0590200b60",
+      "received_at_utc": "2024-01-12T15:30:36.000Z",
+      "reference_label": "C",
+      "sequence_no": 381,
+      "student_tokens_before_clip": 211
+    },
+    {
+      "arrival_index": 115,
+      "clipped": false,
+      "complaint_id": "8189602",
+      "input_sha256": "30af5a35e22812d510e6a4ae70d12019ec01f90342d059a2540a67a3eda6f1a2",
+      "received_at_utc": "2024-01-12T15:51:24.000Z",
+      "reference_label": "A",
+      "sequence_no": 382,
+      "student_tokens_before_clip": 677
+    },
+    {
+      "arrival_index": 116,
+      "clipped": false,
+      "complaint_id": "8173437",
+      "input_sha256": "818c449aa70ee646c6c3e024d13137bcdd79b9c24736ab75f82378d9d27a9c92",
+      "received_at_utc": "2024-01-12T19:32:46.000Z",
+      "reference_label": "C",
+      "sequence_no": 396,
+      "student_tokens_before_clip": 745
+    },
+    {
+      "arrival_index": 117,
+      "clipped": false,
+      "complaint_id": "8181305",
+      "input_sha256": "932be08620feacd21d669edbf72fe088d51cffe36df9435d921d9c675011d78d",
+      "received_at_utc": "2024-01-12T19:57:37.000Z",
+      "reference_label": "C",
+      "sequence_no": 398,
+      "student_tokens_before_clip": 126
+    },
+    {
+      "arrival_index": 118,
+      "clipped": false,
+      "complaint_id": "8172685",
+      "input_sha256": "0d022d5d8cd63d49679b296313869fcb29ec4fba31e3d817367f1033a63de857",
+      "received_at_utc": "2024-01-12T20:42:29.000Z",
+      "reference_label": "B",
+      "sequence_no": 401,
+      "student_tokens_before_clip": 451
+    },
+    {
+      "arrival_index": 119,
+      "clipped": false,
+      "complaint_id": "8173691",
+      "input_sha256": "878201158e3a630b8c3367441d0aec1e8512a5086dd07a7fbbe093fb52ddac10",
+      "received_at_utc": "2024-01-12T21:33:56.000Z",
+      "reference_label": "C",
+      "sequence_no": 403,
+      "student_tokens_before_clip": 70
+    },
+    {
+      "arrival_index": 120,
+      "clipped": false,
+      "complaint_id": "8154014",
+      "input_sha256": "7e314a8f93da686f2facd62e017ebe937742f9e0c64df52d5cda58251c20adb6",
+      "received_at_utc": "2024-01-13T02:23:41.000Z",
+      "reference_label": "A",
+      "sequence_no": 405,
+      "student_tokens_before_clip": 401
+    },
+    {
+      "arrival_index": 121,
+      "clipped": false,
+      "complaint_id": "8173350",
+      "input_sha256": "a6ccd704e066a99d5a7ce459ebafe09a9f3a9e5ecd19cac6dabeee3f4e716e60",
+      "received_at_utc": "2024-01-13T09:24:25.000Z",
+      "reference_label": "C",
+      "sequence_no": 407,
+      "student_tokens_before_clip": 221
+    },
+    {
+      "arrival_index": 122,
+      "clipped": false,
+      "complaint_id": "8156213",
+      "input_sha256": "2d34f15008aa5c81656eaf5ffcded82b4581123bd928897b7200cb90451e9ee1",
+      "received_at_utc": "2024-01-13T12:56:03.000Z",
+      "reference_label": "C",
+      "sequence_no": 409,
+      "student_tokens_before_clip": 218
+    },
+    {
+      "arrival_index": 123,
+      "clipped": false,
+      "complaint_id": "8154978",
+      "input_sha256": "881f7c63c6a74c6a31c327c8bb21c0e1df31552f52c39f43cc90be2eb10f2be6",
+      "received_at_utc": "2024-01-13T17:30:51.000Z",
+      "reference_label": "D",
+      "sequence_no": 411,
+      "student_tokens_before_clip": 147
+    },
+    {
+      "arrival_index": 124,
+      "clipped": false,
+      "complaint_id": "8172578",
+      "input_sha256": "df6bf4acadd5b33aaa26de2f2e2459f8a605ea54957c9b1629ae873edd99b679",
+      "received_at_utc": "2024-01-14T13:40:48.000Z",
+      "reference_label": "A",
+      "sequence_no": 416,
+      "student_tokens_before_clip": 1283
+    },
+    {
+      "arrival_index": 125,
+      "clipped": false,
+      "complaint_id": "8172489",
+      "input_sha256": "337f08e8bd686452bf7664150bc02979e90449d66b2c0091213fa910f5918de5",
+      "received_at_utc": "2024-01-14T22:31:34.000Z",
+      "reference_label": "D",
+      "sequence_no": 421,
+      "student_tokens_before_clip": 328
+    },
+    {
+      "arrival_index": 126,
+      "clipped": false,
+      "complaint_id": "8181552",
+      "input_sha256": "15e13be879d7bf6bbaee913e9f4838964b564ebc1b0e50b88785e419a81a50ae",
+      "received_at_utc": "2024-01-15T05:29:22.000Z",
+      "reference_label": "D",
+      "sequence_no": 422,
+      "student_tokens_before_clip": 454
+    },
+    {
+      "arrival_index": 127,
+      "clipped": true,
+      "complaint_id": "8173949",
+      "input_sha256": "b6e5c088af0de35c78e835e818e18b8ba300384f752957600e2ea79a2e21fd27",
+      "received_at_utc": "2024-01-15T08:04:53.000Z",
+      "reference_label": "D",
+      "sequence_no": 423,
+      "student_tokens_before_clip": 6071
+    },
+    {
+      "arrival_index": 128,
+      "clipped": false,
+      "complaint_id": "8157348",
+      "input_sha256": "117f445bc712c97893e6e32c6e7ff1a3da491660a7a2a42aa2c8e68f95f51908",
+      "received_at_utc": "2024-01-15T16:03:49.000Z",
+      "reference_label": "C",
+      "sequence_no": 425,
+      "student_tokens_before_clip": 314
+    },
+    {
+      "arrival_index": 129,
+      "clipped": false,
+      "complaint_id": "8156887",
+      "input_sha256": "fdd5dea6ea1a9a70e90091db148dbab64e6faab9ec73c15e97f507faa2f62832",
+      "received_at_utc": "2024-01-15T17:36:05.000Z",
+      "reference_label": "C",
+      "sequence_no": 427,
+      "student_tokens_before_clip": 245
+    },
+    {
+      "arrival_index": 130,
+      "clipped": false,
+      "complaint_id": "8158641",
+      "input_sha256": "0d9ed153925a0f26c1042199d6a7faee85f1743899a99a76b231b2b6c63308b0",
+      "received_at_utc": "2024-01-15T19:02:24.000Z",
+      "reference_label": "C",
+      "sequence_no": 428,
+      "student_tokens_before_clip": 696
+    },
+    {
+      "arrival_index": 131,
+      "clipped": false,
+      "complaint_id": "8158512",
+      "input_sha256": "5c991a01d997833a073b3351bbb1b0ff3300c3a91d9cc06c3068240e17767acc",
+      "received_at_utc": "2024-01-15T19:48:38.000Z",
+      "reference_label": "E",
+      "sequence_no": 429,
+      "student_tokens_before_clip": 129
+    },
+    {
+      "arrival_index": 132,
+      "clipped": false,
+      "complaint_id": "8163866",
+      "input_sha256": "e915b30e5451cf97e474685c0777024fe06bb3cda97e15f2e3a16e05e4926126",
+      "received_at_utc": "2024-01-16T01:10:06.000Z",
+      "reference_label": "C",
+      "sequence_no": 433,
+      "student_tokens_before_clip": 195
+    },
+    {
+      "arrival_index": 133,
+      "clipped": false,
+      "complaint_id": "8164430",
+      "input_sha256": "cab58f74a18be0509d21bacdb551f38a109476ddab05f5d526d2965c87a05f07",
+      "received_at_utc": "2024-01-16T04:52:50.000Z",
+      "reference_label": "C",
+      "sequence_no": 434,
+      "student_tokens_before_clip": 699
+    },
+    {
+      "arrival_index": 134,
+      "clipped": false,
+      "complaint_id": "8163437",
+      "input_sha256": "5fac33651d59b4b466ad8a4063d9a88fea9af05c5a654080bac8061784a93a6d",
+      "received_at_utc": "2024-01-16T15:11:40.000Z",
+      "reference_label": "D",
+      "sequence_no": 436,
+      "student_tokens_before_clip": 567
+    },
+    {
+      "arrival_index": 135,
+      "clipped": false,
+      "complaint_id": "8162317",
+      "input_sha256": "5856f6598735f115efaa865fd96391feb99e3353c8740930a339211307c2d375",
+      "received_at_utc": "2024-01-16T18:54:12.000Z",
+      "reference_label": "C",
+      "sequence_no": 441,
+      "student_tokens_before_clip": 353
+    },
+    {
+      "arrival_index": 136,
+      "clipped": false,
+      "complaint_id": "8161140",
+      "input_sha256": "2aba1ec8e47465547e23b311e82145724766364ddb61b5085d0495a108d715df",
+      "received_at_utc": "2024-01-16T22:18:31.000Z",
+      "reference_label": "D",
+      "sequence_no": 447,
+      "student_tokens_before_clip": 271
+    },
+    {
+      "arrival_index": 137,
+      "clipped": false,
+      "complaint_id": "8160968",
+      "input_sha256": "d0ef773adc1ded7b108c2cfd7347c0aeb7bad55a36e05eccf4a248efc5854c25",
+      "received_at_utc": "2024-01-16T22:44:10.000Z",
+      "reference_label": "C",
+      "sequence_no": 448,
+      "student_tokens_before_clip": 151
+    },
+    {
+      "arrival_index": 138,
+      "clipped": false,
+      "complaint_id": "8159264",
+      "input_sha256": "bac4acdce6a1319f4ae779565ec5c6da2c076385f3d82c3c0c713255a1ad85e6",
+      "received_at_utc": "2024-01-17T03:47:54.000Z",
+      "reference_label": "A",
+      "sequence_no": 451,
+      "student_tokens_before_clip": 195
+    },
+    {
+      "arrival_index": 139,
+      "clipped": false,
+      "complaint_id": "8159268",
+      "input_sha256": "041a95d98f26d41419f7eca36083a1f85366fa35421d7bd5415530b4042d7c07",
+      "received_at_utc": "2024-01-17T03:54:37.000Z",
+      "reference_label": "C",
+      "sequence_no": 452,
+      "student_tokens_before_clip": 1060
+    },
+    {
+      "arrival_index": 140,
+      "clipped": false,
+      "complaint_id": "8159121",
+      "input_sha256": "e608dd171d36ad97ec98751e9ed8024ab985273238c7735f459ce364f52978f1",
+      "received_at_utc": "2024-01-17T05:06:31.000Z",
+      "reference_label": "D",
+      "sequence_no": 453,
+      "student_tokens_before_clip": 728
+    },
+    {
+      "arrival_index": 141,
+      "clipped": false,
+      "complaint_id": "8168307",
+      "input_sha256": "002587b84a38e9f96331e6a7e989cc659bd7c6127aad719bdda55a5fd59877aa",
+      "received_at_utc": "2024-01-17T13:13:04.000Z",
+      "reference_label": "C",
+      "sequence_no": 456,
+      "student_tokens_before_clip": 74
+    },
+    {
+      "arrival_index": 142,
+      "clipped": false,
+      "complaint_id": "8166129",
+      "input_sha256": "72be0491d141a05647114a8e7dbdc66da9a25597353d475f4f9f9f8d5b23bf0b",
+      "received_at_utc": "2024-01-17T19:00:10.000Z",
+      "reference_label": "C",
+      "sequence_no": 460,
+      "student_tokens_before_clip": 359
+    },
+    {
+      "arrival_index": 143,
+      "clipped": false,
+      "complaint_id": "8171347",
+      "input_sha256": "e2e7583028cf056bb125495f1d5a019f19fd4d4536d76bcccd4f95f0c391869f",
+      "received_at_utc": "2024-01-17T19:02:31.000Z",
+      "reference_label": "C",
+      "sequence_no": 461,
+      "student_tokens_before_clip": 891
+    },
+    {
+      "arrival_index": 144,
+      "clipped": false,
+      "complaint_id": "8166108",
+      "input_sha256": "68523e45557a52bf4313a7e7448458a78c7fc30397223548cd32579441bd4281",
+      "received_at_utc": "2024-01-17T19:07:35.000Z",
+      "reference_label": "D",
+      "sequence_no": 462,
+      "student_tokens_before_clip": 577
+    },
+    {
+      "arrival_index": 145,
+      "clipped": false,
+      "complaint_id": "8165729",
+      "input_sha256": "4bc00f104e3ca63e7f498b5c46eb8842927e6521c7f7ad17952e6467ad39e20c",
+      "received_at_utc": "2024-01-17T20:47:24.000Z",
+      "reference_label": "C",
+      "sequence_no": 465,
+      "student_tokens_before_clip": 99
+    },
+    {
+      "arrival_index": 146,
+      "clipped": false,
+      "complaint_id": "8171325",
+      "input_sha256": "b9c91c7240196dac6c3601b0846d0b72f17813ea11b4ed8037f64ffa345927fc",
+      "received_at_utc": "2024-01-17T20:59:20.000Z",
+      "reference_label": "C",
+      "sequence_no": 467,
+      "student_tokens_before_clip": 199
+    },
+    {
+      "arrival_index": 147,
+      "clipped": false,
+      "complaint_id": "8164561",
+      "input_sha256": "86f7f346c4516ef26af711219e9cff5031217bc0e0cb7fab5124dd7ecf67d7c8",
+      "received_at_utc": "2024-01-18T00:12:37.000Z",
+      "reference_label": "C",
+      "sequence_no": 478,
+      "student_tokens_before_clip": 293
+    },
+    {
+      "arrival_index": 148,
+      "clipped": false,
+      "complaint_id": "8170842",
+      "input_sha256": "b4c78ceb6d847a4c2886746ae155851a30dde821a72279021d4ecc5809bcae2a",
+      "received_at_utc": "2024-01-18T00:51:44.000Z",
+      "reference_label": "C",
+      "sequence_no": 479,
+      "student_tokens_before_clip": 222
+    },
+    {
+      "arrival_index": 149,
+      "clipped": false,
+      "complaint_id": "8170598",
+      "input_sha256": "4d10c6671cb13f39c4c8614bb7501d796f3042f66f0eaef40a186f62c9954aa1",
+      "received_at_utc": "2024-01-18T01:33:29.000Z",
+      "reference_label": "C",
+      "sequence_no": 480,
+      "student_tokens_before_clip": 374
+    },
+    {
+      "arrival_index": 150,
+      "clipped": false,
+      "complaint_id": "8170514",
+      "input_sha256": "2343d573dc59d596be95aeeb257b8e02be59461f9c65e1626b2f430c4688201c",
+      "received_at_utc": "2024-01-18T01:41:16.000Z",
+      "reference_label": "C",
+      "sequence_no": 481,
+      "student_tokens_before_clip": 975
+    },
+    {
+      "arrival_index": 151,
+      "clipped": false,
+      "complaint_id": "8168167",
+      "input_sha256": "dad81b6a7515a225d8b5ecbea515900a48e9eb20310e44c2ca57ccccc3c141a7",
+      "received_at_utc": "2024-01-18T01:57:34.000Z",
+      "reference_label": "C",
+      "sequence_no": 482,
+      "student_tokens_before_clip": 338
+    },
+    {
+      "arrival_index": 152,
+      "clipped": false,
+      "complaint_id": "8170656",
+      "input_sha256": "5d4edbfb5ddf28995af70d1105438efca142a01f87470fb801401da1b6f641c0",
+      "received_at_utc": "2024-01-18T02:20:32.000Z",
+      "reference_label": "C",
+      "sequence_no": 483,
+      "student_tokens_before_clip": 352
+    },
+    {
+      "arrival_index": 153,
+      "clipped": false,
+      "complaint_id": "8170118",
+      "input_sha256": "387d5ec83cea7196c619526c8f9723eb73bd96ec8759a281681c579a7cd474f8",
+      "received_at_utc": "2024-01-18T02:51:51.000Z",
+      "reference_label": "C",
+      "sequence_no": 484,
+      "student_tokens_before_clip": 237
+    },
+    {
+      "arrival_index": 154,
+      "clipped": false,
+      "complaint_id": "8168163",
+      "input_sha256": "467dfdce93fca93130a0222f96a26c644aba4609274eb8d7b0ceaaa4e39eab26",
+      "received_at_utc": "2024-01-18T03:23:39.000Z",
+      "reference_label": "D",
+      "sequence_no": 486,
+      "student_tokens_before_clip": 337
+    },
+    {
+      "arrival_index": 155,
+      "clipped": false,
+      "complaint_id": "8180646",
+      "input_sha256": "8ab5c8d975f8c619d164a88d81f823b6af1b884c41117f5aa2aaae0e51216e69",
+      "received_at_utc": "2024-01-18T12:39:16.000Z",
+      "reference_label": "C",
+      "sequence_no": 493,
+      "student_tokens_before_clip": 95
+    },
+    {
+      "arrival_index": 156,
+      "clipped": false,
+      "complaint_id": "8180315",
+      "input_sha256": "ff0e4bd4e72c39b24b38df4cb55cff64c6c5af439f1ab52f56023676890cd4f4",
+      "received_at_utc": "2024-01-18T13:59:18.000Z",
+      "reference_label": "E",
+      "sequence_no": 495,
+      "student_tokens_before_clip": 29
+    },
+    {
+      "arrival_index": 157,
+      "clipped": false,
+      "complaint_id": "8180506",
+      "input_sha256": "294c06c67d52e293f9b3413a18972193a723397684477389b9faef49ae74dac9",
+      "received_at_utc": "2024-01-18T14:23:35.000Z",
+      "reference_label": "C",
+      "sequence_no": 496,
+      "student_tokens_before_clip": 155
+    },
+    {
+      "arrival_index": 158,
+      "clipped": false,
+      "complaint_id": "8180345",
+      "input_sha256": "4a642244992c26c30291e74c580fff13bc17aca8868dbdda9b6555f0732ed553",
+      "received_at_utc": "2024-01-18T15:28:43.000Z",
+      "reference_label": "C",
+      "sequence_no": 497,
+      "student_tokens_before_clip": 953
+    },
+    {
+      "arrival_index": 159,
+      "clipped": false,
+      "complaint_id": "8179280",
+      "input_sha256": "40c6d6638df3f709c18616e1dd8955756c36f0a16a8038967a17dac14df1dc98",
+      "received_at_utc": "2024-01-18T17:34:28.000Z",
+      "reference_label": "C",
+      "sequence_no": 500,
+      "student_tokens_before_clip": 470
+    },
+    {
+      "arrival_index": 160,
+      "clipped": false,
+      "complaint_id": "8178347",
+      "input_sha256": "5e3349016feebd4976c6e6170f69d8630f136ec97baf63880d8b1f6cc438656c",
+      "received_at_utc": "2024-01-18T19:03:31.000Z",
+      "reference_label": "D",
+      "sequence_no": 503,
+      "student_tokens_before_clip": 1074
+    },
+    {
+      "arrival_index": 161,
+      "clipped": true,
+      "complaint_id": "8178342",
+      "input_sha256": "6cc6beda5149a90c2eb24ca3a7d974dab96e4c14ea11f1a50b774ff577750060",
+      "received_at_utc": "2024-01-18T19:05:20.000Z",
+      "reference_label": "C",
+      "sequence_no": 504,
+      "student_tokens_before_clip": 4501
+    },
+    {
+      "arrival_index": 162,
+      "clipped": false,
+      "complaint_id": "8178157",
+      "input_sha256": "499e948ddcc627fe6698afd749ecb8890ecebd8f26b4ce01fdb8dc39d4f3ffc2",
+      "received_at_utc": "2024-01-18T19:21:30.000Z",
+      "reference_label": "D",
+      "sequence_no": 505,
+      "student_tokens_before_clip": 556
+    },
+    {
+      "arrival_index": 163,
+      "clipped": false,
+      "complaint_id": "8178545",
+      "input_sha256": "a1ff0b3d9a07b5fb4ad9c5a3cb60241eab0791f4f832c157d4ed45e3d0f5b0b0",
+      "received_at_utc": "2024-01-18T21:15:37.000Z",
+      "reference_label": "D",
+      "sequence_no": 511,
+      "student_tokens_before_clip": 804
+    },
+    {
+      "arrival_index": 164,
+      "clipped": false,
+      "complaint_id": "8181032",
+      "input_sha256": "e5eb7be1328931beaf47cacd3a9bbd5a6cad46b1b936e38a4a6f2ecd2511f937",
+      "received_at_utc": "2024-01-18T23:20:39.000Z",
+      "reference_label": "C",
+      "sequence_no": 518,
+      "student_tokens_before_clip": 338
+    },
+    {
+      "arrival_index": 165,
+      "clipped": false,
+      "complaint_id": "8176292",
+      "input_sha256": "c2c609741952a4ff492a1adf5ad64ed624443c9d486ffca8ac24612d371db56b",
+      "received_at_utc": "2024-01-19T01:01:59.000Z",
+      "reference_label": "D",
+      "sequence_no": 520,
+      "student_tokens_before_clip": 2182
+    },
+    {
+      "arrival_index": 166,
+      "clipped": false,
+      "complaint_id": "8175671",
+      "input_sha256": "c8628451268fcc6d437fe14c873e6756e7b47b5ff275e1acbb36453e6c17949d",
+      "received_at_utc": "2024-01-19T02:03:02.000Z",
+      "reference_label": "C",
+      "sequence_no": 521,
+      "student_tokens_before_clip": 217
+    },
+    {
+      "arrival_index": 167,
+      "clipped": false,
+      "complaint_id": "8186703",
+      "input_sha256": "131ec04a6054591c2f60e045c3fffd3f8e07a6a8d8ac1b5dd878c3b650fabadc",
+      "received_at_utc": "2024-01-19T13:21:03.000Z",
+      "reference_label": "A",
+      "sequence_no": 525,
+      "student_tokens_before_clip": 953
+    },
+    {
+      "arrival_index": 168,
+      "clipped": false,
+      "complaint_id": "8188267",
+      "input_sha256": "7e7381e37398e175b99286b876ac249e407a24084e3a98c5392f189d44f174ba",
+      "received_at_utc": "2024-01-19T13:35:24.000Z",
+      "reference_label": "C",
+      "sequence_no": 527,
+      "student_tokens_before_clip": 87
+    },
+    {
+      "arrival_index": 169,
+      "clipped": false,
+      "complaint_id": "8186765",
+      "input_sha256": "e19f90ee3b71f42798d41c0aba57e50c3c382cc3ee483a1c347602a18d4b1334",
+      "received_at_utc": "2024-01-19T13:39:17.000Z",
+      "reference_label": "C",
+      "sequence_no": 528,
+      "student_tokens_before_clip": 986
+    },
+    {
+      "arrival_index": 170,
+      "clipped": false,
+      "complaint_id": "8182486",
+      "input_sha256": "185fc8164d50efd9f6f047d1585b24e7c3e958598174f35daafe961970d0100e",
+      "received_at_utc": "2024-01-19T16:49:12.000Z",
+      "reference_label": "C",
+      "sequence_no": 533,
+      "student_tokens_before_clip": 961
+    },
+    {
+      "arrival_index": 171,
+      "clipped": false,
+      "complaint_id": "8182357",
+      "input_sha256": "19ed3bdae5f77f328d5721c494340d736add79213c1dd8d95e8405819c887128",
+      "received_at_utc": "2024-01-19T17:47:38.000Z",
+      "reference_label": "C",
+      "sequence_no": 534,
+      "student_tokens_before_clip": 271
+    },
+    {
+      "arrival_index": 172,
+      "clipped": false,
+      "complaint_id": "8182369",
+      "input_sha256": "5d984c94ff7e68fbc011dd65d8854bcbfb9a76f56fc67ca60592ffce846d8604",
+      "received_at_utc": "2024-01-19T17:54:10.000Z",
+      "reference_label": "A",
+      "sequence_no": 535,
+      "student_tokens_before_clip": 338
+    },
+    {
+      "arrival_index": 173,
+      "clipped": false,
+      "complaint_id": "8182582",
+      "input_sha256": "5811312bc1eb9b4a86aa0b7aaa49a8ca160cd8a8c4d3177e126dc1f82ccf8a1c",
+      "received_at_utc": "2024-01-19T19:04:34.000Z",
+      "reference_label": "C",
+      "sequence_no": 543,
+      "student_tokens_before_clip": 492
+    },
+    {
+      "arrival_index": 174,
+      "clipped": false,
+      "complaint_id": "8183100",
+      "input_sha256": "59db423702f9d633cdeb883f6d38893c6bf403f4ac976a040895ea727e7f73cb",
+      "received_at_utc": "2024-01-19T19:28:37.000Z",
+      "reference_label": "C",
+      "sequence_no": 544,
+      "student_tokens_before_clip": 117
+    },
+    {
+      "arrival_index": 175,
+      "clipped": false,
+      "complaint_id": "8184499",
+      "input_sha256": "7c090929822a61de261266fea1a641f800f789c1d373846e60694bcba8bd7703",
+      "received_at_utc": "2024-01-19T23:15:15.000Z",
+      "reference_label": "C",
+      "sequence_no": 555,
+      "student_tokens_before_clip": 140
+    },
+    {
+      "arrival_index": 176,
+      "clipped": false,
+      "complaint_id": "8184669",
+      "input_sha256": "33f9d2d7f42dc58ebd11754c77c2675cffeb398da7e53e5d9b2e86d68648f452",
+      "received_at_utc": "2024-01-19T23:31:51.000Z",
+      "reference_label": "C",
+      "sequence_no": 556,
+      "student_tokens_before_clip": 42
+    },
+    {
+      "arrival_index": 177,
+      "clipped": false,
+      "complaint_id": "8193711",
+      "input_sha256": "7d4e25953841953226710d5165df13a0bab644e2a19f0e341456d70415e32d1a",
+      "received_at_utc": "2024-01-20T14:17:56.000Z",
+      "reference_label": "C",
+      "sequence_no": 562,
+      "student_tokens_before_clip": 136
+    },
+    {
+      "arrival_index": 178,
+      "clipped": false,
+      "complaint_id": "8193136",
+      "input_sha256": "3d882d00df3ee22ef658628c1d79b25a302bc65f20fc227298ff258835f67e1c",
+      "received_at_utc": "2024-01-20T15:17:44.000Z",
+      "reference_label": "D",
+      "sequence_no": 563,
+      "student_tokens_before_clip": 93
+    },
+    {
+      "arrival_index": 179,
+      "clipped": false,
+      "complaint_id": "8192985",
+      "input_sha256": "4a5b8af3300b24f24566d53a1d7fd8ff229284025f2f6e393f92c38058da43bc",
+      "received_at_utc": "2024-01-20T15:37:50.000Z",
+      "reference_label": "C",
+      "sequence_no": 564,
+      "student_tokens_before_clip": 92
+    },
+    {
+      "arrival_index": 180,
+      "clipped": false,
+      "complaint_id": "8193111",
+      "input_sha256": "0ebf7d0931212527610e1d13b3ee702c0a5b30806d13c73f2c092de43625835f",
+      "received_at_utc": "2024-01-20T15:56:41.000Z",
+      "reference_label": "C",
+      "sequence_no": 565,
+      "student_tokens_before_clip": 131
+    },
+    {
+      "arrival_index": 181,
+      "clipped": false,
+      "complaint_id": "8192835",
+      "input_sha256": "3b9b5460e4a923c1a4b5fa57e67fd432b32956b29332dfbef394459ce26dac64",
+      "received_at_utc": "2024-01-20T17:27:32.000Z",
+      "reference_label": "C",
+      "sequence_no": 568,
+      "student_tokens_before_clip": 2754
+    },
+    {
+      "arrival_index": 182,
+      "clipped": false,
+      "complaint_id": "8193923",
+      "input_sha256": "f333ce22971a077bb47d4586557822b8a9f5de14c7542a39d2369993e56e6097",
+      "received_at_utc": "2024-01-20T21:41:55.000Z",
+      "reference_label": "C",
+      "sequence_no": 572,
+      "student_tokens_before_clip": 1216
+    },
+    {
+      "arrival_index": 183,
+      "clipped": false,
+      "complaint_id": "8192098",
+      "input_sha256": "4490892699d4fc1c84216f5d809b5a2fdb3f6bc7cc2f47defeb63bfedbaccda1",
+      "received_at_utc": "2024-01-20T23:18:46.000Z",
+      "reference_label": "C",
+      "sequence_no": 575,
+      "student_tokens_before_clip": 789
+    },
+    {
+      "arrival_index": 184,
+      "clipped": false,
+      "complaint_id": "8190731",
+      "input_sha256": "71839d3faaf47c2b4181886d440e1f30d568755ab1493853c4556c80ec860131",
+      "received_at_utc": "2024-01-21T09:46:29.000Z",
+      "reference_label": "D",
+      "sequence_no": 579,
+      "student_tokens_before_clip": 37
+    },
+    {
+      "arrival_index": 185,
+      "clipped": false,
+      "complaint_id": "8195522",
+      "input_sha256": "f7df019d9471a729b19320669bbc4dd8b9ce4a7f2092f8413bf4dde84b7c8599",
+      "received_at_utc": "2024-01-22T03:25:48.000Z",
+      "reference_label": "C",
+      "sequence_no": 589,
+      "student_tokens_before_clip": 163
+    },
+    {
+      "arrival_index": 186,
+      "clipped": false,
+      "complaint_id": "8195450",
+      "input_sha256": "e71597017b9960ad62efda03cf527b31ffc6306724b413d89dfd7066656893d9",
+      "received_at_utc": "2024-01-22T03:44:41.000Z",
+      "reference_label": "C",
+      "sequence_no": 590,
+      "student_tokens_before_clip": 77
+    },
+    {
+      "arrival_index": 187,
+      "clipped": false,
+      "complaint_id": "8202797",
+      "input_sha256": "18fc98fa4001e6a08383d8869ecf736aaf89d3cd942b45b2dfc9cd203da789c9",
+      "received_at_utc": "2024-01-22T15:44:27.000Z",
+      "reference_label": "E",
+      "sequence_no": 595,
+      "student_tokens_before_clip": 241
+    },
+    {
+      "arrival_index": 188,
+      "clipped": false,
+      "complaint_id": "8205255",
+      "input_sha256": "65b99fdee0ad5cae403922f2320246801f8afe42aa14fabdad8bc3a0831c92b1",
+      "received_at_utc": "2024-01-22T15:54:49.000Z",
+      "reference_label": "C",
+      "sequence_no": 597,
+      "student_tokens_before_clip": 167
+    },
+    {
+      "arrival_index": 189,
+      "clipped": false,
+      "complaint_id": "8203567",
+      "input_sha256": "c426320c9d2dda9f60b5409206028a4cb5f0263c4ed1aa50af3b1da6628a7732",
+      "received_at_utc": "2024-01-22T18:29:08.000Z",
+      "reference_label": "C",
+      "sequence_no": 609,
+      "student_tokens_before_clip": 315
+    },
+    {
+      "arrival_index": 190,
+      "clipped": false,
+      "complaint_id": "8197464",
+      "input_sha256": "79f404147968a40c791ca5d6f1ff2cd4e35467d156f01cf24026183e375e7401",
+      "received_at_utc": "2024-01-22T20:07:29.000Z",
+      "reference_label": "C",
+      "sequence_no": 611,
+      "student_tokens_before_clip": 173
+    },
+    {
+      "arrival_index": 191,
+      "clipped": false,
+      "complaint_id": "8198548",
+      "input_sha256": "b94efb8386c87565c12a9fe476023976e4ac059b46e6464e7a3b69d3c363e7f0",
+      "received_at_utc": "2024-01-22T22:20:09.000Z",
+      "reference_label": "C",
+      "sequence_no": 616,
+      "student_tokens_before_clip": 124
+    },
+    {
+      "arrival_index": 192,
+      "clipped": false,
+      "complaint_id": "8198871",
+      "input_sha256": "ea6306e3f4f138217029ccc83b3a6a3d44f2b6eb5b5ee30740a3c591ef3023dd",
+      "received_at_utc": "2024-01-22T22:47:00.000Z",
+      "reference_label": "D",
+      "sequence_no": 617,
+      "student_tokens_before_clip": 444
+    },
+    {
+      "arrival_index": 193,
+      "clipped": false,
+      "complaint_id": "8198851",
+      "input_sha256": "ee97b72fe1f9625aea73b01716c562d5df6357912c4be6a94197b70333f9b43b",
+      "received_at_utc": "2024-01-22T22:51:28.000Z",
+      "reference_label": "C",
+      "sequence_no": 618,
+      "student_tokens_before_clip": 15
+    },
+    {
+      "arrival_index": 194,
+      "clipped": false,
+      "complaint_id": "8199452",
+      "input_sha256": "d65ab2ff45f4d26ea01ca8407ec59255ed7fe6148b5166dad986256213180f45",
+      "received_at_utc": "2024-01-22T23:20:04.000Z",
+      "reference_label": "C",
+      "sequence_no": 619,
+      "student_tokens_before_clip": 1472
+    },
+    {
+      "arrival_index": 195,
+      "clipped": false,
+      "complaint_id": "8199297",
+      "input_sha256": "63987fc1d9645daf6938310b83b117b6e929abf2e865883f8d26046e35f88d41",
+      "received_at_utc": "2024-01-22T23:38:29.000Z",
+      "reference_label": "E",
+      "sequence_no": 623,
+      "student_tokens_before_clip": 266
+    },
+    {
+      "arrival_index": 196,
+      "clipped": false,
+      "complaint_id": "8199554",
+      "input_sha256": "2662d16894b0cff88502916f78ec1524c1202f08da41d25145b58755e20fff64",
+      "received_at_utc": "2024-01-23T00:01:53.000Z",
+      "reference_label": "C",
+      "sequence_no": 625,
+      "student_tokens_before_clip": 525
+    },
+    {
+      "arrival_index": 197,
+      "clipped": false,
+      "complaint_id": "8199378",
+      "input_sha256": "fd06ecc56788dda97306b2786537a5987a1d7deb38c7180982432491adf2ba92",
+      "received_at_utc": "2024-01-23T00:14:45.000Z",
+      "reference_label": "D",
+      "sequence_no": 626,
+      "student_tokens_before_clip": 84
+    },
+    {
+      "arrival_index": 198,
+      "clipped": false,
+      "complaint_id": "8200266",
+      "input_sha256": "2133ba878087947339c0a6119b0a73ea14a62b7bad45094e161e43f84cf0b267",
+      "received_at_utc": "2024-01-23T02:37:06.000Z",
+      "reference_label": "C",
+      "sequence_no": 631,
+      "student_tokens_before_clip": 172
+    },
+    {
+      "arrival_index": 199,
+      "clipped": false,
+      "complaint_id": "8204248",
+      "input_sha256": "18736727d373295954d0d57658582968b883d7b5c9ae868d3a9a2e3bc23baa0a",
+      "received_at_utc": "2024-01-23T04:13:17.000Z",
+      "reference_label": "C",
+      "sequence_no": 633,
+      "student_tokens_before_clip": 84
+    },
+    {
+      "arrival_index": 200,
+      "clipped": false,
+      "complaint_id": "8206357",
+      "input_sha256": "a774c3ee863677d792ece3e8ae3be294d6ebcb40c24a387798b2f5ebc50b3e2b",
+      "received_at_utc": "2024-01-23T12:40:11.000Z",
+      "reference_label": "D",
+      "sequence_no": 636,
+      "student_tokens_before_clip": 221
+    },
+    {
+      "arrival_index": 201,
+      "clipped": false,
+      "complaint_id": "8207543",
+      "input_sha256": "9c860dec37d128c6988fdfc6e9af021d5dc55990aa5d7e7692ec46421f81ce7a",
+      "received_at_utc": "2024-01-23T16:28:17.000Z",
+      "reference_label": "B",
+      "sequence_no": 641,
+      "student_tokens_before_clip": 465
+    },
+    {
+      "arrival_index": 202,
+      "clipped": false,
+      "complaint_id": "8207401",
+      "input_sha256": "abb2824eba09b079d79f5934b7def26560644411e1849f486bc0ac205524c5ba",
+      "received_at_utc": "2024-01-23T16:28:40.000Z",
+      "reference_label": "E",
+      "sequence_no": 642,
+      "student_tokens_before_clip": 895
+    },
+    {
+      "arrival_index": 203,
+      "clipped": false,
+      "complaint_id": "8208706",
+      "input_sha256": "8db3b5e540698e0a8b270f96edd558f71344ee21f31633354c484cde90e8352e",
+      "received_at_utc": "2024-01-23T18:47:01.000Z",
+      "reference_label": "C",
+      "sequence_no": 648,
+      "student_tokens_before_clip": 298
+    },
+    {
+      "arrival_index": 204,
+      "clipped": false,
+      "complaint_id": "8209398",
+      "input_sha256": "eeb8f08083c30c757238de7ce59222f7bdb5070d0a873ff6fc4d687e954d9da7",
+      "received_at_utc": "2024-01-23T19:34:47.000Z",
+      "reference_label": "C",
+      "sequence_no": 650,
+      "student_tokens_before_clip": 244
+    },
+    {
+      "arrival_index": 205,
+      "clipped": false,
+      "complaint_id": "8209134",
+      "input_sha256": "5e89290f5531b5d15aea348b562a9ddda33f42f8b921914f92759e65122b81d3",
+      "received_at_utc": "2024-01-23T19:36:01.000Z",
+      "reference_label": "C",
+      "sequence_no": 651,
+      "student_tokens_before_clip": 139
+    },
+    {
+      "arrival_index": 206,
+      "clipped": false,
+      "complaint_id": "8209424",
+      "input_sha256": "1371f9f2258a7b934aae72559417c3287973bdbd122a21aeb589bf705be0bc99",
+      "received_at_utc": "2024-01-23T19:40:45.000Z",
+      "reference_label": "E",
+      "sequence_no": 653,
+      "student_tokens_before_clip": 157
+    },
+    {
+      "arrival_index": 207,
+      "clipped": false,
+      "complaint_id": "8208751",
+      "input_sha256": "8b71d8c414c51c7f234a0047af819acdf6baac147cc451561297117a04891b4c",
+      "received_at_utc": "2024-01-23T19:46:14.000Z",
+      "reference_label": "C",
+      "sequence_no": 654,
+      "student_tokens_before_clip": 221
+    },
+    {
+      "arrival_index": 208,
+      "clipped": false,
+      "complaint_id": "8209074",
+      "input_sha256": "cd87dd5e7fb08cb548ae32dc92dbe0e5c0cbfe683bdbaf2d76f134567d1859bd",
+      "received_at_utc": "2024-01-23T19:56:31.000Z",
+      "reference_label": "C",
+      "sequence_no": 657,
+      "student_tokens_before_clip": 167
+    },
+    {
+      "arrival_index": 209,
+      "clipped": false,
+      "complaint_id": "8209213",
+      "input_sha256": "3736406d4aa3ff95048e71b70e0a4f3568e92d376d2ccb7820cf77b7269e7bb9",
+      "received_at_utc": "2024-01-23T20:27:49.000Z",
+      "reference_label": "C",
+      "sequence_no": 658,
+      "student_tokens_before_clip": 215
+    },
+    {
+      "arrival_index": 210,
+      "clipped": false,
+      "complaint_id": "8210213",
+      "input_sha256": "3bd90a0f711fa12fc6e02904dedf5443ac144ec11cdaa50bcf91248b8c7e5917",
+      "received_at_utc": "2024-01-23T21:18:35.000Z",
+      "reference_label": "D",
+      "sequence_no": 660,
+      "student_tokens_before_clip": 279
+    },
+    {
+      "arrival_index": 211,
+      "clipped": false,
+      "complaint_id": "8209904",
+      "input_sha256": "3c61eb8a3d1c4ac688e469f985b3f390a6b3ac0ea02c55d458ff59f5f1769ce5",
+      "received_at_utc": "2024-01-23T21:25:25.000Z",
+      "reference_label": "C",
+      "sequence_no": 661,
+      "student_tokens_before_clip": 600
+    },
+    {
+      "arrival_index": 212,
+      "clipped": false,
+      "complaint_id": "8210333",
+      "input_sha256": "e17337c72f0dcad4d176e22c197275d85eaac9eaab1f53c6b92a44b735e787a7",
+      "received_at_utc": "2024-01-23T21:57:05.000Z",
+      "reference_label": "C",
+      "sequence_no": 662,
+      "student_tokens_before_clip": 158
+    },
+    {
+      "arrival_index": 213,
+      "clipped": false,
+      "complaint_id": "8210477",
+      "input_sha256": "a799d50a7bec3228d0607a5ff7f34da1a557e0ddc2081e918ca5677ae2236702",
+      "received_at_utc": "2024-01-23T22:19:53.000Z",
+      "reference_label": "C",
+      "sequence_no": 663,
+      "student_tokens_before_clip": 416
+    },
+    {
+      "arrival_index": 214,
+      "clipped": false,
+      "complaint_id": "8210396",
+      "input_sha256": "97e061cbaa3c470a1b695de554f92ce956c9dd3ce7efc3d4c00de65e89db38a3",
+      "received_at_utc": "2024-01-23T22:35:09.000Z",
+      "reference_label": "D",
+      "sequence_no": 664,
+      "student_tokens_before_clip": 458
+    },
+    {
+      "arrival_index": 215,
+      "clipped": false,
+      "complaint_id": "8210874",
+      "input_sha256": "7ef455a32b0c9eee0ef8f904fcc89b05ce12f4fbad2e0b12ca0d7f84f8e12aec",
+      "received_at_utc": "2024-01-23T23:55:36.000Z",
+      "reference_label": "C",
+      "sequence_no": 668,
+      "student_tokens_before_clip": 1225
+    },
+    {
+      "arrival_index": 216,
+      "clipped": false,
+      "complaint_id": "8211412",
+      "input_sha256": "7f024d9067e0e5be8b094f41ebfc59aefc17c77a56c0054b646dfca53257f914",
+      "received_at_utc": "2024-01-24T00:52:46.000Z",
+      "reference_label": "C",
+      "sequence_no": 670,
+      "student_tokens_before_clip": 148
+    },
+    {
+      "arrival_index": 217,
+      "clipped": false,
+      "complaint_id": "8212256",
+      "input_sha256": "98d451a04dc7c1c7324efc77375c67423a14a69cbd9ca2c7d223663bc3f51607",
+      "received_at_utc": "2024-01-24T03:35:42.000Z",
+      "reference_label": "C",
+      "sequence_no": 677,
+      "student_tokens_before_clip": 337
+    },
+    {
+      "arrival_index": 218,
+      "clipped": false,
+      "complaint_id": "8212721",
+      "input_sha256": "321110762326a7ab32a10c3820c978c02bb85099da80250a2a1e6803bb52e808",
+      "received_at_utc": "2024-01-24T05:17:37.000Z",
+      "reference_label": "D",
+      "sequence_no": 679,
+      "student_tokens_before_clip": 115
+    },
+    {
+      "arrival_index": 219,
+      "clipped": false,
+      "complaint_id": "8212754",
+      "input_sha256": "e37dbd4e0f70cddeab8a91983ce11510e9e82021befa62e360989129a5b413cd",
+      "received_at_utc": "2024-01-24T06:08:56.000Z",
+      "reference_label": "A",
+      "sequence_no": 681,
+      "student_tokens_before_clip": 47
+    },
+    {
+      "arrival_index": 220,
+      "clipped": false,
+      "complaint_id": "8215803",
+      "input_sha256": "59dc8bc2ad962c4471d820540d088b65818ce54c7ea6af0b624919e49b4ee359",
+      "received_at_utc": "2024-01-24T16:30:00.000Z",
+      "reference_label": "C",
+      "sequence_no": 688,
+      "student_tokens_before_clip": 491
+    },
+    {
+      "arrival_index": 221,
+      "clipped": false,
+      "complaint_id": "8216991",
+      "input_sha256": "f4e52052b815fcb0d6e3004363643c758b50bb4f3476012a7c9985890b669824",
+      "received_at_utc": "2024-01-24T18:44:46.000Z",
+      "reference_label": "A",
+      "sequence_no": 692,
+      "student_tokens_before_clip": 146
+    },
+    {
+      "arrival_index": 222,
+      "clipped": false,
+      "complaint_id": "8217176",
+      "input_sha256": "1c2025d652468b3b3dbaf73ba5ce9774ab369ecf1b38d4c731db1e6db0254e1f",
+      "received_at_utc": "2024-01-24T20:23:14.000Z",
+      "reference_label": "A",
+      "sequence_no": 697,
+      "student_tokens_before_clip": 147
+    },
+    {
+      "arrival_index": 223,
+      "clipped": false,
+      "complaint_id": "8217995",
+      "input_sha256": "0863818a7f204f2181c93be20976f9d2327edbc6dac01bc5f70a9ca44571e928",
+      "received_at_utc": "2024-01-24T21:16:05.000Z",
+      "reference_label": "A",
+      "sequence_no": 699,
+      "student_tokens_before_clip": 217
+    },
+    {
+      "arrival_index": 224,
+      "clipped": false,
+      "complaint_id": "8218377",
+      "input_sha256": "8e8fe98ec3644b285cf33230ccd63ef9446e200757172c83d44142f08cc0b9e7",
+      "received_at_utc": "2024-01-24T21:57:18.000Z",
+      "reference_label": "B",
+      "sequence_no": 705,
+      "student_tokens_before_clip": 114
+    },
+    {
+      "arrival_index": 225,
+      "clipped": false,
+      "complaint_id": "8218660",
+      "input_sha256": "40ea26d71488c318cccde7b24c8ae3a4e7c7f786b14b125b7d63c9c4807bbcdc",
+      "received_at_utc": "2024-01-24T23:17:49.000Z",
+      "reference_label": "C",
+      "sequence_no": 706,
+      "student_tokens_before_clip": 205
+    },
+    {
+      "arrival_index": 226,
+      "clipped": false,
+      "complaint_id": "8219148",
+      "input_sha256": "857bec61dffeec5d8d0b38a632c2d8dfae2fa81ae5e1f301df659a70e0926790",
+      "received_at_utc": "2024-01-25T00:13:31.000Z",
+      "reference_label": "C",
+      "sequence_no": 710,
+      "student_tokens_before_clip": 341
+    },
+    {
+      "arrival_index": 227,
+      "clipped": false,
+      "complaint_id": "8219094",
+      "input_sha256": "e3ced40a18dfd545f1eb67906eb8fbd5ccc2c852b233d3bb985e0428b5e13f7d",
+      "received_at_utc": "2024-01-25T00:48:43.000Z",
+      "reference_label": "A",
+      "sequence_no": 711,
+      "student_tokens_before_clip": 260
+    },
+    {
+      "arrival_index": 228,
+      "clipped": false,
+      "complaint_id": "8213767",
+      "input_sha256": "206843effda9d19a9ae149d8ef696893b7075e6618a50706aeb7e23020c4ad8f",
+      "received_at_utc": "2024-01-25T02:17:35.000Z",
+      "reference_label": "B",
+      "sequence_no": 715,
+      "student_tokens_before_clip": 200
+    },
+    {
+      "arrival_index": 229,
+      "clipped": false,
+      "complaint_id": "8223083",
+      "input_sha256": "e62dcb94dc9cf265160a660f8b2fcb152eefe8c4b62f1d9ed0daedf3a3b49edd",
+      "received_at_utc": "2024-01-25T15:55:04.000Z",
+      "reference_label": "B",
+      "sequence_no": 726,
+      "student_tokens_before_clip": 425
+    },
+    {
+      "arrival_index": 230,
+      "clipped": false,
+      "complaint_id": "8221147",
+      "input_sha256": "8207fb9a77a2f12ab7a36eedcba5dd32666530022279a7bdac79b1238bee95a2",
+      "received_at_utc": "2024-01-25T18:03:26.000Z",
+      "reference_label": "B",
+      "sequence_no": 731,
+      "student_tokens_before_clip": 456
+    },
+    {
+      "arrival_index": 231,
+      "clipped": false,
+      "complaint_id": "8224447",
+      "input_sha256": "b3e7cc21120a0d8266b03f72c8158365fe7c10a6062b2e5e63dd28222ba058fb",
+      "received_at_utc": "2024-01-25T19:31:19.000Z",
+      "reference_label": "C",
+      "sequence_no": 735,
+      "student_tokens_before_clip": 370
+    },
+    {
+      "arrival_index": 232,
+      "clipped": false,
+      "complaint_id": "8224603",
+      "input_sha256": "00c542aa31ab6261d5767f3cb93fe05186e7a187b805d9f03bcb7770c8c7cf9f",
+      "received_at_utc": "2024-01-25T19:48:37.000Z",
+      "reference_label": "D",
+      "sequence_no": 737,
+      "student_tokens_before_clip": 219
+    },
+    {
+      "arrival_index": 233,
+      "clipped": false,
+      "complaint_id": "8225065",
+      "input_sha256": "5c95a116169ba479da70d62c7ccbbb9d5e1676b2a2e2e78afa40756dbd871494",
+      "received_at_utc": "2024-01-25T21:02:13.000Z",
+      "reference_label": "C",
+      "sequence_no": 739,
+      "student_tokens_before_clip": 209
+    },
+    {
+      "arrival_index": 234,
+      "clipped": false,
+      "complaint_id": "8226998",
+      "input_sha256": "8996b1bc456b0bed43652714b7e69ae875248e37a83bfd65f362d0114f3708b7",
+      "received_at_utc": "2024-01-26T03:14:17.000Z",
+      "reference_label": "D",
+      "sequence_no": 752,
+      "student_tokens_before_clip": 231
+    },
+    {
+      "arrival_index": 235,
+      "clipped": false,
+      "complaint_id": "8229728",
+      "input_sha256": "f0f135b1d4dc465f3693bfa99b5eea312cc886038b3904262e1803e1f8574ab0",
+      "received_at_utc": "2024-01-26T07:36:48.000Z",
+      "reference_label": "C",
+      "sequence_no": 755,
+      "student_tokens_before_clip": 87
+    },
+    {
+      "arrival_index": 236,
+      "clipped": false,
+      "complaint_id": "8230049",
+      "input_sha256": "83e2cc8381f332e65a0b264f9af1dec02165509839d7adcbb40b618cc2bea165",
+      "received_at_utc": "2024-01-26T10:49:54.000Z",
+      "reference_label": "B",
+      "sequence_no": 757,
+      "student_tokens_before_clip": 203
+    },
+    {
+      "arrival_index": 237,
+      "clipped": false,
+      "complaint_id": "8230069",
+      "input_sha256": "fceee89e23b107f82737e362a13e2a1d20657db0dd418ee042af9687e195fd34",
+      "received_at_utc": "2024-01-26T12:08:05.000Z",
+      "reference_label": "C",
+      "sequence_no": 758,
+      "student_tokens_before_clip": 55
+    },
+    {
+      "arrival_index": 238,
+      "clipped": false,
+      "complaint_id": "8231456",
+      "input_sha256": "1e913dfd81be745363811b2c337d3ff9b91e67b3e9d79067a9db20efb25ba169",
+      "received_at_utc": "2024-01-26T19:03:15.000Z",
+      "reference_label": "C",
+      "sequence_no": 769,
+      "student_tokens_before_clip": 269
+    },
+    {
+      "arrival_index": 239,
+      "clipped": false,
+      "complaint_id": "8231441",
+      "input_sha256": "2baa6b2fda72ea7d5d10b588f20a007f0e32623aba67fad5d609d5e096666764",
+      "received_at_utc": "2024-01-26T19:09:40.000Z",
+      "reference_label": "A",
+      "sequence_no": 770,
+      "student_tokens_before_clip": 100
+    },
+    {
+      "arrival_index": 240,
+      "clipped": false,
+      "complaint_id": "8232636",
+      "input_sha256": "913250bae9affb7388dbf4cbe9ba98f1c771fb6852cd631041c921af38bcbd14",
+      "received_at_utc": "2024-01-26T22:15:43.000Z",
+      "reference_label": "D",
+      "sequence_no": 776,
+      "student_tokens_before_clip": 464
+    },
+    {
+      "arrival_index": 241,
+      "clipped": false,
+      "complaint_id": "8232869",
+      "input_sha256": "8b3468a85a915e8a33cc6443ebe83794e2862ad1c2b67bf571b6a34063ba2fdf",
+      "received_at_utc": "2024-01-26T22:40:13.000Z",
+      "reference_label": "C",
+      "sequence_no": 777,
+      "student_tokens_before_clip": 273
+    },
+    {
+      "arrival_index": 242,
+      "clipped": false,
+      "complaint_id": "8233064",
+      "input_sha256": "f04ffaf1bd4019e1bc568a0cc237f10e17b6454d6c59eaff41a1495a40d0970e",
+      "received_at_utc": "2024-01-27T00:12:10.000Z",
+      "reference_label": "D",
+      "sequence_no": 780,
+      "student_tokens_before_clip": 131
+    },
+    {
+      "arrival_index": 243,
+      "clipped": false,
+      "complaint_id": "8232712",
+      "input_sha256": "899ffdd8c69ebbb46dadc3ba968d2a5acfc6d5136703d9867a2dad591c011f2d",
+      "received_at_utc": "2024-01-27T00:52:33.000Z",
+      "reference_label": "D",
+      "sequence_no": 782,
+      "student_tokens_before_clip": 160
+    },
+    {
+      "arrival_index": 244,
+      "clipped": false,
+      "complaint_id": "8233367",
+      "input_sha256": "0eff697278a1cb55557266f4a63751c284f3ef0fd0fb1c197f05906ea489159e",
+      "received_at_utc": "2024-01-27T01:48:31.000Z",
+      "reference_label": "C",
+      "sequence_no": 783,
+      "student_tokens_before_clip": 232
+    },
+    {
+      "arrival_index": 245,
+      "clipped": false,
+      "complaint_id": "8237680",
+      "input_sha256": "3af71d5a5c443eebad6ff07261e18a0d089894a168ba5d542f10434e1044deeb",
+      "received_at_utc": "2024-01-27T07:56:52.000Z",
+      "reference_label": "B",
+      "sequence_no": 786,
+      "student_tokens_before_clip": 474
+    },
+    {
+      "arrival_index": 246,
+      "clipped": false,
+      "complaint_id": "8237695",
+      "input_sha256": "6d9d9da15c80d52d6ec4a824d2afc7df5840393096facf272a18c7987e73e16c",
+      "received_at_utc": "2024-01-27T14:04:18.000Z",
+      "reference_label": "D",
+      "sequence_no": 788,
+      "student_tokens_before_clip": 791
+    },
+    {
+      "arrival_index": 247,
+      "clipped": false,
+      "complaint_id": "8234687",
+      "input_sha256": "2eb9ec971643dfc31293db48dda55f2bf7378d35c2df3c15bf2504191733242b",
+      "received_at_utc": "2024-01-27T15:27:33.000Z",
+      "reference_label": "D",
+      "sequence_no": 791,
+      "student_tokens_before_clip": 485
+    },
+    {
+      "arrival_index": 248,
+      "clipped": false,
+      "complaint_id": "8236710",
+      "input_sha256": "c7ad050891fe0d0293b41c9e926683f86c8aaaa38ca03707502fcb3401b4e949",
+      "received_at_utc": "2024-01-27T16:48:14.000Z",
+      "reference_label": "C",
+      "sequence_no": 793,
+      "student_tokens_before_clip": 1274
+    },
+    {
+      "arrival_index": 249,
+      "clipped": false,
+      "complaint_id": "8237313",
+      "input_sha256": "69a6ccf015bcce808156193a324cea3461702ed78e313d7ad818cc15270c512b",
+      "received_at_utc": "2024-01-27T17:26:36.000Z",
+      "reference_label": "D",
+      "sequence_no": 794,
+      "student_tokens_before_clip": 129
+    },
+    {
+      "arrival_index": 250,
+      "clipped": false,
+      "complaint_id": "8236928",
+      "input_sha256": "5f1ea20b4469af7463bb2f8991f9f8616a92543392d266795f635a6bc6523516",
+      "received_at_utc": "2024-01-27T18:01:52.000Z",
+      "reference_label": "C",
+      "sequence_no": 795,
+      "student_tokens_before_clip": 174
+    },
+    {
+      "arrival_index": 251,
+      "clipped": false,
+      "complaint_id": "8236519",
+      "input_sha256": "2d3fd98019ee02afa491c8e56448a7336ea955de47accf4b9bd7db3524ac6cfc",
+      "received_at_utc": "2024-01-27T18:18:29.000Z",
+      "reference_label": "C",
+      "sequence_no": 796,
+      "student_tokens_before_clip": 222
+    },
+    {
+      "arrival_index": 252,
+      "clipped": false,
+      "complaint_id": "8236360",
+      "input_sha256": "ae89c88d1fa05af9a996ad0f7a492e6e91ffa0c69d4047be8e10cbd4f131c30a",
+      "received_at_utc": "2024-01-27T18:33:15.000Z",
+      "reference_label": "C",
+      "sequence_no": 797,
+      "student_tokens_before_clip": 23
+    },
+    {
+      "arrival_index": 253,
+      "clipped": false,
+      "complaint_id": "8236008",
+      "input_sha256": "dc903cbb9120a6805edd015542f2e92324d7bbed33d12e4794641e005826ae5a",
+      "received_at_utc": "2024-01-28T00:48:13.000Z",
+      "reference_label": "D",
+      "sequence_no": 805,
+      "student_tokens_before_clip": 948
+    },
+    {
+      "arrival_index": 254,
+      "clipped": false,
+      "complaint_id": "8235469",
+      "input_sha256": "4d2c4b6c97eed3ed612020f4b8f5ded31afb1ed9fdb6f8e669cdebddc86a1f33",
+      "received_at_utc": "2024-01-28T03:48:07.000Z",
+      "reference_label": "E",
+      "sequence_no": 806,
+      "student_tokens_before_clip": 87
+    },
+    {
+      "arrival_index": 255,
+      "clipped": false,
+      "complaint_id": "8235451",
+      "input_sha256": "61bcc9f24204a7c584e05e34337f19e6651e722aec79beeabc17455b28f83a05",
+      "received_at_utc": "2024-01-28T04:01:53.000Z",
+      "reference_label": "C",
+      "sequence_no": 807,
+      "student_tokens_before_clip": 67
+    },
+    {
+      "arrival_index": 256,
+      "clipped": false,
+      "complaint_id": "8241125",
+      "input_sha256": "12dbd679d1147c931723a95b9b1b4331c564675ec757dde81286f3ca986e2d05",
+      "received_at_utc": "2024-01-28T15:29:20.000Z",
+      "reference_label": "C",
+      "sequence_no": 811,
+      "student_tokens_before_clip": 410
+    },
+    {
+      "arrival_index": 257,
+      "clipped": false,
+      "complaint_id": "8240022",
+      "input_sha256": "f4bff61368f8ebec617bfaacfface9701b2667e578db1046571c5d94dc324b62",
+      "received_at_utc": "2024-01-28T17:51:33.000Z",
+      "reference_label": "C",
+      "sequence_no": 813,
+      "student_tokens_before_clip": 226
+    },
+    {
+      "arrival_index": 258,
+      "clipped": false,
+      "complaint_id": "8239930",
+      "input_sha256": "97fa1bf2da636076b97a168b296d015d3454a062afa06bd48465081422047ffd",
+      "received_at_utc": "2024-01-28T18:10:50.000Z",
+      "reference_label": "C",
+      "sequence_no": 814,
+      "student_tokens_before_clip": 233
+    },
+    {
+      "arrival_index": 259,
+      "clipped": false,
+      "complaint_id": "8239106",
+      "input_sha256": "bee07b964fc954c0f0139bb8cc6828b82a0a4f904990f7465a85685e2a080d55",
+      "received_at_utc": "2024-01-29T00:59:25.000Z",
+      "reference_label": "C",
+      "sequence_no": 819,
+      "student_tokens_before_clip": 582
+    },
+    {
+      "arrival_index": 260,
+      "clipped": false,
+      "complaint_id": "8239159",
+      "input_sha256": "6edf9eb46cac413982203f500d8c32fef038ae09c0f05650462edcd73f1fde34",
+      "received_at_utc": "2024-01-29T01:22:39.000Z",
+      "reference_label": "D",
+      "sequence_no": 820,
+      "student_tokens_before_clip": 61
+    },
+    {
+      "arrival_index": 261,
+      "clipped": false,
+      "complaint_id": "8242801",
+      "input_sha256": "a7813eb1d4d8cd64386ab80ab925e5460bd2772da2bf1f87a58998865e13ce14",
+      "received_at_utc": "2024-01-29T07:46:26.000Z",
+      "reference_label": "D",
+      "sequence_no": 825,
+      "student_tokens_before_clip": 391
+    },
+    {
+      "arrival_index": 262,
+      "clipped": false,
+      "complaint_id": "8247676",
+      "input_sha256": "fa7591ed49041b62f6c766f615787cf63483c68e4f027e16ae64057a92fcd265",
+      "received_at_utc": "2024-01-29T13:23:14.000Z",
+      "reference_label": "A",
+      "sequence_no": 826,
+      "student_tokens_before_clip": 508
+    },
+    {
+      "arrival_index": 263,
+      "clipped": false,
+      "complaint_id": "8241821",
+      "input_sha256": "0e52c8f7d9c996b868cfaef838d054570225d071c2f469af99a86082b16848bc",
+      "received_at_utc": "2024-01-29T15:45:31.000Z",
+      "reference_label": "C",
+      "sequence_no": 829,
+      "student_tokens_before_clip": 265
+    },
+    {
+      "arrival_index": 264,
+      "clipped": false,
+      "complaint_id": "8241465",
+      "input_sha256": "48ee716be9590d5bf5e523f5ea08bffccd06239f139cc5e280939548e7350f97",
+      "received_at_utc": "2024-01-29T16:55:53.000Z",
+      "reference_label": "C",
+      "sequence_no": 832,
+      "student_tokens_before_clip": 224
+    },
+    {
+      "arrival_index": 265,
+      "clipped": false,
+      "complaint_id": "8246348",
+      "input_sha256": "15c73ba315abda16e01dbf8a86fe6e3e9a7089d4c87d460329d7695df0578880",
+      "received_at_utc": "2024-01-29T20:47:25.000Z",
+      "reference_label": "C",
+      "sequence_no": 844,
+      "student_tokens_before_clip": 102
+    },
+    {
+      "arrival_index": 266,
+      "clipped": false,
+      "complaint_id": "8245822",
+      "input_sha256": "abd75dae6dbd77ecc8882aaebe34f3d1b9552f6c6c4312c8e21b577112c5dec0",
+      "received_at_utc": "2024-01-29T21:39:09.000Z",
+      "reference_label": "C",
+      "sequence_no": 845,
+      "student_tokens_before_clip": 81
+    },
+    {
+      "arrival_index": 267,
+      "clipped": false,
+      "complaint_id": "8244516",
+      "input_sha256": "1098b7024d696f3534b9019114e8a37c66aa3056c5ddbf31b0b77910861f8a7b",
+      "received_at_utc": "2024-01-30T01:10:23.000Z",
+      "reference_label": "D",
+      "sequence_no": 853,
+      "student_tokens_before_clip": 1089
+    },
+    {
+      "arrival_index": 268,
+      "clipped": false,
+      "complaint_id": "8243906",
+      "input_sha256": "f12391ef7bca36f94b8abd63b3ceb51c747ed8795bd5b5b1a303cb97c2219ec5",
+      "received_at_utc": "2024-01-30T01:59:55.000Z",
+      "reference_label": "C",
+      "sequence_no": 857,
+      "student_tokens_before_clip": 386
+    },
+    {
+      "arrival_index": 269,
+      "clipped": false,
+      "complaint_id": "8243779",
+      "input_sha256": "4dd8306c147c8f2db8cf9f7669109085054af09df26bd1790bd14d29ad3ae7b8",
+      "received_at_utc": "2024-01-30T02:21:52.000Z",
+      "reference_label": "A",
+      "sequence_no": 859,
+      "student_tokens_before_clip": 452
+    },
+    {
+      "arrival_index": 270,
+      "clipped": false,
+      "complaint_id": "8243560",
+      "input_sha256": "72827df084a69114fcd61ded15962eac54d6e51dd9db24d98e939329f8c97715",
+      "received_at_utc": "2024-01-30T04:10:47.000Z",
+      "reference_label": "C",
+      "sequence_no": 863,
+      "student_tokens_before_clip": 381
+    },
+    {
+      "arrival_index": 271,
+      "clipped": false,
+      "complaint_id": "8253463",
+      "input_sha256": "d08034ec154ccae40dd29e61e2e3027dafe0a8bca0c11004124f990228c3df42",
+      "received_at_utc": "2024-01-30T14:29:03.000Z",
+      "reference_label": "C",
+      "sequence_no": 871,
+      "student_tokens_before_clip": 197
+    },
+    {
+      "arrival_index": 272,
+      "clipped": false,
+      "complaint_id": "8255202",
+      "input_sha256": "344686cf00e445efd2ac8b2dc85a46826d3e653b4f68616db9c5ede8e7455824",
+      "received_at_utc": "2024-01-30T16:17:43.000Z",
+      "reference_label": "C",
+      "sequence_no": 875,
+      "student_tokens_before_clip": 44
+    },
+    {
+      "arrival_index": 273,
+      "clipped": false,
+      "complaint_id": "8255204",
+      "input_sha256": "512e76f365eaa123a554a9fcadd63e2fad6e9f8c8a3bbcd6a8ae5105e4cc5542",
+      "received_at_utc": "2024-01-30T16:21:45.000Z",
+      "reference_label": "D",
+      "sequence_no": 876,
+      "student_tokens_before_clip": 326
+    },
+    {
+      "arrival_index": 274,
+      "clipped": false,
+      "complaint_id": "8255225",
+      "input_sha256": "9d8bd12ca7c7604fa56ab7343bedc25dd59fff9cdd22b6097845768fd5af6c10",
+      "received_at_utc": "2024-01-30T16:59:56.000Z",
+      "reference_label": "C",
+      "sequence_no": 878,
+      "student_tokens_before_clip": 1751
+    },
+    {
+      "arrival_index": 275,
+      "clipped": false,
+      "complaint_id": "8252075",
+      "input_sha256": "6fa55f6fbc536456fc27d775dac789841c93a2ddf77ce262d046f0d0646d2560",
+      "received_at_utc": "2024-01-30T17:52:52.000Z",
+      "reference_label": "B",
+      "sequence_no": 883,
+      "student_tokens_before_clip": 395
+    },
+    {
+      "arrival_index": 276,
+      "clipped": false,
+      "complaint_id": "8252227",
+      "input_sha256": "35debc87f71a58ef38fd6aa11de68bcb387ce0708a8f3ca010206e6fc2954fc6",
+      "received_at_utc": "2024-01-30T17:54:41.000Z",
+      "reference_label": "C",
+      "sequence_no": 884,
+      "student_tokens_before_clip": 646
+    },
+    {
+      "arrival_index": 277,
+      "clipped": false,
+      "complaint_id": "8255139",
+      "input_sha256": "7dba828e351051f52cc485c07289b5c50f87365cef13ca162554fa9e516d3fc6",
+      "received_at_utc": "2024-01-30T19:02:42.000Z",
+      "reference_label": "C",
+      "sequence_no": 889,
+      "student_tokens_before_clip": 166
+    },
+    {
+      "arrival_index": 278,
+      "clipped": false,
+      "complaint_id": "8251496",
+      "input_sha256": "a421a6cca8e79dc2465a1a3c00904a515fd6129559aea5e542a538b000e31c2d",
+      "received_at_utc": "2024-01-30T19:52:46.000Z",
+      "reference_label": "D",
+      "sequence_no": 892,
+      "student_tokens_before_clip": 83
+    },
+    {
+      "arrival_index": 279,
+      "clipped": false,
+      "complaint_id": "8251324",
+      "input_sha256": "e5b9c15f9978001821962e9c1ccededbc70dcba4e9431744d8cc271821d4ef23",
+      "received_at_utc": "2024-01-30T20:35:48.000Z",
+      "reference_label": "C",
+      "sequence_no": 893,
+      "student_tokens_before_clip": 862
+    },
+    {
+      "arrival_index": 280,
+      "clipped": false,
+      "complaint_id": "8251278",
+      "input_sha256": "88c869eea6ca10d2e51cae2e8ffec7d5208311ee6d4292b26eb32c92e2d9d629",
+      "received_at_utc": "2024-01-30T20:39:59.000Z",
+      "reference_label": "C",
+      "sequence_no": 895,
+      "student_tokens_before_clip": 410
+    },
+    {
+      "arrival_index": 281,
+      "clipped": false,
+      "complaint_id": "8251205",
+      "input_sha256": "36f1ccaff4548113713b03c36bfaa4ba1f097fc8585d484c983baf88bd5e5fce",
+      "received_at_utc": "2024-01-30T20:49:38.000Z",
+      "reference_label": "C",
+      "sequence_no": 896,
+      "student_tokens_before_clip": 83
+    },
+    {
+      "arrival_index": 282,
+      "clipped": false,
+      "complaint_id": "8251171",
+      "input_sha256": "4a9d5bf34889cdb793d7a90c92b8086bae77b975586dfac18dfe87d3d1f74cba",
+      "received_at_utc": "2024-01-30T20:54:26.000Z",
+      "reference_label": "A",
+      "sequence_no": 897,
+      "student_tokens_before_clip": 170
+    },
+    {
+      "arrival_index": 283,
+      "clipped": false,
+      "complaint_id": "8254801",
+      "input_sha256": "245157bf84299e9223c19e7eb5d3533e128dd0605da2d06f0d756d4c6ca303c7",
+      "received_at_utc": "2024-01-30T21:45:22.000Z",
+      "reference_label": "D",
+      "sequence_no": 899,
+      "student_tokens_before_clip": 286
+    },
+    {
+      "arrival_index": 284,
+      "clipped": false,
+      "complaint_id": "8250631",
+      "input_sha256": "b9258062380e5fb831a4b70fd7b254a67a0be051d668aeb2db67418543bf9e06",
+      "received_at_utc": "2024-01-30T22:25:21.000Z",
+      "reference_label": "C",
+      "sequence_no": 903,
+      "student_tokens_before_clip": 341
+    },
+    {
+      "arrival_index": 285,
+      "clipped": false,
+      "complaint_id": "8250358",
+      "input_sha256": "7365ec6ab4d13e080baac804d1f84f777da087d44fb411d922a3344d1963e9a3",
+      "received_at_utc": "2024-01-30T23:16:52.000Z",
+      "reference_label": "D",
+      "sequence_no": 905,
+      "student_tokens_before_clip": 546
+    },
+    {
+      "arrival_index": 286,
+      "clipped": false,
+      "complaint_id": "8250223",
+      "input_sha256": "d82e479c67c690907f397f41c6ee956a85265811de2f2bb2c3f28c4ab03294b1",
+      "received_at_utc": "2024-01-31T00:15:29.000Z",
+      "reference_label": "C",
+      "sequence_no": 910,
+      "student_tokens_before_clip": 522
+    },
+    {
+      "arrival_index": 287,
+      "clipped": false,
+      "complaint_id": "8249814",
+      "input_sha256": "7e86ce5f29d4808024aa78849bb2df19ca019ba7a53f56b6fef244ec72615aa5",
+      "received_at_utc": "2024-01-31T01:12:51.000Z",
+      "reference_label": "C",
+      "sequence_no": 913,
+      "student_tokens_before_clip": 683
+    },
+    {
+      "arrival_index": 288,
+      "clipped": false,
+      "complaint_id": "8250189",
+      "input_sha256": "8d58b14d7f0213face46055e3a1f87d502f947ba6db33ba4e6ec883f37f4acda",
+      "received_at_utc": "2024-01-31T02:02:45.000Z",
+      "reference_label": "A",
+      "sequence_no": 915,
+      "student_tokens_before_clip": 188
+    },
+    {
+      "arrival_index": 289,
+      "clipped": false,
+      "complaint_id": "8249231",
+      "input_sha256": "3d5f8a632d66e2165a3a80227cf412a22ae2602cfb963582be55366e3deaa8b1",
+      "received_at_utc": "2024-01-31T03:04:07.000Z",
+      "reference_label": "D",
+      "sequence_no": 920,
+      "student_tokens_before_clip": 250
+    },
+    {
+      "arrival_index": 290,
+      "clipped": false,
+      "complaint_id": "8248936",
+      "input_sha256": "8d7f92acb4d22a827e6d3cfc612626671b30015e0e5f1df4f702e0a4618573eb",
+      "received_at_utc": "2024-01-31T03:43:47.000Z",
+      "reference_label": "A",
+      "sequence_no": 921,
+      "student_tokens_before_clip": 532
+    },
+    {
+      "arrival_index": 291,
+      "clipped": false,
+      "complaint_id": "8256651",
+      "input_sha256": "e0c398245c37dbc463812d4078ba1a36adc57890d1cc6d789fb4239117d525d7",
+      "received_at_utc": "2024-01-31T12:55:41.000Z",
+      "reference_label": "C",
+      "sequence_no": 923,
+      "student_tokens_before_clip": 279
+    },
+    {
+      "arrival_index": 292,
+      "clipped": false,
+      "complaint_id": "8255541",
+      "input_sha256": "24b3c51b3aa84e95b86809b40e1de6cfdb977a5e33d4e8a8a88afb49ea721583",
+      "received_at_utc": "2024-01-31T15:36:26.000Z",
+      "reference_label": "A",
+      "sequence_no": 926,
+      "student_tokens_before_clip": 95
+    },
+    {
+      "arrival_index": 293,
+      "clipped": false,
+      "complaint_id": "8260300",
+      "input_sha256": "f62c20a6b851cc7a1a0d404e2b77262387fe58821d30cc5501b9bf50e203c31a",
+      "received_at_utc": "2024-01-31T16:34:53.000Z",
+      "reference_label": "A",
+      "sequence_no": 929,
+      "student_tokens_before_clip": 175
+    },
+    {
+      "arrival_index": 294,
+      "clipped": false,
+      "complaint_id": "8261385",
+      "input_sha256": "f0ecc0b1e466eb38bf29f306173e8bafa3caa5f657b287477ca0d92a664162ac",
+      "received_at_utc": "2024-01-31T17:20:02.000Z",
+      "reference_label": "C",
+      "sequence_no": 932,
+      "student_tokens_before_clip": 104
+    },
+    {
+      "arrival_index": 295,
+      "clipped": false,
+      "complaint_id": "8260798",
+      "input_sha256": "224212dc3a0564795db6a54f222acdc4851657f81e8b96ce23d4b1aeac1ac586",
+      "received_at_utc": "2024-01-31T17:50:11.000Z",
+      "reference_label": "C",
+      "sequence_no": 935,
+      "student_tokens_before_clip": 427
+    },
+    {
+      "arrival_index": 296,
+      "clipped": false,
+      "complaint_id": "8260437",
+      "input_sha256": "67b2047c87c466d43b574f6212fd7e7f135e765e411fe1ea331336b9d9a9a272",
+      "received_at_utc": "2024-01-31T19:32:04.000Z",
+      "reference_label": "C",
+      "sequence_no": 941,
+      "student_tokens_before_clip": 289
+    },
+    {
+      "arrival_index": 297,
+      "clipped": false,
+      "complaint_id": "8260575",
+      "input_sha256": "966f97ab2eefa9269797efbc114c9e8976a0a08ea388d9bea98d586196430e13",
+      "received_at_utc": "2024-01-31T19:38:16.000Z",
+      "reference_label": "C",
+      "sequence_no": 942,
+      "student_tokens_before_clip": 92
+    },
+    {
+      "arrival_index": 298,
+      "clipped": false,
+      "complaint_id": "8259599",
+      "input_sha256": "2b2ab65d07be31c37619ec0c592b55aaf478925cc1b17bbd641901300a069424",
+      "received_at_utc": "2024-01-31T21:35:07.000Z",
+      "reference_label": "C",
+      "sequence_no": 950,
+      "student_tokens_before_clip": 163
+    },
+    {
+      "arrival_index": 299,
+      "clipped": false,
+      "complaint_id": "8259715",
+      "input_sha256": "08d5209b7c61d2bc043aee06893bce2a165300867d684e0e673d328e23589878",
+      "received_at_utc": "2024-01-31T21:36:31.000Z",
+      "reference_label": "D",
+      "sequence_no": 951,
+      "student_tokens_before_clip": 724
+    },
+    {
+      "arrival_index": 300,
+      "clipped": false,
+      "complaint_id": "8258724",
+      "input_sha256": "5f8297ee3a6a52931ed3177bc53b9443989d8c034c7e86776c51a6406c56e845",
+      "received_at_utc": "2024-01-31T23:31:19.000Z",
+      "reference_label": "C",
+      "sequence_no": 957,
+      "student_tokens_before_clip": 235
+    }
+  ],
+  "chat_template_kwargs": {},
+  "cohort_ordered_ids_sha256": "3c59aa321b65ea493b579cd503af0aeb580fa9c28ee4cabe4b15d136ab123dfa",
+  "cohort_split_counts": {
+    "development": 957,
+    "history": 8202,
+    "test": 2024,
+    "validation": 1013
+  },
+  "data_path": "data/mortgage_complaint.csv",
+  "data_sha256": "e70dc89a627f60d27f37f327e6014dc375a2c9907defdf001449c862e004236d",
+  "decoding": {
+    "do_sample": false,
+    "eos_policy": "model_and_tokenizer",
+    "max_tokens": 16
+  },
+  "device": "mps",
+  "dtype": "torch.float32",
+  "environment": {
+    "httpx": "0.28.1",
+    "huggingface-hub": "1.11.0",
+    "openai": "2.37.0",
+    "platform": "macOS-26.3.1-arm64-arm-64bit",
+    "python": "3.12.10",
+    "python-dotenv": "1.2.2",
+    "tokenizers": "0.22.2",
+    "torch": "2.10.0",
+    "transformers": "5.5.4"
+  },
+  "examples": [
+    {
+      "label": "E",
+      "text": "My credit report still shows a mortgage I paid off last year. The lender confirms I owe nothing. Please remove the balance from my credit file."
+    },
+    {
+      "label": "A",
+      "text": "I applied to refinance. The lender rejected my application using the wrong income figure. Please reconsider my application."
+    },
+    {
+      "label": "D",
+      "text": "My work hours were cut and I cannot make next month's payment. I asked for a temporary payment reduction and need a decision."
+    },
+    {
+      "label": "B",
+      "text": "Our loan was approved at a fixed rate. At settlement the papers showed a variable rate. We need corrected documents before we sign."
+    },
+    {
+      "label": "C",
+      "text": "My mortgage statement says I missed a payment. The money left my bank on time, but the servicer credited another account. Please apply my payment."
+    }
+  ],
+  "generation_stop_tokens": [
+    "<end_of_turn>"
+  ],
+  "head": 2000,
+  "inference_tokenizer": "google/gemma-3-270m-it",
+  "inference_tokenizer_revision": "ac82b4e820549b854eebf28ce6dedaf9fdfa17b3",
+  "max_attempts": 2,
+  "model": "google/gemma-3-270m-it",
+  "model_revision": "ac82b4e820549b854eebf28ce6dedaf9fdfa17b3",
+  "prompt_file": "mortgage_v3.toml",
+  "revision": "12fd25f77366fa6b3b4b768ec3050bf629380bac",
+  "schema_version": 2,
+  "seed": 42,
+  "split": "development",
+  "student_model": "gemma3-270m-it",
+  "system_prompt": "Read the mortgage complaint and choose one category.\n\nIdentify the main problem the consumer wants resolved. If they do not\nask for a specific fix, use the main problem they describe. A topic\nmentioned as background or as a consequence may be different from the\nproblem they want resolved.\n\nA = Applying for a mortgage or refinancing an existing mortgage.\nChoose A for problems with an application, eligibility, an offer or\nrate quote, or a lender's decision to approve or deny a new loan.\n\nB = Closing on a mortgage.\nChoose B for problems completing the transaction, such as incorrect\nfinal documents, signing delays, closing costs, or funds due at settlement.\n\nC = Managing an existing mortgage account.\nChoose C when the consumer wants the servicer to correct how it handled\na payment, balance, fee, escrow account, or payoff on an existing loan.\n\nD = Difficulty paying or seeking mortgage relief.\nChoose D when the main problem is inability to pay, getting or changing\na relief arrangement, or seeking help to avoid foreclosure. Examples\ninclude forbearance, a repayment plan, or a hardship loan modification.\n\nE = Credit reporting and related services.\nChoose E when the main problem concerns information on a credit report,\na credit inquiry or dispute, or access to a credit report, score,\nmonitoring service, fraud alert, or security freeze.\n\nWhen two categories seem plausible, use these distinctions:\n- A vs B: A wrong rate in an offer is A. A wrong rate in the final\n  documents the consumer is being asked to sign is B.\n- A vs D: Reconsidering an application for a new refinance loan is A.\n  Changing payments on the current loan because of hardship is D.\n- C vs D: Correcting how a payment was applied is C. Requesting lower\n  payments or more time to pay because of hardship is D.\n- C vs E: Correcting the servicer's account records is C. Correcting\n  what appears on the consumer's credit report is E.\n\nReturn exactly one uppercase letter: A, B, C, D, or E.\n",
+  "tail": 1000,
+  "threads": 4,
+  "tokenizer": "HuggingFaceTB/SmolLM2-135M-Instruct",
+  "user_template": "Complaint: {text}\n\nCategory (one letter):"
+}
