@@ -2,7 +2,7 @@
 
 [System and experiment design](https://docs.google.com/document/d/1LyIxZPZP4Ax1GHQ-LLyzqF2JipfCaxy5SB8kU0B53ug/edit?usp=sharing) · [Local experiment design](Experiment%20Design.md)
 
-The main pairing is **Gemma 4 31B IT Teacher → Gemma 3 270M IT Student**, using the frozen v3 prompt. This stage records Teacher labels for the complete cohort and runs unadapted Student baselines. Training subsets and LoRA adapters are constructed in a later stage. SmolLM2-135M and Qwen3.5-0.8B remain exploratory comparisons.
+The default pairing is **DeepSeek V4.1 Flash 1017 Teacher → Gemma 3 270M IT Student**, using the frozen v3 prompt. Gemma 4 31B IT remains an optional Teacher baseline; SmolLM2-135M and Qwen3.5-0.8B remain optional Students. This stage records Teacher labels for the complete cohort and runs unadapted Student baselines. Training subsets and LoRA adapters are constructed in a later stage, using one explicitly selected Teacher's labels.
 
 ## Environment
 
@@ -47,7 +47,7 @@ Preview all 12,196 complaints:
 uv run --locked python code/teacher_baseline.py --prompt-version v3
 ```
 
-Collect all labels into one run:
+Collect all labels with the default DeepSeek Teacher:
 
 ```bash
 uv run --locked python code/teacher_baseline.py \
@@ -56,11 +56,27 @@ uv run --locked python code/teacher_baseline.py \
   --run
 ```
 
-The default destination is `output/baseline_v3/teacher_all/`. Omitting `--split` means the complete cohort; the run configuration stores `split: null`, and every case retains its actual `history`, `validation` or `test` value. `all` in the directory name is a collection scope, not a fourth data split.
+The default destination is `output/baseline_v3/teacher_deepseek-v4.1-flash-1017_all/`. Omitting `--split` means the complete cohort; the run configuration stores `split: null`, and every case retains its actual `history`, `validation` or `test` value. `all` in the directory name is a collection scope, not a fourth data split.
 
-An optional `--split history`, `--split validation` or `--split test` filters to that complete partition, using `teacher_history/`, `teacher_validation/` or `teacher_test/`. Concurrency defaults to 1 and may be raised for any selection; exported rows always follow the frozen input order, even if responses finish out of order. Per-attempt completion timestamps are retained. Use 1 for a serial collection.
+An optional `--split history`, `--split validation` or `--split test` filters to that complete partition; destinations use `teacher_<profile>_<split>/`. Concurrency defaults to 1 and may be raised for any selection; exported rows always follow the frozen input order, even if responses finish out of order. Per-attempt completion timestamps are retained. Use 1 for a serial collection. Concurrency alone does not enforce TPM; check the selected model's actual account quota. HTTP 429 still pauses and preserves the run.
 
-The Teacher is `google/gemma-4-31B-it` at `https://api.siliconflow.com/v1`, with temperature 0 and max_tokens 16. Each request contains the shared v3 instructions, five demonstrations and one complaint. CFPB reference labels are not sent. A legal A–E reply is accepted even when it differs from the reference label. All prompts use the fixed SmolLM2 tokenizer for narrative clipping: above 3,000 tokens, retain the first 2,000 and last 1,000.
+Both Teachers use the existing `SILICONFLOW_API_KEY` and `https://api.siliconflow.com/v1`, with temperature 0 and max_tokens 16:
+
+| `--teacher-model` | API model | Request settings |
+|---|---|---|
+| `deepseek-v4.1-flash-1017` (default) | `deepseek-ai/DeepSeek-V4.1-Flash-1017` | `enable_thinking=false`, passed through OpenAI SDK `extra_body` |
+| `gemma4-31b-it` | `google/gemma-4-31B-it` | Original Gemma request settings, without the DeepSeek thinking parameter |
+
+The dated DeepSeek ID was verified against the international account's model list. The thinking switch follows the [SiliconFlow Chat Completions API](https://docs.siliconflow.com/en/api-reference/chat-completions/chat-completions); no DeepSeek official-site API key is required. The selected API model and DeepSeek request body are frozen in the ledger; returned model IDs and response IDs are recorded on every response. Both models receive the same v3 instructions, five demonstrations and complaint. CFPB references are not sent. A legal A–E reply is accepted even when it differs from the reference. Narrative clipping stays fixed to the SmolLM2 tokenizer: above 3,000 tokens, retain the first 2,000 and last 1,000.
+
+Run the optional Gemma Teacher baseline in its own default directory:
+
+```bash
+uv run --locked python code/teacher_baseline.py \
+  --teacher-model gemma4-31b-it --prompt-version v3 --concurrency 1 --run
+```
+
+This writes `output/baseline_v3/teacher_gemma4-31b-it_all/`. Running the default command does not reuse an older unqualified `teacher_all/` directory. To resume an existing schema-3 Gemma run there with unchanged inputs/environment, explicitly select Gemma and supply `--output output/baseline_v3/teacher_all`. Switching models in any existing run directory is rejected before new API calls; keep their labels separate.
 
 This command only records labels and attempts. It does not create training checkpoints, prefix manifests, training jobs or adapters. The current source CSV and manifest retain CFPB references for auditing/scoring; any future trainer must use only accepted Teacher labels as supervision and allowlist history IDs.
 
@@ -68,6 +84,9 @@ For one real connectivity check on the first history complaint:
 
 ```bash
 uv run --locked python code/teacher_smoke.py --prompt-version v3
+
+# Optional Gemma connectivity check.
+uv run --locked python code/teacher_smoke.py --teacher-model gemma4-31b-it --prompt-version v3
 ```
 
 ## Ledger, resume and outputs
@@ -79,7 +98,7 @@ Every new run uses schema 3 and writes:
 | `run.sqlite` | `run`: frozen config and input manifest; `attempts`: every request/generation attempt, raw reply, parsed label, status, errors, timings and usage |
 | `config.json` | Frozen settings and ordered input manifest, including each case's real split; no duplicate narrative |
 | `predictions.csv` | One row per selected complaint, including pending/failed rows and split |
-| `metrics.json` | Progress, validity, reference-label scores and usage; aggregate all-cohort scores are collection diagnostics, not a validation/test comparison |
+| `metrics.json` | Model identity, progress, validity, reference-label scores and usage; Student exports also identify their paired Teacher model; aggregate all-cohort scores are collection diagnostics, not a validation/test comparison |
 
 New ledgers contain only the `run` and `attempts` business tables. No `history_traces`, `prefixes` or `progress` tables, `history_labels.csv` or prefix JSON files are created. A separate `runner.lock.sqlite` prevents simultaneous writers; it holds no classification or training records.
 
@@ -91,12 +110,12 @@ Changing the source snapshot, device, model, prompt or frozen environment requir
 
 ```bash
 uv run --locked python code/teacher_baseline.py \
-  --export-only --output output/baseline_v3/teacher_all
+  --export-only --output output/baseline_v3/teacher_deepseek-v4.1-flash-1017_all
 ```
 
 ## Student baselines and Teacher pairing
 
-Always explicitly select `--student-model gemma3-270m-it` for the main study. The legacy CLI model default is SmolLM2. Student defaults to the complete `validation` partition; `--split history` and `--split test` select their respective complete partitions. Run final test scoring only after model selection is frozen.
+Student defaults to `--student-model gemma3-270m-it` and the complete `validation` partition. SmolLM2 and Qwen remain selectable with `--student-model smollm2-135m` or `--student-model qwen3.5-0.8b`. `--split history` and `--split test` select their respective complete partitions. Run final test scoring only after model selection is frozen.
 
 ```bash
 # Preview; no model download or inference.
@@ -115,7 +134,9 @@ uv run --locked python code/student_baseline.py \
 
 Use `--device mps` for Apple Metal or `--device cpu`; all devices use FP32, four CPU threads, batch size 1, greedy decoding and at most 16 generated tokens per attempt. Model and inputs move to the selected device. Unavailable accelerators cause an error before Student weight/tokenizer loading, with no silent CPU fallback. Use separate output directories when changing devices. The CUDA integration has offline fixture coverage and a completed archived 300-case remote run.
 
-Student automatically reads `output/baseline_v3/teacher_all/`, or an explicit `--teacher-run PATH`. An all-cohort Teacher ledger is filtered by the Student's real split, then matched by ordered IDs, input hashes, reference labels, clipping and exact prompt settings. Only that partition must have terminal Teacher outcomes; unrelated pending partitions do not block pairing. A single-partition Teacher ledger must match the complete selected inputs exactly. Archived Teacher ledgers are read-only and remain usable with matching archived Student manifests.
+Student automatically reads `output/baseline_v3/teacher_deepseek-v4.1-flash-1017_all/`. Use `--teacher-model gemma4-31b-it` to select the optional Teacher's default directory, or `--teacher-run PATH` to select a specific ledger, including the older Gemma `teacher_all/`. An explicit path selects its stored Teacher model unless `--teacher-model` is also supplied, in which case the model must match. There is no automatic fallback from a missing DeepSeek run to Gemma. `metrics.json` records the actual paired Teacher API model.
+
+An all-cohort Teacher ledger is filtered by the Student's real split, then matched by ordered IDs, input hashes, reference labels, clipping and exact prompt settings. Only that partition must have terminal Teacher outcomes; unrelated pending partitions do not block pairing. A single-partition Teacher ledger must match the complete selected inputs exactly. Archived Teacher ledgers are read-only and remain usable with matching archived Student manifests. Pairing is an export/evaluation choice and does not alter frozen Student inference settings or force another inference run.
 
 An absent default Teacher ledger or incomplete selected Teacher partition leaves agreement null. A missing explicit path or incompatible manifest is an error. Accepted legal labels count toward Teacher agreement; exhausted failures count as nonmatches. Only terminal Student cases enter classification scores, with pending cases excluded and `complete=false`/`provisional=true` until completion. All five classes are included in macro-F1. The first-token A–E diagnostic is reported separately and never replaces a failed generated reply.
 
@@ -125,7 +146,13 @@ Re-export after Teacher completion without rerunning Student inference:
 uv run --locked python code/student_baseline.py \
   --export-only \
   --output output/baseline_v3/student_gemma3-270m-it_validation_cuda \
-  --teacher-run output/baseline_v3/teacher_all
+  --teacher-model deepseek-v4.1-flash-1017
+
+# Recompute agreement against the optional Gemma Teacher using the same Student predictions.
+uv run --locked python code/student_baseline.py \
+  --export-only \
+  --output output/baseline_v3/student_gemma3-270m-it_validation_cuda \
+  --teacher-model gemma4-31b-it
 ```
 
 | Student | Model | Pinned revision |
@@ -142,7 +169,7 @@ Each Student uses its native tokenizer/chat template while narrative clipping st
 |---|---|
 | `code/mortgage_data.py` | Three-partition cohort audit, complete selections, clipping and manifests |
 | `code/mortgage_prompt.py` | Shared labels, versioned prompts, messages and strict parsing |
-| `code/teacher_client.py` | SiliconFlow client and request settings |
+| `code/teacher_client.py` | SiliconFlow Teacher profiles, model-specific request settings and isolated output paths |
 | `code/teacher_baseline.py` / `code/teacher_collection.py` | Full-cohort collection, retries, concurrency, resume and exports |
 | `code/student_baseline.py` | Student inference, resume, Teacher pairing and scoring |
 | `code/evaluation.py` / `code/run_store.py` | Metrics, raw attempt ledger, locking and atomic exports |

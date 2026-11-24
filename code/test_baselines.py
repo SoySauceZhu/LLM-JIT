@@ -312,7 +312,7 @@ class TestStudentAndPairing(unittest.TestCase):
         self.output.mkdir()
         self.teacher.mkdir()
         self.cases = fixture_cases()
-        self.config = student_config(self.cases, "validation", load_prompt("v3"))
+        self.config = student_config(self.cases, "validation", load_prompt("v3"), "smollm2-135m")
         self.db = sqlite3.connect(self.output / "run.sqlite")
         self.addCleanup(self.db.close)
         initialize(self.db, self.config)
@@ -601,7 +601,8 @@ class TestTeacherEntrypoint(unittest.TestCase):
         rows = [dict(case) for case in cases]
         calls = []
 
-        def predict(client, text, prompt):
+        def predict(client, text, prompt, teacher_model):
+            self.assertEqual(teacher_model, "deepseek-v4.1-flash-1017")
             calls.append(text)
             if text == "B":
                 raise KeyboardInterrupt()

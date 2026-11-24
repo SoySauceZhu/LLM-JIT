@@ -4,11 +4,11 @@
 
 Optimize a repeatedly called LLM function by compiling its accumulated Teacher-labeled history into a smaller local model with LoRA. The selected function for Experiment 1 is `classify_mortgage(text) -> A,B,C,D,E`.
 
-Initially, **Gemma 4 31B IT** handles mortgage complaints. As successful Teacher calls accumulate, the experiment trains independent LoRA adapters for **Gemma 3 270M IT**, the primary Student, on increasingly large chronological prefixes. Each train-once policy then hands subsequent mortgage requests to its adapted Student after training and loading finish.
+By default, **DeepSeek V4.1 Flash 1017** serves as Teacher, with **Gemma 4 31B IT** retained as an optional large-model baseline. The Student is **Gemma 3 270M IT** by default; SmolLM2 and Qwen remain optional Students. Later training uses chronological history labels from one selected Teacher, constructs fresh LoRA adapters for chosen subsets, and evaluates independent train-once policies. The collection stage itself does not train adapters.
 
 # Target at this phase
 
-The immediate stage labels all complaints with Gemma 4 31B IT and records complete attempts. Later stages evaluate whether Gemma 3 270M IT, fine-tuned only on past history Teacher labels, approaches Teacher quality on later complaints.
+The immediate stage labels all complaints with the selected Teacher (DeepSeek V4.1 Flash 1017 by default) and records complete attempts. Later stages evaluate whether Gemma 3 270M IT, fine-tuned only on past history Teacher labels, approaches that Teacher's quality on later complaints. Keep the optional Gemma Teacher baseline separate.
 
 Measure accuracy, five-class macro-F1, per-class recall and false-positive rate, valid-output rate, and agreement with the Teacher as training history grows. Estimate how many subsequent requests are needed to recover training, validation and loading costs. All requests already belong to the mortgage topic; topic discovery and confidence-based routing remain outside this experiment.
 
@@ -81,11 +81,12 @@ Use a Python CLI, SQLite and a single GPU worker. The collector records requests
 
 ## Model configuration
 
-**Primary pairing, selected on November 23, 2026: Gemma 4 31B IT Teacher → Gemma 3 270M IT Student.** This defines the main Gemma-family distillation study. The main learning curves, candidate selection and cost replay use Gemma 3; the SmolLM2 and Qwen pilots remain exploratory comparisons. Additional LoRA sweeps for those models would be a separately declared extension.
+**Default pairing, updated November 24, 2026: DeepSeek V4.1 Flash 1017 Teacher → Gemma 3 270M IT Student.** Gemma 4 31B IT remains an optional Teacher baseline. Model names are explicit CLI options: `--teacher-model deepseek-v4.1-flash-1017|gemma4-31b-it` and `--student-model gemma3-270m-it|smollm2-135m|qwen3.5-0.8b`. Main learning curves use the selected Teacher's history labels and Gemma 3; any comparison must identify its supervision source. Existing Gemma-family pilots are historical evidence, not a measured DeepSeek baseline.
 
 | Role | Model and backend | Frozen configuration |
 | :---- | :---- | :---- |
-| Teacher | `google/gemma-4-31B-it`, SiliconFlow international API at `https://api.siliconflow.com/v1` | temperature 0, max_tokens 16; retain endpoint, returned model identifier, response ID, timestamps and token usage for every attempt |
+| Default Teacher | `deepseek-ai/DeepSeek-V4.1-Flash-1017`, SiliconFlow international API at `https://api.siliconflow.com/v1` | temperature 0, max_tokens 16, `extra_body={"enable_thinking": false}`; freeze exact request settings and retain returned model IDs, response IDs, timestamps and usage |
+| Optional Teacher | `google/gemma-4-31B-it`, same SiliconFlow endpoint/key | Original temperature 0, max_tokens 16 settings; separate named output directory and no DeepSeek thinking parameter |
 | Primary Student | `google/gemma-3-270m-it`, local `Gemma3ForCausalLM` | revision `ac82b4e820549b854eebf28ce6dedaf9fdfa17b3`; native tokenizer and chat template; greedy generation, max_new_tokens 16 |
 | Shared prompt | `code/prompts/mortgage_v3.toml` | freeze complete system instructions, five synthetic demonstrations and user template before history collection |
 | Shared narrative clipping | `HuggingFaceTB/SmolLM2-135M-Instruct` tokenizer | revision `12fd25f77366fa6b3b4b768ec3050bf629380bac`; maximum 3,000 narrative tokens, keeping the first 2,000 and final 1,000 |
@@ -107,9 +108,9 @@ All rows below use the same historical 300 January pilot complaints, proportiona
 | Qwen3.5-0.8B, exploratory Student | 30.33% | 0.1774 | 300/300 | 31.00% |
 | SmolLM2-135M-Instruct, exploratory Student | 16.00% | 0.1298 | 293/300 | 13.33% |
 
-The main-model choice prioritizes the Gemma-family Teacher–Student pairing and a smaller local Student. The pilot scores above remain part of that decision's evidence. Gemma 3 produced 40 empty final replies after retries and predicted no B or E labels. Its first-token five-choice diagnostic reached only 30.67% accuracy, so format recovery alone would not close the classification gap. Always predicting reference-majority class C gives 57.33% on this pilot; this is a diagnostic, not the later history-Teacher-trained majority baseline.
+The earlier Gemma-family pairing motivated the original Teacher/Student pilots. The current default Teacher is DeepSeek, whose quality must be measured separately; the unchanged scores above describe agreement with the archived Gemma Teacher only. Gemma 3 produced 40 empty final replies after retries and predicted no B or E labels. Its first-token five-choice diagnostic reached 30.67% accuracy. Always predicting reference-majority C gives 57.33% on this pilot; this remains a diagnostic, not a later Teacher-trained majority baseline.
 
-Treat valid-output rate, B/E recall and Teacher agreement as visible learning outcomes throughout fine-tuning. These pilots do not establish that a Gemma 3 adapter will approach Gemma 4. The sample is reused pilot data: 25 cases participated in v2 prompt development, and later prompt variants were informed by pilot failures. Freeze v3 and the primary model now; use October for candidate selection and November–December for final held-out results.
+Treat valid-output rate, B/E recall and Teacher agreement as visible learning outcomes throughout fine-tuning. These pilots do not establish that a Gemma 3 adapter will approach either Teacher. The sample is reused pilot data: 25 cases participated in v2 prompt development, and later prompt variants were informed by pilot failures. Freeze v3 and the primary model now; use October for candidate selection and November–December for final held-out results.
 
 [Gemma 3 pilot and four-model comparison](result/pre-run%20300%20sample%20test/gemma3-270m-it-v3/note.md) · [Qwen pilot](result/pre-run%20300%20sample%20test/qwen3.5-0.8b-v3/note.md) · [Gemma Teacher v3 pilot](result/pre-run%20300%20sample%20test/gemma/v3/note.md)
 
@@ -148,9 +149,9 @@ Use the audited CSV and the updated three-partition membership for the main run.
 
 ## Step 2\. Verify the pipeline and establish baselines
 
-Use the completed January pilots as historical evidence for v3, the Gemma 4 Teacher and the Gemma 3 primary Student. Those complaints are now part of history, not a fourth split. A later disposable synthetic Gemma 3 LoRA train/save/reload smoke must not contribute its adapter to the main experiment; all main candidates start from the untouched pinned base. Sampling/epoch seeds belong to that later training configuration, not the full Teacher collection CLI.
+Keep the completed January Gemma Teacher/Student pilots as historical evidence for v3 and the Gemma 3 Student. Those complaints are now part of history, not a fourth split. DeepSeek is a new Teacher baseline; collect and evaluate it independently. A later disposable synthetic LoRA smoke must not contribute its adapter to the main experiment; all candidates start from the untouched pinned base. Sampling/epoch seeds belong to later training, not full Teacher collection.
 
-Run the Teacher and original Gemma 3 as fixed baselines on all 1,013 October cases. Include a majority-class baseline from history Teacher labels and a TF–IDF plus logistic regression classifier fitted on the same Teacher-labeled prefixes as LoRA. Fit each vocabulary on its prefix alone. Record supervision and cost for every baseline. The archived Qwen and SmolLM2 pilot results provide exploratory context; the primary Gemma 3 study does not require training their adapters. An independent scripted Teacher fixture exercises orchestration without paid calls; its outputs belong only in test artifacts.
+Run the selected Teacher and original Gemma 3 as fixed baselines on all 1,013 October cases; optionally collect the Gemma Teacher comparator as a separate baseline. Include a majority-class baseline and TF–IDF/logistic regression trained on the same chosen Teacher-labeled history subsets as LoRA. Fit each vocabulary on its subset alone and record supervision source and cost. Archived Qwen/SmolLM2 pilots remain exploratory. Synthetic fixture outputs belong only in test artifacts.
 
 ## Step 3\. Collect the stream and train candidates
 
@@ -164,13 +165,13 @@ The **collection run** keeps the Teacher active to acquire a common history for 
 
 ## Step 4\. Measure classification quality
 
-Score Gemma 4, original Gemma 3, the non-LLM baselines and each reachable Gemma 3 adapter on the same October cases. Report accuracy, five-class macro-F1, per-class recall and one-versus-rest false-positive rate, confusion counts, valid-output rate and agreement with the Teacher. Use the consumer-selected category for accuracy and F1. Score an exhausted failure as incorrect and as a false negative for its true class. Include a failure column in the confusion matrix. Report Teacher agreement over all cases, counting only matching valid predictions in the numerator; also report empty final replies separately because they affected 40/300 Gemma 3 pilot cases.
+Score DeepSeek, the optional Gemma Teacher, original Gemma 3, the non-LLM baselines and each reachable Gemma 3 adapter on the same October cases. Report accuracy, five-class macro-F1, per-class recall/FPR, confusion counts, valid-output rate and agreement with the explicitly selected Teacher. CFPB references define accuracy/F1; exhausted failures count as errors and appear in the failure column. Report empty final replies separately. Do not mix DeepSeek and Gemma supervision or present one Teacher's agreement as the other's.
 
-For the first run, retain the predeclared quality tolerance of **0.02 absolute macro-F1** below the October Gemma 4 Teacher. Select the smallest Gemma 3 training prefix meeting it. If none qualifies, record that outcome. If unadapted Gemma 3 already qualifies, report it as the zero-training option. Compute the threshold from the October Teacher score, not the January pilot score. Keep per-class results visible, especially credit reporting (75 held-out examples). Freeze the selection before opening the final labels. Evaluate the prespecified Gemma 3 learning curves and the chosen model on the November–December test set in one final pass. Compute paired 95% bootstrap intervals for quality differences by resampling the same complaints for all models (2,000 replicates, seed 42). This threshold is an experimental choice, and attaining it is an empirical outcome.
+For the first run, retain the predeclared quality tolerance of **0.02 absolute macro-F1** below the October selected Teacher. Select the smallest Gemma 3 training prefix meeting it. If none qualifies, record that outcome. If unadapted Gemma 3 already qualifies, report it as the zero-training option. Compute the threshold from the October Teacher score, not the January pilot score. Keep per-class results visible, especially credit reporting (75 held-out examples). Freeze the selection before opening the final labels. Evaluate the prespecified Gemma 3 learning curves and the chosen model on the November–December test set in one final pass. Compute paired 95% bootstrap intervals for quality differences by resampling the same complaints for all models (2,000 replicates, seed 42). This threshold is an experimental choice, and attaining it is an empirical outcome.
 
 ## Step 5\. Calculate how long each training decision takes to pay back
 
-Replay the same January–December arrivals under always-Gemma-4, always-original-Gemma-3, and each Gemma-3 train-once policy. In each train-once policy, Gemma 4 serves through training and loading. Model readiness time equals the triggering receipt timestamp plus measured training, required validation and loading time, assuming an immediately available dedicated worker. Route subsequent arrivals at or after readiness to that Gemma 3 adapter. Handle same-time events in the frozen stream order; the triggering complaint always used the Teacher. Charge failed training and leave the Teacher serving if the adapter cannot be activated.
+Replay the same January–December arrivals under always-selected-Teacher (DeepSeek by default, or Gemma in a separate comparison), always-original-Gemma-3, and each Gemma-3 train-once policy. In each train-once policy, the selected Teacher serves through training and loading. Model readiness time equals the triggering receipt timestamp plus measured training, required validation and loading time, assuming an immediately available dedicated worker. Route subsequent arrivals at or after readiness to that Gemma 3 adapter. Handle same-time events in the frozen stream order; the triggering complaint always used the Teacher. Charge failed training and leave the Teacher serving if the adapter cannot be activated.
 
 For each request, store the cost of every serving attempt, model chosen, incremental training spend, cumulative policy spend and cumulative always-Teacher spend. Use billed tokens and dated prices for APIs, and measured GPU-seconds times count-adjusted hourly rates divided by 3,600 for local runs. Record concurrency, batch size and treatment of idle capacity. Collect matched per-request serving costs or label the sampling method and estimates explicitly. Keep unavailable prices or usage values explicit and mark the affected dollar results unpriced until rates are supplied. Keep extra benchmark calls and the cost of training the other six research candidates in a separate research ledger.
 
@@ -180,7 +181,7 @@ The observed break-even is the first post-readiness request where cumulative pol
 
 ### Available baseline and history commands
 
-Sync the uv-managed project environment from `uv.lock`, then use the following explicit main-study model selection. The Student CLI retains its legacy SmolLM2 default for compatibility, so primary Gemma 3 runs always specify `--student-model gemma3-270m-it`.
+Sync the uv-managed environment from `uv.lock`. The CLI defaults are DeepSeek V4.1 Flash 1017 Teacher and Gemma 3 270M IT Student. The examples keep explicit model selection where useful for reproducibility; optional models require their corresponding flags.
 
 ```bash
 uv sync --locked
@@ -188,23 +189,26 @@ uv sync --locked
 # Preview all 12,196 Teacher inputs without calls or tokenizer downloads.
 uv run --locked python code/teacher_baseline.py --prompt-version v3
 
-# Label the entire cohort once; retain each complaint's actual split.
+# Label the entire cohort once with default DeepSeek; retain each complaint's actual split.
 uv run --locked python code/teacher_baseline.py --prompt-version v3 --concurrency 1 --run
 
-# October Student baseline paired with the selected rows from teacher_all.
-uv run --locked python code/student_baseline.py --student-model gemma3-270m-it --device mps --split validation --prompt-version v3 --teacher-run output/baseline_v3/teacher_all --output output/baseline_v3/student_gemma3-270m-it_validation --run
+# Optional Gemma Teacher baseline, automatically stored in a separate model directory.
+uv run --locked python code/teacher_baseline.py --teacher-model gemma4-31b-it --prompt-version v3 --concurrency 1 --run
+
+# October Student baseline paired with the default DeepSeek Teacher.
+uv run --locked python code/student_baseline.py --student-model gemma3-270m-it --device mps --split validation --prompt-version v3 --teacher-run output/baseline_v3/teacher_deepseek-v4.1-flash-1017_all --output output/baseline_v3/student_gemma3-270m-it_validation --run
 
 # Alternative on the remote NVIDIA machine.
-uv run --locked python code/student_baseline.py --student-model gemma3-270m-it --device cuda --split validation --prompt-version v3 --teacher-run output/baseline_v3/teacher_all --output output/baseline_v3/student_gemma3-270m-it_validation_cuda --run
+uv run --locked python code/student_baseline.py --student-model gemma3-270m-it --device cuda --split validation --prompt-version v3 --teacher-run output/baseline_v3/teacher_deepseek-v4.1-flash-1017_all --output output/baseline_v3/student_gemma3-270m-it_validation_cuda --run
 ```
 
-Teacher concurrency defaults to 1 for serial collection and can be raised for any selection; raw completion timestamps are retained and exports follow original input order. MPS and CUDA require the corresponding GPU-enabled process; all current serving devices use FP32. Use one serving configuration for baseline/adapter comparisons and separate output directories after device, source or environment changes. Repeating a command with the same frozen config resumes attempts. Gemma downloads require authorized Hugging Face access; credentials are never saved in artifacts.
+Teacher concurrency defaults to 1 for serial collection and can be raised for any selection subject to that model's actual account quota; raw completion timestamps are retained and exports follow original input order. MPS and CUDA require the corresponding GPU-enabled process; all current serving devices use FP32. Use one serving configuration for baseline/adapter comparisons and separate output directories after device, source or environment changes. Repeating a command with the same frozen config resumes attempts. Gemma downloads require authorized Hugging Face access; credentials are never saved in artifacts.
 
 ### Planned training, evaluation and cost stages
 
 The stages below describe the later target interface; the `mortgage_exp` package is not implemented yet. Full-cohort Teacher labeling, Student baseline inference on the three partitions, retry/resume and Teacher pairing are implemented. Training-subset selection, Gemma 3 LoRA, majority/TF–IDF baselines, bootstrap reports and cost replay remain to be built. Collection contains no training-prefix artifacts. Final test evaluation is available explicitly through `--split test` and should be run after model selection is frozen.
 
-Provide these stages or equivalent documented invocations. Each uses the same run ID and versioned configuration, with the Gemma 4/Gemma 3 pairing specified above. Include reproducible dependency pins or a lockfile, configuration and README commands. Expose model endpoint, revisions, raw-data paths, GPU rate and API prices as configuration. Read credentials from the environment.
+Provide these stages or equivalent documented invocations. Each uses the same run ID and versioned configuration, with the selected Teacher/Gemma 3 pairing specified above. Include reproducible dependency pins or a lockfile, configuration and README commands. Expose model endpoint, revisions, raw-data paths, GPU rate and API prices as configuration. Read credentials from the environment.
 
 `python -m mortgage_exp prepare  --config configs/cfpb_2024.yaml --run-id exp1`  
 `python -m mortgage_exp smoke    --config configs/cfpb_2024.yaml --run-id exp1`  

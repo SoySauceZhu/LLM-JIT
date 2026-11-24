@@ -11,11 +11,12 @@ from openai import APIError
 
 from mortgage_data import load_experiment, prepare_cases, select_rows
 from mortgage_prompt import DEFAULT_VERSION, SUPPORTED_VERSIONS, load_prompt
-from teacher_client import make_client, parse_reply, request_label
+from teacher_client import DEFAULT_TEACHER_MODEL, TEACHER_MODELS, make_client, parse_reply, request_label
 
 
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument("--teacher-model", choices=TEACHER_MODELS, default=DEFAULT_TEACHER_MODEL)
     parser.add_argument("--prompt-version", choices=SUPPORTED_VERSIONS, default=DEFAULT_VERSION)
     args = parser.parse_args()
     sample = select_rows(load_experiment(), "history")[0]
@@ -23,7 +24,8 @@ def main():
 
     try:
         with make_client() as client:
-            response = request_label(client, case["text"], load_prompt(args.prompt_version))
+            response = request_label(client, case["text"], load_prompt(args.prompt_version),
+                                     teacher_model=args.teacher_model)
     except APIError as exc:
         raise SystemExit(f"SiliconFlow request failed: {exc}") from None
 

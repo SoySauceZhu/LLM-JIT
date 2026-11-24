@@ -1,15 +1,17 @@
 """Run independent Teacher requests with bounded concurrency and a resumable ledger."""
 
+import json
 import sqlite3
 import time
 from collections import deque
 from concurrent.futures import ThreadPoolExecutor, as_completed
 from contextlib import closing
+from functools import partial
 from threading import Event, Lock
 
 from openai import APIError, APITimeoutError
 
-from teacher_client import parse_reply, request_label
+from teacher_client import TEACHER_MODELS, parse_reply, request_label
 from run_store import single_runner
 
 
@@ -54,7 +56,12 @@ def collect_case(db, client, case, used, concurrency, stop, predict):
 
 def collect(db, db_path, client, cases, concurrency, *, predict=None):
     if predict is None:
-        predict = request_label
+        config = json.loads(db.execute("SELECT config FROM run WHERE id=1").fetchone()[0])
+        teacher_model = next((name for name, profile in TEACHER_MODELS.items()
+                              if profile["model"] == config["model"]), None)
+        if teacher_model is None:
+            raise ValueError(f"Unknown Teacher model in ledger: {config['model']}")
+        predict = partial(request_label, prompt=config, teacher_model=teacher_model)
     if concurrency < 1:
         raise ValueError("Concurrency must be positive")
     # Paused service errors do not consume the two classification attempts.

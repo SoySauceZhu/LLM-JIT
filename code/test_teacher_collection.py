@@ -40,7 +40,7 @@ class TestTeacherCollection(unittest.TestCase):
         third_started = Event()
         calls = Counter()
 
-        def predict(client, text):
+        def predict(client, text, **_):
             calls[text] += 1
             if text == "A":
                 # With two workers, B must finish before C starts.
@@ -71,7 +71,7 @@ class TestTeacherCollection(unittest.TestCase):
         started = Barrier(2)
         stopped = Event()
 
-        def predict(client, text):
+        def predict(client, text, **_):
             self.assertIn(text, "AB")
             started.wait(timeout=5)
             if text == "A":
@@ -87,7 +87,7 @@ class TestTeacherCollection(unittest.TestCase):
                 collect(self.db, self.path, None, self.cases, 2)
         self.assertEqual(dict(self.db.execute("SELECT complaint_id, status FROM attempts")),
                          {"0": "paused", "1": "ok"})
-        with patch("teacher_collection.request_label", side_effect=lambda _, text: reply(text)) as api:
+        with patch("teacher_collection.request_label", side_effect=lambda _, text, **__: reply(text)) as api:
             collect(self.db, self.path, None, self.cases, 1)
         self.assertEqual([call.args[1] for call in api.call_args_list], list("ACDE"))
         self.assertEqual(dict(self.db.execute(

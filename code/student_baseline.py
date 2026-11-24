@@ -15,7 +15,9 @@ from run_store import (
     attempts_by_case, final_attempt, initialize, make_config, progress_metrics, read_config,
     single_runner, usage_metrics, write_exports,
 )
+from teacher_client import DEFAULT_TEACHER_MODEL, TEACHER_MODELS, teacher_output
 
+DEFAULT_STUDENT_MODEL = "gemma3-270m-it"
 STUDENT_MODELS = {
     "smollm2-135m": {"model": TOKENIZER, "revision": REVISION, "chat_template_kwargs": {}},
     "qwen3.5-0.8b": {"model": "Qwen/Qwen3.5-0.8B",
@@ -27,7 +29,7 @@ STUDENT_MODELS = {
 }
 
 
-def student_config(cases, split, prompt, student_model="smollm2-135m", device="cpu"):
+def student_config(cases, split, prompt, student_model=DEFAULT_STUDENT_MODEL, device="cpu"):
     profile = STUDENT_MODELS[student_model]
     extra = {"generation_stop_tokens": profile["stop_tokens"]} if "stop_tokens" in profile else {}
     return make_config(cases, split, prompt, backend="student", model=profile["model"],
@@ -97,7 +99,7 @@ def load_student(student_model, device="cpu"):
     return model, tokenizer, settings, [tokens[0] for tokens in encoded]
 
 
-def load_teacher_labels(run, config, *, required=False):
+def load_teacher_labels(run, config, *, required=False, teacher_model=None):
     """Read the Teacher ledger, including legacy pilots, without modifying it."""
     run = Path(run)
     if not (run / "run.sqlite").is_file():
@@ -107,6 +109,8 @@ def load_teacher_labels(run, config, *, required=False):
     teacher = read_config(run)
     if teacher.get("backend", "teacher") != "teacher":
         raise ValueError("--teacher-run must point to a Teacher ledger")
+    if teacher_model is not None and teacher["model"] != TEACHER_MODELS[teacher_model]["model"]:
+        raise ValueError("Teacher model differs from --teacher-model")
     for key in ("tokenizer", "revision", "head", "tail", "system_prompt", "user_template", "prompt_file"):
         if teacher.get(key) != config.get(key):
             raise ValueError(f"Teacher configuration mismatch: {key}")
@@ -202,9 +206,11 @@ def collect_student(db, cases, predict):
             print(f"{index}/{len(cases)}", flush=True)
 
 
-def export_results(db, output, teacher_run, *, require_teacher=False):
+def export_results(db, output, teacher_run, *, require_teacher=False, teacher_model=None):
     config = json.loads(db.execute("SELECT config FROM run WHERE id=1").fetchone()[0])
-    labels, pairing_status = load_teacher_labels(teacher_run, config, required=require_teacher)
+    labels, pairing_status = load_teacher_labels(teacher_run, config, required=require_teacher,
+                                                teacher_model=teacher_model)
+    teacher = read_config(teacher_run) if (Path(teacher_run) / "run.sqlite").is_file() else None
     grouped = attempts_by_case(db)
     fields = ["complaint_id", "split", "reference_label", "sequence_no", "received_at_utc", "arrival_index",
               "input_sha256", "student_tokens_before_clip", "clipped", "teacher_label",
@@ -233,6 +239,7 @@ def export_results(db, output, teacher_run, *, require_teacher=False):
     # Never publish an all-cases agreement from a partially completed run.
     paired = labels is not None and progress["complete"]
     metrics = {**progress, "teacher_run": str(teacher_run.resolve()) if labels is not None else None,
+               "teacher_model": teacher["model"] if teacher else None,
                "model": config["model"], "model_revision": config.get("model_revision", config["revision"]),
                "device": config["device"], "dtype": config["dtype"],
                "pairing_status": pairing_status, "clipped": sum(c["clipped"] for c in config["cases"]),
@@ -249,26 +256,30 @@ def export_results(db, output, teacher_run, *, require_teacher=False):
 
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("--student-model", choices=STUDENT_MODELS, default="smollm2-135m")
+    parser.add_argument("--student-model", choices=STUDENT_MODELS, default=DEFAULT_STUDENT_MODEL)
     parser.add_argument("--device", choices=("cpu", "mps", "cuda"), default="cpu",
                         help="Inference device: CPU, Apple Metal, or NVIDIA CUDA (all FP32)")
     parser.add_argument("--split", choices=COHORT_SPLIT_COUNTS, default="validation")
     parser.add_argument("--prompt-version", choices=SUPPORTED_VERSIONS, default=DEFAULT_VERSION)
     parser.add_argument("--output", type=Path)
     parser.add_argument("--teacher-run", type=Path)
+    parser.add_argument("--teacher-model", choices=TEACHER_MODELS,
+                        help="Teacher to pair against (default: DeepSeek; an explicit --teacher-run selects its stored model)")
     action = parser.add_mutually_exclusive_group()
     action.add_argument("--run", action="store_true")
     action.add_argument("--export-only", action="store_true")
     args = parser.parse_args()
+    selected_teacher = args.teacher_model or (None if args.teacher_run else DEFAULT_TEACHER_MODEL)
     output = args.output or student_output(args.student_model, args.split, args.prompt_version)
     if args.export_only:
         config = read_config(output)
         if config.get("schema_version") not in (2, 3) or config.get("backend") != "student":
             parser.error("Export requires a schema 2 or 3 Student baseline ledger")
         version = Path(config["prompt_file"]).stem.rsplit("_", 1)[-1]
-        teacher_run = args.teacher_run or default_output("teacher", None, version)
+        teacher_run = args.teacher_run or teacher_output(selected_teacher, None, version)
         with single_runner(output), closing(sqlite3.connect(output / "run.sqlite")) as db:
-            export_results(db, output, teacher_run, require_teacher=args.teacher_run is not None)
+            export_results(db, output, teacher_run, require_teacher=args.teacher_run is not None,
+                           teacher_model=selected_teacher)
         return
     rows = select_rows(load_experiment(), args.split)
     print(f"{args.split} n={len(rows)} counts={dict(Counter(r['reference_label'] for r in rows))} "
@@ -279,9 +290,10 @@ def main():
     prompt = load_prompt(args.prompt_version)
     cases = prepare_cases(rows)
     config = student_config(cases, args.split, prompt, args.student_model, args.device)
-    teacher_run = args.teacher_run or default_output("teacher", None, args.prompt_version)
+    teacher_run = args.teacher_run or teacher_output(selected_teacher, None, args.prompt_version)
     # Detect a wrong Teacher configuration before spending local inference time.
-    load_teacher_labels(teacher_run, config, required=args.teacher_run is not None)
+    load_teacher_labels(teacher_run, config, required=args.teacher_run is not None,
+                        teacher_model=selected_teacher)
     output.mkdir(parents=True, exist_ok=True)
     with single_runner(output), closing(sqlite3.connect(output / "run.sqlite")) as db:
         initialize(db, config)
@@ -293,7 +305,8 @@ def main():
                     model, tokenizer, settings, label_ids, build_messages(case["text"], prompt),
                     config["chat_template_kwargs"]))
         finally:
-            export_results(db, output, teacher_run, require_teacher=args.teacher_run is not None)
+            export_results(db, output, teacher_run, require_teacher=args.teacher_run is not None,
+                           teacher_model=selected_teacher)
 
 
 if __name__ == "__main__":
