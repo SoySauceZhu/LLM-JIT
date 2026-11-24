@@ -1,9 +1,9 @@
 """Send one development complaint to the SiliconFlow Teacher.
 
-Install dependencies with: python3 -m pip install openai python-dotenv
+Install dependencies with: uv sync --locked
 Set SILICONFLOW_API_KEY to a key from cloud.siliconflow.com in the environment
 or the repository's .env file.
-Run from the repository root with: python3 code/teacher_smoke.py
+Run from the repository root with: uv run --locked python code/teacher_smoke.py
 """
 
 import argparse

@@ -1,0 +1,34 @@
+[project]
+name = "llm-jit"
+version = "0.1.0"
+description = "Teacher collection and local Student experiments for mortgage complaint classification"
+readme = "README.md"
+requires-python = ">=3.12,<3.13"
+dependencies = [
+    "openai==2.37.0",
+    "python-dotenv==1.2.2",
+    "huggingface-hub==1.11.0",
+    "tokenizers==0.22.2",
+    "httpx==0.28.1",
+    "torch==2.10.0",
+    "transformers==5.5.4",
+]
+
+[tool.uv]
+package = false
+environments = [
+    "sys_platform == 'darwin' and platform_machine == 'arm64'",
+    "sys_platform == 'linux' and platform_machine == 'x86_64'",
+]
+
+# Apple Silicon uses the PyPI wheel (CPU/MPS). The remote NVIDIA machine
+# uses the CUDA 12.6 wheel; its NVIDIA driver must support that runtime.
+[tool.uv.sources]
+torch = [
+    { index = "pytorch-cu126", marker = "sys_platform == 'linux'" },
+]
+
+[[tool.uv.index]]
+name = "pytorch-cu126"
+url = "https://download.pytorch.org/whl/cu126"
+explicit = true

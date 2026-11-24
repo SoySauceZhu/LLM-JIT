@@ -60,6 +60,11 @@ def load_student(student_model, device="cpu"):
     profile = STUDENT_MODELS[student_model]
     if device == "mps" and not torch.backends.mps.is_available():
         raise ValueError("Metal GPU is unavailable in this process; use --device cpu or a GPU-enabled execution environment")
+    if device == "cuda" and not torch.cuda.is_available():
+        raise ValueError(
+            "CUDA GPU is unavailable in this process; check nvidia-smi, install CUDA-enabled "
+            "PyTorch with uv sync --locked on Linux, or use --device cpu"
+        )
     kwargs = {"revision": profile["revision"]}
     if student_model != "smollm2-135m":
         kwargs["cache_dir"] = ROOT / ".cache/huggingface"
@@ -238,7 +243,8 @@ def export_results(db, output, teacher_run, *, require_teacher=False):
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--student-model", choices=STUDENT_MODELS, default="smollm2-135m")
-    parser.add_argument("--device", choices=("cpu", "mps"), default="cpu")
+    parser.add_argument("--device", choices=("cpu", "mps", "cuda"), default="cpu",
+                        help="Inference device: CPU, Apple Metal, or NVIDIA CUDA (all FP32)")
     parser.add_argument("--split", choices=("development", "validation"), default="validation")
     parser.add_argument("--size", type=int, help="Development sample only (default: 300)")
     parser.add_argument("--seed", type=int, help="Development sampling seed only (default: 42)")

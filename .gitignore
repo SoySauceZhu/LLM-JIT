@@ -3,3 +3,4 @@ __pycache__/
 runner.lock.sqlite
 .cache/
 .venv/
+.venv-pip-backup/

@@ -153,6 +153,86 @@ class TestDataAndCLI(unittest.TestCase):
             self.assertEqual(result.returncode, 2, result.stderr)
 
 
+class TestStudentCUDA(unittest.TestCase):
+    def test_cuda_preview_needs_no_gpu_or_model_download(self):
+        import student_baseline
+
+        rows = [{**case, "split": "validation"} for case in fixture_cases()]
+        with TemporaryDirectory() as tmp, \
+                patch.object(student_baseline, "load_experiment", return_value=rows), \
+                patch.object(student_baseline, "prepare_cases") as prepare, \
+                patch.object(student_baseline, "load_student") as load, \
+                patch("sys.argv", ["student_baseline", "--device", "cuda", "--output", tmp]):
+            student_baseline.main()
+            prepare.assert_not_called()
+            load.assert_not_called()
+            self.assertEqual(list(Path(tmp).iterdir()), [])
+
+    def test_unavailable_cuda_fails_before_loading_weights_or_tokenizer(self):
+        for name in STUDENT_MODELS:
+            with self.subTest(model=name), patch("torch.cuda.is_available", return_value=False), \
+                    patch("transformers.AutoTokenizer.from_pretrained") as tokenizer, \
+                    patch("transformers.AutoModelForCausalLM.from_pretrained") as weights:
+                with self.assertRaisesRegex(ValueError, "CUDA GPU is unavailable.*--device cpu"):
+                    load_student(name, "cuda")
+                tokenizer.assert_not_called()
+                weights.assert_not_called()
+
+    def test_cuda_loads_each_student_in_fp32_and_freezes_device(self):
+        import torch
+
+        for name, profile in STUDENT_MODELS.items():
+            with self.subTest(model=name):
+                tokenizer = Mock(eos_token_id=1, pad_token_id=0)
+                tokenizer.encode.side_effect = lambda letter, **_: [ord(letter)]
+                tokenizer.get_vocab.return_value = {"<end_of_turn>": 106}
+                tokenizer.convert_tokens_to_ids.return_value = 106
+                model = Mock()
+                model.to.return_value = model
+                model.eval.return_value = model
+                model.generation_config = SimpleNamespace(eos_token_id=1)
+                with patch("torch.cuda.is_available", return_value=True), \
+                        patch("transformers.AutoTokenizer.from_pretrained", return_value=tokenizer), \
+                        patch("transformers.AutoModelForCausalLM.from_pretrained", return_value=model) as weights:
+                    loaded, _, _, _ = load_student(name, "cuda")
+                self.assertIs(loaded, model)
+                self.assertEqual(weights.call_args.args, (profile["model"],))
+                self.assertIs(weights.call_args.kwargs["dtype"], torch.float32)
+                self.assertEqual(weights.call_args.kwargs["revision"], profile["revision"])
+                model.to.assert_called_once_with("cuda")
+                model.eval.assert_called_once_with()
+                config = student_config(fixture_cases(), "validation", 42, load_prompt("v3"), name, "cuda")
+                self.assertEqual(config["device"], "cuda")
+                self.assertEqual(config["dtype"], "torch.float32")
+                with closing(sqlite3.connect(":memory:")) as db:
+                    initialize(db, config)
+                    initialize(db, config)  # Same-device resume is allowed.
+                    with self.assertRaisesRegex(ValueError, "configuration changed"):
+                        initialize(db, {**config, "device": "cpu"})
+
+    def test_predict_moves_all_inputs_to_the_cuda_model_device(self):
+        import torch
+
+        input_ids = Mock()
+        input_ids.to.return_value = torch.tensor([[4, 5]])
+        attention_mask = Mock()
+        attention_mask.to.return_value = torch.tensor([[1, 1]])
+        tokenizer = Mock(eos_token_id=9)
+        tokenizer.apply_chat_template.return_value = {"input_ids": input_ids, "attention_mask": attention_mask}
+        tokenizer.decode.return_value = "C"
+        model = SimpleNamespace(
+            device=torch.device("cuda:0"), config=SimpleNamespace(max_position_embeddings=32),
+            generate=Mock(return_value=SimpleNamespace(
+                sequences=torch.tensor([[4, 5, 2, 9]]), scores=(torch.tensor([[0., 0., 10., 0., 0.]]),))))
+        result = predict_once(model, tokenizer, SimpleNamespace(max_new_tokens=16), list(range(5)), [])
+        input_ids.to.assert_called_once_with(model.device)
+        attention_mask.to.assert_called_once_with(model.device)
+        self.assertIs(model.generate.call_args.kwargs["input_ids"], input_ids.to.return_value)
+        self.assertIs(model.generate.call_args.kwargs["attention_mask"], attention_mask.to.return_value)
+        self.assertEqual(result["raw_reply"], "C")
+        self.assertEqual(result["first_token_choice"], "C")
+
+
 class TestHistory(unittest.TestCase):
     def setUp(self):
         tmp = TemporaryDirectory()

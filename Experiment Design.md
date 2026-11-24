@@ -180,22 +180,25 @@ The observed break-even is the first post-readiness request where cumulative pol
 
 ### Available baseline and history commands
 
-Activate the project environment, which pins compatible dependencies, then use the following explicit main-study model selection. The Student CLI retains its legacy SmolLM2 default for compatibility, so primary Gemma 3 runs always specify `--student-model gemma3-270m-it`.
+Sync the uv-managed project environment from `uv.lock`, then use the following explicit main-study model selection. The Student CLI retains its legacy SmolLM2 default for compatibility, so primary Gemma 3 runs always specify `--student-model gemma3-270m-it`.
 
 ```bash
-source .venv/bin/activate
+uv sync --locked
 
 # Preview only; omit --run to avoid inference.
-python3 code/teacher_baseline.py --split history --prompt-version v3
-python3 code/student_baseline.py --student-model gemma3-270m-it --split validation --prompt-version v3
+uv run --locked python code/teacher_baseline.py --split history --prompt-version v3
+uv run --locked python code/student_baseline.py --student-model gemma3-270m-it --split validation --prompt-version v3
 
 # Chronological Teacher history and full October baselines.
-python3 code/teacher_baseline.py --split history --prompt-version v3 --run
-python3 code/teacher_baseline.py --split validation --prompt-version v3 --concurrency 4 --run
-python3 code/student_baseline.py --student-model gemma3-270m-it --device mps --split validation --prompt-version v3 --teacher-run output/baseline_v3/teacher_validation --output output/baseline_v3/student_gemma3-270m-it_validation --run
+uv run --locked python code/teacher_baseline.py --split history --prompt-version v3 --run
+uv run --locked python code/teacher_baseline.py --split validation --prompt-version v3 --concurrency 4 --run
+uv run --locked python code/student_baseline.py --student-model gemma3-270m-it --device mps --split validation --prompt-version v3 --teacher-run output/baseline_v3/teacher_validation --output output/baseline_v3/student_gemma3-270m-it_validation --run
+
+# Alternative Student validation run on the remote NVIDIA machine.
+uv run --locked python code/student_baseline.py --student-model gemma3-270m-it --device cuda --split validation --prompt-version v3 --teacher-run output/baseline_v3/teacher_validation --output output/baseline_v3/student_gemma3-270m-it_validation_cuda --run
 ```
 
-History uses concurrency 1. The MPS command needs a GPU-enabled process; use a separate output directory for a CPU run. Repeating a command resumes committed attempts. Export-only commands, additional environment setup and the pilot reproduction commands are documented in [README](README.md). The local Gemma 3 download requires an authorized Hugging Face account. Credentials stay in local environment/account configuration and are never saved to experiment artifacts.
+History uses concurrency 1. MPS and CUDA each require the corresponding GPU-enabled process; all current serving devices use FP32. Choose one serving configuration for the formal baseline and adapter comparisons, and use separate output directories when switching devices or environments. Repeating a command in the same environment resumes committed attempts. Export-only commands, remote CUDA setup and the pilot reproduction commands are documented in [README](README.md). The local Gemma 3 download requires an authorized Hugging Face account. Credentials stay in local environment/account configuration and are never saved to experiment artifacts.
 
 ### Planned training, evaluation and cost stages
 
