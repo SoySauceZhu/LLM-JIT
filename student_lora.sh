@@ -5,6 +5,7 @@ CDPATH= cd "$(dirname "$0")"
 
 train_csv=data/lora/teacher_deepseek-v4.1-flash-1017_v3/history_n9000.csv
 teacher_run=output/baseline_v3/teacher_deepseek-v4.1-flash-1017_all
+epochs=3
 
 if [ ! -s "$train_csv" ]; then
     printf 'Training CSV is missing or empty: %s\n' "$train_csv" >&2
@@ -19,7 +20,6 @@ run_variant() {
     rank=$1
     alpha=$2
     learning_rate=$3
-    epochs=$4
     name="gemma3-270m-it_v3_n9000_r${rank}_a${alpha}_lr${learning_rate}_e${epochs}_drop0.05"
     adapter="output/lora/$name"
     evaluation="output/lora_eval/${name}_validation"
@@ -47,17 +47,19 @@ run_variant() {
 }
 
 # Compare ranks 8, 16 and 32 at alpha/rank = 2.
-run_variant 8 16 5e-5 1
-run_variant 16 32 5e-5 1
-run_variant 32 64 5e-5 1
+run_variant 8 16 5e-5
+run_variant 16 32 5e-5
+run_variant 32 64 5e-5
 
 # Compare alpha/rank = 1 and 4 at each of the first two ranks.
-run_variant 8 8 5e-5 1
-run_variant 8 32 5e-5 1
-run_variant 16 16 5e-5 1
-run_variant 16 64 5e-5 1
+run_variant 8 8 5e-5
+run_variant 8 32 5e-5
+run_variant 16 16 5e-5
+run_variant 16 64 5e-5
 
-# Check the learning rate and training length at rank 8 and alpha 16.
-run_variant 8 16 2e-5 1
-run_variant 8 16 1e-4 1
-run_variant 8 16 5e-5 2
+# Check the learning rate at rank 8 and alpha 16.
+run_variant 8 16 2e-5
+run_variant 8 16 1e-4
+
+# Compare alpha/rank = 1 and 2 at rank 32 as well.
+run_variant 32 32 5e-5
