@@ -1,0 +1,321 @@
+{
+  "split": "history",
+  "selection": "Take the first n accepted Teacher labels in original sequence_no order. Each dataset contains the preceding smaller dataset.",
+  "milestone_time": "UTC receipt timestamp of the nth eligible complaint in the original stream.",
+  "csv_encoding": "UTF-8",
+  "csv_fields": [
+    "sequence_no",
+    "complaint_id",
+    "received_at_utc",
+    "split",
+    "text",
+    "text_sha256",
+    "raw_issue",
+    "reference_label",
+    "teacher_label"
+  ],
+  "training_input_field": "text",
+  "training_target_field": "teacher_label",
+  "reference_label_role": "CFPB audit and evaluation metadata",
+  "source": {
+    "cohort_csv": "data/mortgage_complaint.csv",
+    "cohort_csv_sha256": "fa8771fed133082444f7e3f62f1554f1dd523366bbb482fa54a5cf1a6bed00e8",
+    "cohort_ordered_complaint_ids_sha256": "3c59aa321b65ea493b579cd503af0aeb580fa9c28ee4cabe4b15d136ab123dfa",
+    "teacher_model": "deepseek-ai/DeepSeek-V4.1-Flash-1017",
+    "teacher_ledger": "output/baseline_v3/teacher_deepseek-v4.1-flash-1017_all/run.sqlite",
+    "teacher_ledger_sha256": "f5e1e7b590e36933ab83e2524a6484f3bb7c14e8cba5c593452c3589ba507200",
+    "teacher_predictions_csv": "output/baseline_v3/teacher_deepseek-v4.1-flash-1017_all/predictions.csv",
+    "teacher_predictions_csv_sha256": "49044dbfe9b8f818f9a14a4950486a2c7ae81a9ce4fd5d0a994d4e4c33273b0b",
+    "prompt": "code/prompts/mortgage_v3.toml",
+    "prompt_sha256": "321da8ce69689045c57df3675a3d4867e37e1fab2aaeb3a8c160577f801bdbd0",
+    "teacher_input_clipping": {
+      "tokenizer": "HuggingFaceTB/SmolLM2-135M-Instruct",
+      "revision": "12fd25f77366fa6b3b4b768ec3050bf629380bac",
+      "head_tokens": 2000,
+      "tail_tokens": 1000
+    }
+  },
+  "history_cases": 9159,
+  "history_eligible_cases": 9155,
+  "history_cases_without_label": [
+    {
+      "complaint_id": "8376317",
+      "sequence_no": 1649,
+      "received_at_utc": "2024-02-20T04:02:34.000Z",
+      "teacher_status": "invalid"
+    },
+    {
+      "complaint_id": "8630230",
+      "sequence_no": 2998,
+      "received_at_utc": "2024-03-26T23:43:26.000Z",
+      "teacher_status": "invalid"
+    },
+    {
+      "complaint_id": "9281684",
+      "sequence_no": 5584,
+      "received_at_utc": "2024-06-18T03:29:39.000Z",
+      "teacher_status": "invalid"
+    },
+    {
+      "complaint_id": "9514303",
+      "sequence_no": 6465,
+      "received_at_utc": "2024-07-15T20:12:44.000Z",
+      "teacher_status": "invalid"
+    }
+  ],
+  "eligible_cases_after_largest_prefix": 155,
+  "prefixes": [
+    {
+      "file": "history_n0100.csv",
+      "n_rows": 100,
+      "first_complaint_id": "8085676",
+      "first_sequence_no": 1,
+      "first_received_at_utc": "2024-01-01T00:45:14.000Z",
+      "trigger_complaint_id": "8101986",
+      "trigger_sequence_no": 100,
+      "trigger_received_at_utc": "2024-01-04T00:39:03.000Z",
+      "history_cases_without_label_through_trigger": 0,
+      "teacher_label_counts": {
+        "A": 7,
+        "B": 2,
+        "C": 65,
+        "D": 23,
+        "E": 3
+      },
+      "ordered_complaint_ids_sha256": "daa2c1bb2c9886c9d43b56b1d290d16b57061670c4be8aa7bef0124a2b99168e",
+      "csv_sha256": "54b9c6d5b7626f5e19accb1baef55f9c4f60c54420e53972a9c3b98ccfffb3bd",
+      "csv_size_bytes": 169663
+    },
+    {
+      "file": "history_n0200.csv",
+      "n_rows": 200,
+      "first_complaint_id": "8085676",
+      "first_sequence_no": 1,
+      "first_received_at_utc": "2024-01-01T00:45:14.000Z",
+      "trigger_complaint_id": "8128901",
+      "trigger_sequence_no": 200,
+      "trigger_received_at_utc": "2024-01-08T16:05:33.000Z",
+      "history_cases_without_label_through_trigger": 0,
+      "teacher_label_counts": {
+        "A": 12,
+        "B": 6,
+        "C": 123,
+        "D": 51,
+        "E": 8
+      },
+      "ordered_complaint_ids_sha256": "07d96002b5430166b25edd8e9dc1d49a78e5fa65a6685fc483ec42a45b4795f8",
+      "csv_sha256": "83f717f25bc41666ba760c45279f35e97008310960f822ed29f90b7042337303",
+      "csv_size_bytes": 351787
+    },
+    {
+      "file": "history_n0500.csv",
+      "n_rows": 500,
+      "first_complaint_id": "8085676",
+      "first_sequence_no": 1,
+      "first_received_at_utc": "2024-01-01T00:45:14.000Z",
+      "trigger_complaint_id": "8179280",
+      "trigger_sequence_no": 500,
+      "trigger_received_at_utc": "2024-01-18T17:34:28.000Z",
+      "history_cases_without_label_through_trigger": 0,
+      "teacher_label_counts": {
+        "A": 22,
+        "B": 12,
+        "C": 308,
+        "D": 130,
+        "E": 28
+      },
+      "ordered_complaint_ids_sha256": "506489756b6729aaa911a01bb398e76f4daef71e5f6d58e6a1860b44228bf4dc",
+      "csv_sha256": "18f8cb46a83fba40502ee08dd259fd4de34e1944b0f5d513fc28d3bc9087d8e1",
+      "csv_size_bytes": 911777
+    },
+    {
+      "file": "history_n1000.csv",
+      "n_rows": 1000,
+      "first_complaint_id": "8085676",
+      "first_sequence_no": 1,
+      "first_received_at_utc": "2024-01-01T00:45:14.000Z",
+      "trigger_complaint_id": "8267761",
+      "trigger_sequence_no": 1000,
+      "trigger_received_at_utc": "2024-02-01T20:53:36.000Z",
+      "history_cases_without_label_through_trigger": 0,
+      "teacher_label_counts": {
+        "A": 61,
+        "B": 23,
+        "C": 621,
+        "D": 245,
+        "E": 50
+      },
+      "ordered_complaint_ids_sha256": "4a8f8b846b016174901616c16d9677550f9f7d813b7cbaec4cbf855f417a7105",
+      "csv_sha256": "df38c073db6efb0316b8effc009ed01e9be61121102b97ae60b3b761c93d0ea2",
+      "csv_size_bytes": 1905438
+    },
+    {
+      "file": "history_n2000.csv",
+      "n_rows": 2000,
+      "first_complaint_id": "8085676",
+      "first_sequence_no": 1,
+      "first_received_at_utc": "2024-01-01T00:45:14.000Z",
+      "trigger_complaint_id": "8441370",
+      "trigger_sequence_no": 2001,
+      "trigger_received_at_utc": "2024-02-28T21:52:55.000Z",
+      "history_cases_without_label_through_trigger": 1,
+      "teacher_label_counts": {
+        "A": 131,
+        "B": 48,
+        "C": 1230,
+        "D": 478,
+        "E": 113
+      },
+      "ordered_complaint_ids_sha256": "99f29db255b56a9f07579ffc85c54f88e09f1133f8e0e552b0dd08d598f3ca46",
+      "csv_sha256": "81835da73b5842447eb767a5f3741deb7baec1bfb38a4fa033440fff2e688a9c",
+      "csv_size_bytes": 3652644
+    },
+    {
+      "file": "history_n3000.csv",
+      "n_rows": 3000,
+      "first_complaint_id": "8085676",
+      "first_sequence_no": 1,
+      "first_received_at_utc": "2024-01-01T00:45:14.000Z",
+      "trigger_complaint_id": "8629023",
+      "trigger_sequence_no": 3002,
+      "trigger_received_at_utc": "2024-03-27T02:04:35.000Z",
+      "history_cases_without_label_through_trigger": 2,
+      "teacher_label_counts": {
+        "A": 210,
+        "B": 70,
+        "C": 1807,
+        "D": 749,
+        "E": 164
+      },
+      "ordered_complaint_ids_sha256": "1b14312bb08c6139d592f44fd03f664d872194c635107e091532ea917c24c6eb",
+      "csv_sha256": "48057cc462727690befeeefa9b66d3a7792403c82217cd63e991b0e0cfa82ed8",
+      "csv_size_bytes": 5464261
+    },
+    {
+      "file": "history_n4000.csv",
+      "n_rows": 4000,
+      "first_complaint_id": "8085676",
+      "first_sequence_no": 1,
+      "first_received_at_utc": "2024-01-01T00:45:14.000Z",
+      "trigger_complaint_id": "8849631",
+      "trigger_sequence_no": 4002,
+      "trigger_received_at_utc": "2024-04-24T21:41:43.000Z",
+      "history_cases_without_label_through_trigger": 2,
+      "teacher_label_counts": {
+        "A": 284,
+        "B": 92,
+        "C": 2436,
+        "D": 973,
+        "E": 215
+      },
+      "ordered_complaint_ids_sha256": "230752ba831d6c0718ac05901973598f5c51833c8af86cf03dd41625a0783143",
+      "csv_sha256": "87e8c68c0d0c6812bba26eb0f3379033cb8d3be4269f847251a31baff48a2271",
+      "csv_size_bytes": 7332542
+    },
+    {
+      "file": "history_n5000.csv",
+      "n_rows": 5000,
+      "first_complaint_id": "8085676",
+      "first_sequence_no": 1,
+      "first_received_at_utc": "2024-01-01T00:45:14.000Z",
+      "trigger_complaint_id": "9114812",
+      "trigger_sequence_no": 5002,
+      "trigger_received_at_utc": "2024-05-28T20:49:44.000Z",
+      "history_cases_without_label_through_trigger": 2,
+      "teacher_label_counts": {
+        "A": 380,
+        "B": 125,
+        "C": 3015,
+        "D": 1211,
+        "E": 269
+      },
+      "ordered_complaint_ids_sha256": "b4c46c2aefa32615772ee6b436b9b4e84b36ce80f52d8012daadd30ca5c38d32",
+      "csv_sha256": "f2f432c1db5e3b0c0efd5ab731b57f3dac135f8af63b1b1f1daa3af504049288",
+      "csv_size_bytes": 9177193
+    },
+    {
+      "file": "history_n6000.csv",
+      "n_rows": 6000,
+      "first_complaint_id": "8085676",
+      "first_sequence_no": 1,
+      "first_received_at_utc": "2024-01-01T00:45:14.000Z",
+      "trigger_complaint_id": "9389412",
+      "trigger_sequence_no": 6003,
+      "trigger_received_at_utc": "2024-06-30T20:09:01.000Z",
+      "history_cases_without_label_through_trigger": 3,
+      "teacher_label_counts": {
+        "A": 469,
+        "B": 151,
+        "C": 3595,
+        "D": 1480,
+        "E": 305
+      },
+      "ordered_complaint_ids_sha256": "acd2c8c7d4d58cec22adff789c985f6f1a6b4415bf68d62444c5657538e06494",
+      "csv_sha256": "d6054fe6339a46d7803421ca58bdccc9e3ade35480b6e63aae681585c54dc1e6",
+      "csv_size_bytes": 10993402
+    },
+    {
+      "file": "history_n7000.csv",
+      "n_rows": 7000,
+      "first_complaint_id": "8085676",
+      "first_sequence_no": 1,
+      "first_received_at_utc": "2024-01-01T00:45:14.000Z",
+      "trigger_complaint_id": "9664806",
+      "trigger_sequence_no": 7004,
+      "trigger_received_at_utc": "2024-07-31T01:21:43.000Z",
+      "history_cases_without_label_through_trigger": 4,
+      "teacher_label_counts": {
+        "A": 561,
+        "B": 180,
+        "C": 4189,
+        "D": 1718,
+        "E": 352
+      },
+      "ordered_complaint_ids_sha256": "c8b43c28283b5c4a3160ccdf6b21df443aae2ba12039b382f317a25583efefd0",
+      "csv_sha256": "b1e37d1e3add0f419dcfba22ff4789f67a7945868d8a8f5920d8f600581a6f91",
+      "csv_size_bytes": 12817314
+    },
+    {
+      "file": "history_n8000.csv",
+      "n_rows": 8000,
+      "first_complaint_id": "8085676",
+      "first_sequence_no": 1,
+      "first_received_at_utc": "2024-01-01T00:45:14.000Z",
+      "trigger_complaint_id": "9942279",
+      "trigger_sequence_no": 8004,
+      "trigger_received_at_utc": "2024-08-28T16:41:07.000Z",
+      "history_cases_without_label_through_trigger": 4,
+      "teacher_label_counts": {
+        "A": 637,
+        "B": 211,
+        "C": 4788,
+        "D": 1958,
+        "E": 406
+      },
+      "ordered_complaint_ids_sha256": "1dcdc42aa55d54f69f2cf60d8a4593e4f9bca7d9a853267206dc530f10fcfb89",
+      "csv_sha256": "21472c037e8720522d5f7cb8ec3967083c68eb3f1a02fcc6c0fcecc1b342aa1d",
+      "csv_size_bytes": 14648207
+    },
+    {
+      "file": "history_n9000.csv",
+      "n_rows": 9000,
+      "first_complaint_id": "8085676",
+      "first_sequence_no": 1,
+      "first_received_at_utc": "2024-01-01T00:45:14.000Z",
+      "trigger_complaint_id": "10240914",
+      "trigger_sequence_no": 9004,
+      "trigger_received_at_utc": "2024-09-25T19:27:42.000Z",
+      "history_cases_without_label_through_trigger": 4,
+      "teacher_label_counts": {
+        "A": 720,
+        "B": 246,
+        "C": 5387,
+        "D": 2187,
+        "E": 460
+      },
+      "ordered_complaint_ids_sha256": "c57123468ae58225c9f7cc44ad3b2a8156ab0c2c615afc62befa7bbf2865777d",
+      "csv_sha256": "b10a58023735c08bd045cbf65394d22c8ff4ae848b0f28e5784dd94c5205aea5",
+      "csv_size_bytes": 16459558
+    }
+  ]
+}
