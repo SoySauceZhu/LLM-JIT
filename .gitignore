@@ -4,3 +4,6 @@ runner.lock.sqlite
 .cache/
 .venv/
 .venv-pip-backup/
+
+# LoRA adapter weights saved by the trainer
+adapter_model.safetensors
