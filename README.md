@@ -2,7 +2,7 @@
 
 [System and experiment design](https://docs.google.com/document/d/1LyIxZPZP4Ax1GHQ-LLyzqF2JipfCaxy5SB8kU0B53ug/edit?usp=sharing) · [Local experiment design](Experiment%20Design.md)
 
-The default pairing is **DeepSeek V4.1 Flash 1017 Teacher → Gemma 3 270M IT Student**, using the frozen v3 prompt. Gemma 4 31B IT remains an optional Teacher baseline; SmolLM2-135M and Qwen3.5-0.8B remain optional Students. This stage records Teacher labels for the complete cohort and runs unadapted Student baselines. Training subsets and LoRA adapters are constructed in a later stage, using one explicitly selected Teacher's labels.
+The default pairing is **DeepSeek V4.1 Flash 1017 Teacher → Gemma 3 270M IT Student**, using the frozen v3 prompt. Gemma 4 31B IT remains an optional Teacher baseline; SmolLM2-135M and Qwen3.5-0.8B remain optional Students. Teacher collection and unadapted Student baselines have separate entry points from LoRA training on the history prefixes.
 
 ## Environment
 
@@ -180,6 +180,31 @@ uv run --locked python code/student_baseline.py \
 
 Each Student uses its native tokenizer/chat template while narrative clipping stays fixed to SmolLM2. Gemma's template folds the system instruction into the first user turn and generation also stops at native `<end_of_turn>`. Qwen uses `enable_thinking=False`, the text-only backbone, and both tokenizer/model EOS IDs. Only the terminal stop token is removed before strict parsing. Qwen/Gemma caches use the git-ignored `.cache/huggingface/`; SmolLM2 uses the default Hugging Face cache.
 
+## Gemma 3 LoRA SFT on NVIDIA CUDA
+
+From the repo root on the NVIDIA machine, audit one history prefix with the pinned tokenizer, then train a fresh adapter in a new directory.
+
+```bash
+TRAIN_CSV=data/lora/teacher_deepseek-v4.1-flash-1017_v3/history_n0100.csv
+ADAPTER_DIR=output/lora/gemma3-270m-it_v3_n0100
+
+uv run --locked --extra lora python code/student_lora.py --train-csv "$TRAIN_CSV" --audit-only
+uv run --locked --extra lora python code/student_lora.py \
+  --train-csv "$TRAIN_CSV" --device cuda --output "$ADAPTER_DIR" --run
+```
+
+The trainer uses the frozen v3 chat and shared narrative clipping. It accepts only complaint IDs and text from the frozen history cohort and skips rows without a valid A–E `teacher_label`. The only unmasked targets are the final assistant letter and Gemma's `<end_of_turn>`. The native causal LM shifts labels internally. Each optimizer update gives all its answer tokens equal weight, including when the final effective batch is partial.
+
+Defaults are FP32, rank 8, alpha 16, dropout 0.05 on `q_proj` and `v_proj`, AdamW at `2e-4`, three epochs, effective batch 8, micro-batch 1 and seed 42. Use `--dtype bfloat16` on a CUDA GPU with native BF16 support. The output contains PEFT adapter weights, `training.json` with runtime and optimizer metrics, and `loss_tokens.jsonl` with each sample's supervised token IDs and zero-based target start.
+
+Evaluate the saved adapter with the same autoregressive generation and strict label parsing as the baseline. Use a fresh output directory for each adapter.
+
+```bash
+uv run --locked --extra lora python code/student_baseline.py \
+  --device cuda --split validation --prompt-version v3 --adapter "$ADAPTER_DIR" \
+  --output output/lora_eval/gemma3-270m-it_v3_n0100_validation --run
+```
+
 ## Code and checks
 
 | Module | Responsibility |
@@ -189,6 +214,7 @@ Each Student uses its native tokenizer/chat template while narrative clipping st
 | `code/teacher_client.py` | SiliconFlow Teacher profiles, model-specific request settings and isolated output paths |
 | `code/teacher_baseline.py` / `code/teacher_collection.py` | Full-cohort collection, retries, concurrency, resume and exports |
 | `code/student_baseline.py` | Student inference, resume, Teacher pairing and scoring |
+| `code/student_lora.py` | History-only completion SFT, target token audit and PEFT adapter export |
 | `code/evaluation.py` / `code/run_store.py` | Metrics, raw attempt ledger, locking and atomic exports |
 
 Run offline checks without API calls or model downloads:
@@ -199,4 +225,4 @@ uv run --locked python -m unittest discover -s code -p 'test_*.py'
 
 Validation result: [Gemma 3 270M IT, full October validation, v3/CUDA](result/validation/gemma3-270m-it-v3-cuda/note.md). The completed 1,013-case Student run has 26.75% accuracy, 0.1591 macro-F1 and 83.61% valid output; Teacher pairing was incomplete at export. The report includes frozen source snapshots and independently checked statistics.
 
-Historical evidence: [Gemma 3 pilot](result/pre-run%20300%20sample%20test/gemma3-270m-it-v3/note.md) · [Qwen pilot](result/pre-run%20300%20sample%20test/qwen3.5-0.8b-v3/note.md). Their original metadata remains in archived output/report directories. LoRA, training subset selection, TF–IDF baselines and deployment cost replay are later stages; Teacher collection does not choose their training subsets.
+Historical evidence: [Gemma 3 pilot](result/pre-run%20300%20sample%20test/gemma3-270m-it-v3/note.md) · [Qwen pilot](result/pre-run%20300%20sample%20test/qwen3.5-0.8b-v3/note.md). Their original metadata remains in archived output/report directories.

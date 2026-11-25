@@ -12,7 +12,7 @@ from evaluation import score
 from mortgage_data import COHORT_SPLIT_COUNTS, REVISION, TOKENIZER, default_output, load_experiment, prepare_cases, select_rows
 from mortgage_prompt import DEFAULT_VERSION, LABELS, ROOT, SUPPORTED_VERSIONS, build_messages, load_prompt, parse_label
 from run_store import (
-    attempts_by_case, final_attempt, initialize, make_config, progress_metrics, read_config,
+    attempts_by_case, file_sha256, final_attempt, initialize, make_config, progress_metrics, read_config,
     single_runner, usage_metrics, write_exports,
 )
 from teacher_client import DEFAULT_TEACHER_MODEL, TEACHER_MODELS, teacher_output
@@ -31,13 +31,15 @@ STUDENT_MODELS = {
 
 
 def student_config(cases, split, prompt, student_model=DEFAULT_STUDENT_MODEL, device="cpu", *,
-                   diagnostics=False, attn_implementation="auto"):
+                   diagnostics=False, attn_implementation="auto", adapter=None):
     profile = STUDENT_MODELS[student_model]
     extra = {"generation_stop_tokens": profile["stop_tokens"]} if "stop_tokens" in profile else {}
     if diagnostics:
         extra["diagnostics"] = {"version": DIAGNOSTICS_VERSION, "first_step_top_k": TOP_K}
     if attn_implementation != "auto":
         extra["attn_implementation"] = attn_implementation
+    if adapter is not None:
+        extra["lora_adapter"] = adapter
     return make_config(cases, split, prompt, backend="student", model=profile["model"],
                        decoding={"do_sample": False, "max_tokens": 16,
                                  "eos_policy": "model_and_tokenizer"}, device=device,
@@ -60,7 +62,25 @@ def generation_stop_ids(model_eos, tokenizer_eos, extra_stop_ids=()):
                               if n is not None)) or None
 
 
-def load_student(student_model, device="cpu", *, attn_implementation="auto"):
+def student_pretrained_kwargs(student_model):
+    kwargs = {"revision": STUDENT_MODELS[student_model]["revision"]}
+    if student_model != "smollm2-135m":
+        kwargs["cache_dir"] = ROOT / ".cache/huggingface"
+    return kwargs
+
+
+def adapter_identity(directory, student_model):
+    profile = STUDENT_MODELS[student_model]
+    config_path = directory / "adapter_config.json"
+    config = json.loads(config_path.read_text())
+    if (config.get("peft_type"), config.get("task_type"), config.get("base_model_name_or_path"),
+        config.get("revision")) != ("LORA", "CAUSAL_LM", profile["model"], profile["revision"]):
+        raise ValueError("Adapter must be a causal LM LoRA for the pinned Student model and revision")
+    return {name: file_sha256(directory / name)
+            for name in ("adapter_config.json", "adapter_model.safetensors")}
+
+
+def load_student(student_model, device="cpu", *, attn_implementation="auto", dtype="float32", adapter=None):
     """Load the native text model/tokenizer from an immutable revision."""
     import torch
     from transformers import AutoModelForCausalLM, AutoTokenizer, GenerationConfig
@@ -73,15 +93,15 @@ def load_student(student_model, device="cpu", *, attn_implementation="auto"):
             "CUDA GPU is unavailable in this process; check nvidia-smi, install CUDA-enabled "
             "PyTorch with uv sync --locked on Linux, or use --device cpu"
         )
-    kwargs = {"revision": profile["revision"]}
-    if student_model != "smollm2-135m":
-        kwargs["cache_dir"] = ROOT / ".cache/huggingface"
+    if dtype == "bfloat16" and (device != "cuda" or not torch.cuda.is_bf16_supported(including_emulation=False)):
+        raise ValueError("Native bfloat16 training requires a supported CUDA GPU; use --dtype float32")
+    kwargs = student_pretrained_kwargs(student_model)
     torch.set_num_threads(4)
     try:
         tokenizer = AutoTokenizer.from_pretrained(profile["model"], **kwargs)
         model_kwargs = {"attn_implementation": attn_implementation} if attn_implementation != "auto" else {}
         model = AutoModelForCausalLM.from_pretrained(
-            profile["model"], dtype=torch.float32, **kwargs, **model_kwargs).to(device).eval()
+            profile["model"], dtype=getattr(torch, dtype), **kwargs, **model_kwargs).to(device).eval()
     except OSError as exc:
         if student_model == "gemma3-270m-it" and "gated" in str(exc).lower():
             raise RuntimeError(
@@ -90,6 +110,10 @@ def load_student(student_model, device="cpu", *, attn_implementation="auto"):
                 "HF_TOKEN or run `hf auth login` locally, then resume the same command."
             ) from exc
         raise
+    if adapter is not None:
+        from peft import PeftModel
+
+        model = PeftModel.from_pretrained(model, adapter, is_trainable=False).eval()
     encoded = [tokenizer.encode(label, add_special_tokens=False) for label in LABELS]
     if any(len(tokens) != 1 for tokens in encoded):
         raise ValueError("First-token diagnostic requires single-token letters")
@@ -295,6 +319,7 @@ def main():
     parser.add_argument("--split", choices=COHORT_SPLIT_COUNTS, default="validation")
     parser.add_argument("--prompt-version", choices=SUPPORTED_VERSIONS, default=DEFAULT_VERSION)
     parser.add_argument("--output", type=Path)
+    parser.add_argument("--adapter", type=Path, help="Load a saved Gemma 3 LoRA for generation")
     parser.add_argument("--diagnostics", action="store_true",
                         help="Record generated token IDs, first-step scores and inference runtime per attempt")
     parser.add_argument("--attn-implementation", choices=("auto", "eager", "sdpa"), default="auto",
@@ -306,6 +331,10 @@ def main():
     action.add_argument("--run", action="store_true")
     action.add_argument("--export-only", action="store_true")
     args = parser.parse_args()
+    if args.adapter is not None and (args.student_model != "gemma3-270m-it" or args.output is None):
+        parser.error("--adapter requires --student-model gemma3-270m-it and a separate --output")
+    if args.export_only and args.adapter is not None:
+        parser.error("--export-only uses the adapter identity already stored in the ledger")
     selected_teacher = args.teacher_model or (None if args.teacher_run else DEFAULT_TEACHER_MODEL)
     output = args.output or student_output(args.student_model, args.split, args.prompt_version)
     if args.export_only:
@@ -327,7 +356,8 @@ def main():
     prompt = load_prompt(args.prompt_version)
     cases = prepare_cases(rows)
     config = student_config(cases, args.split, prompt, args.student_model, args.device,
-                            diagnostics=args.diagnostics, attn_implementation=args.attn_implementation)
+                            diagnostics=args.diagnostics, attn_implementation=args.attn_implementation,
+                            adapter=adapter_identity(args.adapter, args.student_model) if args.adapter else None)
     teacher_run = args.teacher_run or teacher_output(selected_teacher, None, args.prompt_version)
     # Detect a wrong Teacher configuration before spending local inference time.
     load_teacher_labels(teacher_run, config, required=args.teacher_run is not None,
@@ -339,7 +369,8 @@ def main():
             grouped = attempts_by_case(db)
             if any(not final_attempt(grouped.get(c["complaint_id"], [])) for c in cases):
                 model, tokenizer, settings, label_ids = load_student(
-                    args.student_model, args.device, attn_implementation=args.attn_implementation)
+                    args.student_model, args.device, attn_implementation=args.attn_implementation,
+                    adapter=args.adapter)
                 runtime = inference_runtime(model, tokenizer, settings) if args.diagnostics else None
                 collect_student(db, cases, lambda case: predict_once(
                     model, tokenizer, settings, label_ids, build_messages(case["text"], prompt),

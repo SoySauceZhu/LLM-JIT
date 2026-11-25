@@ -206,7 +206,7 @@ Teacher concurrency defaults to 1 for serial collection and can be raised for an
 
 ### Planned training, evaluation and cost stages
 
-The stages below describe the later target interface; the `mortgage_exp` package is not implemented yet. Full-cohort Teacher labeling, Student baseline inference on the three partitions, retry/resume and Teacher pairing are implemented. Training-subset selection, Gemma 3 LoRA, majority/TF–IDF baselines, bootstrap reports and cost replay remain to be built. Collection contains no training-prefix artifacts. Final test evaluation is available explicitly through `--split test` and should be run after model selection is frozen.
+The stages below describe the later target interface. The current CLIs cover full-cohort Teacher labeling, Student inference on the three partitions, retry/resume and Teacher pairing. The prepared history prefixes can now be used with `code/student_lora.py` to train Gemma 3 adapters. Majority/TF–IDF baselines, bootstrap reports and cost replay remain to be built. Final test evaluation is available explicitly through `--split test` after model selection is frozen.
 
 Provide these stages or equivalent documented invocations. Each uses the same run ID and versioned configuration, with the selected Teacher/Gemma 3 pairing specified above. Include reproducible dependency pins or a lockfile, configuration and README commands. Expose model endpoint, revisions, raw-data paths, GPU rate and API prices as configuration. Read credentials from the environment.
 

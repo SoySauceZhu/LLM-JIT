@@ -13,6 +13,11 @@ from tempfile import TemporaryDirectory
 from mortgage_data import COHORT_HASH, COHORT_SPLIT_COUNTS, DATA, HEAD, REVISION, TAIL, TOKENIZER, manifest_cases
 
 
+def file_sha256(path):
+    with path.open("rb") as file:
+        return hashlib.file_digest(file, "sha256").hexdigest()
+
+
 @contextmanager
 def single_runner(output):
     # The separate lock leaves the attempt ledger readable during inference.
@@ -40,7 +45,7 @@ def make_config(cases, split, prompt, *, backend, model, decoding, **extra):
         "schema_version": 3, "backend": backend, "model": model, "decoding": decoding,
         **prompt, "tokenizer": TOKENIZER, "revision": REVISION, "head": HEAD, "tail": TAIL,
         "split": split,
-        "cases": manifest_cases(cases), "data_sha256": hashlib.sha256(DATA.read_bytes()).hexdigest(),
+        "cases": manifest_cases(cases), "data_sha256": file_sha256(DATA),
         "data_path": "data/mortgage_complaint.csv", "cohort_ordered_ids_sha256": COHORT_HASH,
         "cohort_split_counts": COHORT_SPLIT_COUNTS,
         "environment": {"python": platform.python_version(), "platform": platform.platform(),
