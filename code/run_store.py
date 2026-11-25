@@ -62,7 +62,7 @@ def initialize(db, config):
             raw_reply TEXT, label TEXT, detail TEXT, response_id TEXT, response_model TEXT,
             prompt_tokens INTEGER, completion_tokens INTEGER, seconds REAL NOT NULL,
             recorded_at TEXT DEFAULT CURRENT_TIMESTAMP, concurrency INTEGER NOT NULL DEFAULT 1,
-            first_token_choice TEXT)""")
+            first_token_choice TEXT, diagnostics TEXT)""")
         db.execute("CREATE INDEX IF NOT EXISTS by_complaint ON attempts(complaint_id)")
 
 

@@ -16,6 +16,7 @@ from run_store import (
     single_runner, usage_metrics, write_exports,
 )
 from teacher_client import DEFAULT_TEACHER_MODEL, TEACHER_MODELS, teacher_output
+from student_diagnostics import DIAGNOSTICS_VERSION, TOP_K, generation_diagnostics, inference_runtime
 
 DEFAULT_STUDENT_MODEL = "gemma3-270m-it"
 STUDENT_MODELS = {
@@ -29,9 +30,14 @@ STUDENT_MODELS = {
 }
 
 
-def student_config(cases, split, prompt, student_model=DEFAULT_STUDENT_MODEL, device="cpu"):
+def student_config(cases, split, prompt, student_model=DEFAULT_STUDENT_MODEL, device="cpu", *,
+                   diagnostics=False, attn_implementation="auto"):
     profile = STUDENT_MODELS[student_model]
     extra = {"generation_stop_tokens": profile["stop_tokens"]} if "stop_tokens" in profile else {}
+    if diagnostics:
+        extra["diagnostics"] = {"version": DIAGNOSTICS_VERSION, "first_step_top_k": TOP_K}
+    if attn_implementation != "auto":
+        extra["attn_implementation"] = attn_implementation
     return make_config(cases, split, prompt, backend="student", model=profile["model"],
                        decoding={"do_sample": False, "max_tokens": 16,
                                  "eos_policy": "model_and_tokenizer"}, device=device,
@@ -54,7 +60,7 @@ def generation_stop_ids(model_eos, tokenizer_eos, extra_stop_ids=()):
                               if n is not None)) or None
 
 
-def load_student(student_model, device="cpu"):
+def load_student(student_model, device="cpu", *, attn_implementation="auto"):
     """Load the native text model/tokenizer from an immutable revision."""
     import torch
     from transformers import AutoModelForCausalLM, AutoTokenizer, GenerationConfig
@@ -73,8 +79,9 @@ def load_student(student_model, device="cpu"):
     torch.set_num_threads(4)
     try:
         tokenizer = AutoTokenizer.from_pretrained(profile["model"], **kwargs)
+        model_kwargs = {"attn_implementation": attn_implementation} if attn_implementation != "auto" else {}
         model = AutoModelForCausalLM.from_pretrained(
-            profile["model"], dtype=torch.float32, **kwargs).to(device).eval()
+            profile["model"], dtype=torch.float32, **kwargs, **model_kwargs).to(device).eval()
     except OSError as exc:
         if student_model == "gemma3-270m-it" and "gated" in str(exc).lower():
             raise RuntimeError(
@@ -143,7 +150,8 @@ def load_teacher_labels(run, config, *, required=False, teacher_model=None):
     return labels, "complete"
 
 
-def predict_once(model, tokenizer, settings, label_ids, messages, chat_template_kwargs=None):
+def predict_once(model, tokenizer, settings, label_ids, messages, chat_template_kwargs=None, *,
+                 diagnostics=False, runtime=None):
     import torch
 
     with torch.inference_mode():
@@ -169,8 +177,12 @@ def predict_once(model, tokenizer, settings, label_ids, messages, chat_template_
             tokens.pop()
         raw = tokenizer.decode(tokens, skip_special_tokens=False, clean_up_tokenization_spaces=False)
         choice = LABELS[output.scores[0][0, label_ids].argmax().item()] if output.scores else None
-    return {"raw_reply": raw, "first_token_choice": choice,
-            "prompt_tokens": prompt_length, "completion_tokens": generated_tokens}
+    result = {"raw_reply": raw, "first_token_choice": choice,
+              "prompt_tokens": prompt_length, "completion_tokens": generated_tokens}
+    if diagnostics:
+        result["diagnostics"] = generation_diagnostics(
+            tokenizer, inputs, output, label_ids, stop_ids, settings.max_new_tokens, runtime)
+    return result
 
 
 def collect_student(db, cases, predict):
@@ -194,12 +206,16 @@ def collect_student(db, cases, predict):
             raw = result["raw_reply"]
             label = parse_label(raw)
             with db:
-                db.execute("""INSERT INTO attempts (complaint_id, status, raw_reply, label,
-                    prompt_tokens, completion_tokens, seconds, first_token_choice)
-                    VALUES (?, ?, ?, ?, ?, ?, ?, ?)""",
-                           (case["complaint_id"], "ok" if label else "invalid", raw, label,
-                            result["prompt_tokens"], result["completion_tokens"],
-                            time.monotonic() - start, result["first_token_choice"]))
+                fields = ["complaint_id", "status", "raw_reply", "label", "prompt_tokens",
+                          "completion_tokens", "seconds", "first_token_choice"]
+                values = [case["complaint_id"], "ok" if label else "invalid", raw, label,
+                          result["prompt_tokens"], result["completion_tokens"],
+                          time.monotonic() - start, result["first_token_choice"]]
+                if "diagnostics" in result:
+                    fields.append("diagnostics")
+                    values.append(json.dumps(result["diagnostics"], allow_nan=False))
+                db.execute(f"INSERT INTO attempts ({', '.join(fields)}) "
+                           f"VALUES ({', '.join('?' for _ in values)})", values)
             if label:
                 break
         if index % 25 == 0 or index == len(cases):
@@ -246,7 +262,24 @@ def export_results(db, output, teacher_run, *, require_teacher=False, teacher_mo
                "usage": usage_metrics(db),
                "strict_generation": score(terminal, "student_label", paired=paired),
                "first_token_choice": score(terminal, "first_token_choice", paired=paired)}
-    write_exports(output, json_files={"config.json": config, "metrics.json": metrics},
+    json_files = {"config.json": config, "metrics.json": metrics}
+    if config.get("diagnostics"):
+        diagnostic_attempts = [
+            {"attempt_id": a["id"], "complaint_id": cid, "attempt_number": index,
+             "status": a["status"], "raw_reply": a["raw_reply"],
+             "recorded_at": a["recorded_at"],
+             "diagnostics": json.loads(a["diagnostics"]) if a.get("diagnostics") else None}
+            for cid, attempts in grouped.items() for index, a in enumerate(attempts, 1)
+        ]
+        diagnostic_attempts.sort(key=lambda a: a["attempt_id"])
+        metrics["diagnostics"] = {
+            "version": DIAGNOSTICS_VERSION, "file": "diagnostics.json",
+            "attempts_recorded": sum(a["diagnostics"] is not None for a in diagnostic_attempts),
+            "generation_attempts": sum(a["status"] != "paused" for a in diagnostic_attempts),
+        }
+        json_files["diagnostics.json"] = {"version": DIAGNOSTICS_VERSION,
+                                          "attempts": diagnostic_attempts}
+    write_exports(output, json_files=json_files,
                   csv_files={"predictions.csv": (fields, rows)})
     print(f"terminal={len(terminal)}/{len(rows)} complete={progress['complete']} "
           f"accuracy={metrics['strict_generation']['accuracy']} pairing={pairing_status} "
@@ -262,6 +295,10 @@ def main():
     parser.add_argument("--split", choices=COHORT_SPLIT_COUNTS, default="validation")
     parser.add_argument("--prompt-version", choices=SUPPORTED_VERSIONS, default=DEFAULT_VERSION)
     parser.add_argument("--output", type=Path)
+    parser.add_argument("--diagnostics", action="store_true",
+                        help="Record generated token IDs, first-step scores and inference runtime per attempt")
+    parser.add_argument("--attn-implementation", choices=("auto", "eager", "sdpa"), default="auto",
+                        help="Attention implementation; auto preserves the model/library default")
     parser.add_argument("--teacher-run", type=Path)
     parser.add_argument("--teacher-model", choices=TEACHER_MODELS,
                         help="Teacher to pair against (default: DeepSeek; an explicit --teacher-run selects its stored model)")
@@ -289,7 +326,8 @@ def main():
         return
     prompt = load_prompt(args.prompt_version)
     cases = prepare_cases(rows)
-    config = student_config(cases, args.split, prompt, args.student_model, args.device)
+    config = student_config(cases, args.split, prompt, args.student_model, args.device,
+                            diagnostics=args.diagnostics, attn_implementation=args.attn_implementation)
     teacher_run = args.teacher_run or teacher_output(selected_teacher, None, args.prompt_version)
     # Detect a wrong Teacher configuration before spending local inference time.
     load_teacher_labels(teacher_run, config, required=args.teacher_run is not None,
@@ -300,10 +338,12 @@ def main():
         try:
             grouped = attempts_by_case(db)
             if any(not final_attempt(grouped.get(c["complaint_id"], [])) for c in cases):
-                model, tokenizer, settings, label_ids = load_student(args.student_model, args.device)
+                model, tokenizer, settings, label_ids = load_student(
+                    args.student_model, args.device, attn_implementation=args.attn_implementation)
+                runtime = inference_runtime(model, tokenizer, settings) if args.diagnostics else None
                 collect_student(db, cases, lambda case: predict_once(
                     model, tokenizer, settings, label_ids, build_messages(case["text"], prompt),
-                    config["chat_template_kwargs"]))
+                    config["chat_template_kwargs"], diagnostics=args.diagnostics, runtime=runtime))
         finally:
             export_results(db, output, teacher_run, require_teacher=args.teacher_run is not None,
                            teacher_model=selected_teacher)

@@ -134,6 +134,23 @@ uv run --locked python code/student_baseline.py \
 
 Use `--device mps` for Apple Metal or `--device cpu`; all devices use FP32, four CPU threads, batch size 1, greedy decoding and at most 16 generated tokens per attempt. Model and inputs move to the selected device. Unavailable accelerators cause an error before Student weight/tokenizer loading, with no silent CPU fallback. Use separate output directories when changing devices. The CUDA integration has offline fixture coverage and a completed archived 300-case remote run.
 
+To investigate empty replies, run a fresh validation experiment with diagnostics:
+
+```bash
+uv run --locked python code/student_baseline.py \
+  --student-model gemma3-270m-it \
+  --device cuda --split validation --prompt-version v3 \
+  --diagnostics \
+  --output output/baseline_v3/student_gemma3-270m-it_validation_cuda_run3 \
+  --run
+```
+
+`--diagnostics` records each attempt's complete generated token IDs, text before removing the terminal stop token, stop reason, prompt-token hash and boundaries, and the first generation step's top 10 candidates, all A–E candidates and all stop tokens. Candidates include scores, full-vocabulary probabilities and ranks; nonfinite scores are explicitly recorded. The score margin is the best letter's score minus the best stop token's score. The runtime record includes the actual attention implementation, generation settings, tokenizer template hash, PyTorch/CUDA versions, GPU identity and numerical controls. Enabled SDPA backends are recorded as possibilities, not as a trace of the CUDA kernel actually used.
+
+Diagnostics are committed as JSON in the same `attempts` row as the reply and exported to `diagnostics.json` on finish or interruption. Both retries are retained. `--export-only` regenerates the file from the ledger without inference. Diagnostics do not change prompts, generation settings or label parsing, and require no extra model forward passes; copying and summarizing scores adds runtime overhead. Continue using the same flags to resume run3. Existing runs remain readable and do not gain retroactive diagnostics; enabling diagnostics requires a new output directory.
+
+The default `--attn-implementation auto` preserves the model/library default. To compare against ordinary attention, add `--attn-implementation eager` and use another directory, for example `output/baseline_v3/student_gemma3-270m-it_validation_cuda_eager`. Changing the implementation is a separate experiment; run3 above only adds observation.
+
 Student automatically reads `output/baseline_v3/teacher_deepseek-v4.1-flash-1017_all/`. Use `--teacher-model gemma4-31b-it` to select the optional Teacher's default directory, or `--teacher-run PATH` to select a specific ledger, including the older Gemma `teacher_all/`. An explicit path selects its stored Teacher model unless `--teacher-model` is also supplied, in which case the model must match. There is no automatic fallback from a missing DeepSeek run to Gemma. `metrics.json` records the actual paired Teacher API model.
 
 An all-cohort Teacher ledger is filtered by the Student's real split, then matched by ordered IDs, input hashes, reference labels, clipping and exact prompt settings. Only that partition must have terminal Teacher outcomes; unrelated pending partitions do not block pairing. A single-partition Teacher ledger must match the complete selected inputs exactly. Archived Teacher ledgers are read-only and remain usable with matching archived Student manifests. Pairing is an export/evaluation choice and does not alter frozen Student inference settings or force another inference run.
@@ -179,5 +196,7 @@ Run offline checks without API calls or model downloads:
 ```bash
 uv run --locked python -m unittest discover -s code -p 'test_*.py'
 ```
+
+Validation result: [Gemma 3 270M IT, full October validation, v3/CUDA](result/validation/gemma3-270m-it-v3-cuda/note.md). The completed 1,013-case Student run has 26.75% accuracy, 0.1591 macro-F1 and 83.61% valid output; Teacher pairing was incomplete at export. The report includes frozen source snapshots and independently checked statistics.
 
 Historical evidence: [Gemma 3 pilot](result/pre-run%20300%20sample%20test/gemma3-270m-it-v3/note.md) · [Qwen pilot](result/pre-run%20300%20sample%20test/qwen3.5-0.8b-v3/note.md). Their original metadata remains in archived output/report directories. LoRA, training subset selection, TF–IDF baselines and deployment cost replay are later stages; Teacher collection does not choose their training subsets.
