@@ -1,0 +1,72 @@
+{
+  "student_model": "google/gemma-3-270m-it",
+  "revision": "ac82b4e820549b854eebf28ce6dedaf9fdfa17b3",
+  "prompt": "v3",
+  "chat_template_sha256": "7de1c58e208eda46e9c7f86397df37ec49883aeece39fb961e0a6b24088dd3c4",
+  "n_training_examples": 3000,
+  "n_invalid_answers_skipped": 0,
+  "n_clipped": 11,
+  "train_csv": "data/lora/teacher_deepseek-v4.1-flash-1017_v3/history_n3000.csv",
+  "train_csv_sha256": "48057cc462727690befeeefa9b66d3a7792403c82217cd63e991b0e0cfa82ed8",
+  "ordered_complaint_ids_sha256": "1b14312bb08c6139d592f44fd03f664d872194c635107e091532ea917c24c6eb",
+  "teacher_label_counts": {
+    "A": 210,
+    "B": 70,
+    "C": 1807,
+    "D": 749,
+    "E": 164
+  },
+  "clipping": {
+    "tokenizer": "HuggingFaceTB/SmolLM2-135M-Instruct",
+    "revision": "12fd25f77366fa6b3b4b768ec3050bf629380bac",
+    "head": 2000,
+    "tail": 1000
+  },
+  "loss": {
+    "type": "completion_only_causal_lm_cross_entropy",
+    "ignore_index": -100,
+    "end_of_turn_id": 106,
+    "supervised_tokens_per_example": 2
+  },
+  "device": "cuda",
+  "gpu": "Quadro RTX 6000",
+  "base_dtype": "float32",
+  "adapter_dtype": "torch.float32",
+  "seed": 42,
+  "epochs": 3,
+  "batch_size": 8,
+  "micro_batch_size": 1,
+  "optimizer": "AdamW",
+  "learning_rate": 0.0002,
+  "weight_decay": 0.0,
+  "trainable_parameters": 368640,
+  "packages": {
+    "peft": "0.18.1",
+    "torch": "2.10.0+cu126",
+    "transformers": "5.5.4",
+    "tokenizers": "0.22.2"
+  },
+  "epoch_metrics": [
+    {
+      "epoch": 1,
+      "completion_loss": 0.45094820538163183,
+      "optimizer_updates": 375
+    },
+    {
+      "epoch": 2,
+      "completion_loss": 0.2322344816873471,
+      "optimizer_updates": 750
+    },
+    {
+      "epoch": 3,
+      "completion_loss": 0.18190366548423967,
+      "optimizer_updates": 1125
+    }
+  ],
+  "optimizer_updates": 1125,
+  "training_seconds": 1346.005654595996,
+  "adapter_files_sha256": {
+    "adapter_config.json": "c5d63ac3a47a7d2d08a394a366cb070dc1daa8807c26094fea4de480f0a12adb",
+    "adapter_model.safetensors": "0e3608ecc1c017d2a7cc9173b661df0e4736f27758bcf284c16f97725873371b"
+  }
+}

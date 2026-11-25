@@ -1,0 +1,72 @@
+{
+  "student_model": "google/gemma-3-270m-it",
+  "revision": "ac82b4e820549b854eebf28ce6dedaf9fdfa17b3",
+  "prompt": "v3",
+  "chat_template_sha256": "7de1c58e208eda46e9c7f86397df37ec49883aeece39fb961e0a6b24088dd3c4",
+  "n_training_examples": 1000,
+  "n_invalid_answers_skipped": 0,
+  "n_clipped": 7,
+  "train_csv": "data/lora/teacher_deepseek-v4.1-flash-1017_v3/history_n1000.csv",
+  "train_csv_sha256": "df38c073db6efb0316b8effc009ed01e9be61121102b97ae60b3b761c93d0ea2",
+  "ordered_complaint_ids_sha256": "4a8f8b846b016174901616c16d9677550f9f7d813b7cbaec4cbf855f417a7105",
+  "teacher_label_counts": {
+    "A": 61,
+    "B": 23,
+    "C": 621,
+    "D": 245,
+    "E": 50
+  },
+  "clipping": {
+    "tokenizer": "HuggingFaceTB/SmolLM2-135M-Instruct",
+    "revision": "12fd25f77366fa6b3b4b768ec3050bf629380bac",
+    "head": 2000,
+    "tail": 1000
+  },
+  "loss": {
+    "type": "completion_only_causal_lm_cross_entropy",
+    "ignore_index": -100,
+    "end_of_turn_id": 106,
+    "supervised_tokens_per_example": 2
+  },
+  "device": "cuda",
+  "gpu": "Quadro RTX 6000",
+  "base_dtype": "float32",
+  "adapter_dtype": "torch.float32",
+  "seed": 42,
+  "epochs": 3,
+  "batch_size": 8,
+  "micro_batch_size": 1,
+  "optimizer": "AdamW",
+  "learning_rate": 0.0002,
+  "weight_decay": 0.0,
+  "trainable_parameters": 368640,
+  "packages": {
+    "peft": "0.18.1",
+    "torch": "2.10.0+cu126",
+    "transformers": "5.5.4",
+    "tokenizers": "0.22.2"
+  },
+  "epoch_metrics": [
+    {
+      "epoch": 1,
+      "completion_loss": 0.5584039678573608,
+      "optimizer_updates": 125
+    },
+    {
+      "epoch": 2,
+      "completion_loss": 0.4473759160637856,
+      "optimizer_updates": 250
+    },
+    {
+      "epoch": 3,
+      "completion_loss": 0.28216261219978334,
+      "optimizer_updates": 375
+    }
+  ],
+  "optimizer_updates": 375,
+  "training_seconds": 456.36636551599076,
+  "adapter_files_sha256": {
+    "adapter_config.json": "c5d63ac3a47a7d2d08a394a366cb070dc1daa8807c26094fea4de480f0a12adb",
+    "adapter_model.safetensors": "23d65baddf4968eb2b319df5faf3f5164acc6f8586716bb833a144d5cc0e5b7f"
+  }
+}
