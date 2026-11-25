@@ -1,0 +1,113 @@
+{
+  "model": "deepseek-ai/DeepSeek-V4.1-Flash-1017",
+  "base_url": "https://api.siliconflow.com/v1",
+  "n": 12196,
+  "valid_rate": 0.9994260413250246,
+  "accuracy": 0.788537225319777,
+  "macro_f1": 0.6590736118392128,
+  "per_class": {
+    "A": {
+      "support": 1247,
+      "recall": 0.5773857257417803,
+      "fpr": 0.02228514019545164,
+      "f1": 0.6512890094979648
+    },
+    "B": {
+      "support": 893,
+      "recall": 0.2877939529675252,
+      "fpr": 0.009024152879766434,
+      "f1": 0.41054313099041534
+    },
+    "C": {
+      "support": 6887,
+      "recall": 0.8942935966313345,
+      "fpr": 0.22621962704840837,
+      "f1": 0.8646030743314382
+    },
+    "D": {
+      "support": 2674,
+      "recall": 0.8036649214659686,
+      "fpr": 0.07750472589792061,
+      "f1": 0.7728825750764251
+    },
+    "E": {
+      "support": 495,
+      "recall": 0.6707070707070707,
+      "fpr": 0.02452781813520212,
+      "f1": 0.5960502692998204
+    }
+  },
+  "correct": 9617,
+  "teacher_matches": null,
+  "teacher_agreement_all_cases": null,
+  "predicted_counts": {
+    "E": 619,
+    "C": 7360,
+    "A": 964,
+    "D": 2887,
+    "B": 359,
+    "FAIL": 7
+  },
+  "confusion_rows_reference_columns_prediction": {
+    "A": {
+      "A": 720,
+      "B": 71,
+      "C": 245,
+      "D": 155,
+      "E": 56,
+      "FAIL": 0
+    },
+    "B": {
+      "A": 180,
+      "B": 257,
+      "C": 383,
+      "D": 54,
+      "E": 19,
+      "FAIL": 0
+    },
+    "C": {
+      "A": 34,
+      "B": 29,
+      "C": 6159,
+      "D": 500,
+      "E": 162,
+      "FAIL": 3
+    },
+    "D": {
+      "A": 17,
+      "B": 2,
+      "C": 452,
+      "D": 2149,
+      "E": 50,
+      "FAIL": 4
+    },
+    "E": {
+      "A": 13,
+      "B": 0,
+      "C": 121,
+      "D": 29,
+      "E": 332,
+      "FAIL": 0
+    }
+  },
+  "n_expected": 12196,
+  "n_terminal": 12196,
+  "n_pending": 0,
+  "complete": true,
+  "provisional": false,
+  "metric_denominator": "terminal_cases",
+  "clipped": 51,
+  "usage": {
+    "attempts": 12205,
+    "known_prompt_tokens": 12411151,
+    "known_completion_tokens": 12445,
+    "attempts_missing_usage": 0,
+    "attempt_seconds": 6081.971374468012,
+    "cost_usd": null,
+    "pricing_status": "unpriced"
+  },
+  "attempts_by_concurrency": {
+    "1": 118,
+    "3": 12087
+  }
+}
