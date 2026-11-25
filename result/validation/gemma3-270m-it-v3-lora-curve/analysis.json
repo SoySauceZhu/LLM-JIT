@@ -1,0 +1,4373 @@
+{
+  "evaluation": {
+    "split": "validation",
+    "n": 1013,
+    "labels": [
+      "A",
+      "B",
+      "C",
+      "D",
+      "E"
+    ],
+    "base_run": "output/baseline_v3/student_gemma3-270m-it_validation_cuda_run3",
+    "teacher_run": "output/baseline_v3/teacher_deepseek-v4.1-flash-1017_all",
+    "n_clipped": 2,
+    "teacher_tolerance_macro_f1": 0.02,
+    "qualification_threshold": 0.6633296894798818,
+    "qualified_nodes": [],
+    "paired_bootstrap": {
+      "scope": "exploratory validation, fixed adapters",
+      "replicates": 2000,
+      "seed": 42
+    }
+  },
+  "training_config": {
+    "student_model": "google/gemma-3-270m-it",
+    "revision": "ac82b4e820549b854eebf28ce6dedaf9fdfa17b3",
+    "prompt": "v3",
+    "chat_template_sha256": "7de1c58e208eda46e9c7f86397df37ec49883aeece39fb961e0a6b24088dd3c4",
+    "clipping": {
+      "tokenizer": "HuggingFaceTB/SmolLM2-135M-Instruct",
+      "revision": "12fd25f77366fa6b3b4b768ec3050bf629380bac",
+      "head": 2000,
+      "tail": 1000
+    },
+    "loss": {
+      "type": "completion_only_causal_lm_cross_entropy",
+      "ignore_index": -100,
+      "end_of_turn_id": 106,
+      "supervised_tokens_per_example": 2
+    },
+    "device": "cuda",
+    "gpu": "Quadro RTX 6000",
+    "base_dtype": "float32",
+    "adapter_dtype": "torch.float32",
+    "seed": 42,
+    "epochs": 3,
+    "batch_size": 8,
+    "micro_batch_size": 1,
+    "optimizer": "AdamW",
+    "learning_rate": 0.0002,
+    "weight_decay": 0.0,
+    "trainable_parameters": 368640,
+    "packages": {
+      "peft": "0.18.1",
+      "torch": "2.10.0+cu126",
+      "transformers": "5.5.4",
+      "tokenizers": "0.22.2"
+    },
+    "lora": {
+      "alora_invocation_tokens": null,
+      "alpha_pattern": {},
+      "arrow_config": null,
+      "auto_mapping": null,
+      "base_model_name_or_path": "google/gemma-3-270m-it",
+      "bias": "none",
+      "corda_config": null,
+      "ensure_weight_tying": false,
+      "eva_config": null,
+      "exclude_modules": null,
+      "fan_in_fan_out": false,
+      "inference_mode": true,
+      "init_lora_weights": true,
+      "layer_replication": null,
+      "layers_pattern": null,
+      "layers_to_transform": null,
+      "loftq_config": {},
+      "lora_alpha": 16,
+      "lora_bias": false,
+      "lora_dropout": 0.05,
+      "megatron_config": null,
+      "megatron_core": "megatron.core",
+      "modules_to_save": null,
+      "peft_type": "LORA",
+      "peft_version": "0.18.1",
+      "qalora_group_size": 16,
+      "r": 8,
+      "rank_pattern": {},
+      "revision": "ac82b4e820549b854eebf28ce6dedaf9fdfa17b3",
+      "target_modules": [
+        "q_proj",
+        "v_proj"
+      ],
+      "target_parameters": null,
+      "task_type": "CAUSAL_LM",
+      "trainable_token_indices": null,
+      "use_dora": false,
+      "use_qalora": false,
+      "use_rslora": false
+    }
+  },
+  "teacher": {
+    "n": 1013,
+    "valid_rate": 0.9990128331688055,
+    "accuracy": 0.7857847976307996,
+    "macro_f1": 0.6833296894798818,
+    "per_class": {
+      "A": {
+        "support": 106,
+        "recall": 0.5660377358490566,
+        "fpr": 0.027563395810363836,
+        "f1": 0.6282722513089005,
+        "predicted": 85,
+        "correct": 60,
+        "final_failures": 0,
+        "precision": 0.7058823529411765
+      },
+      "B": {
+        "support": 84,
+        "recall": 0.4166666666666667,
+        "fpr": 0.008611410118406888,
+        "f1": 0.5511811023622047,
+        "predicted": 43,
+        "correct": 35,
+        "final_failures": 0,
+        "precision": 0.813953488372093
+      },
+      "C": {
+        "support": 562,
+        "recall": 0.8932384341637011,
+        "fpr": 0.21286031042128603,
+        "f1": 0.8655172413793103,
+        "predicted": 598,
+        "correct": 502,
+        "final_failures": 0,
+        "precision": 0.8394648829431438
+      },
+      "D": {
+        "support": 215,
+        "recall": 0.7813953488372093,
+        "fpr": 0.08020050125313283,
+        "f1": 0.7516778523489933,
+        "predicted": 232,
+        "correct": 168,
+        "final_failures": 1,
+        "precision": 0.7241379310344828
+      },
+      "E": {
+        "support": 46,
+        "recall": 0.6739130434782609,
+        "fpr": 0.023784901758014478,
+        "f1": 0.62,
+        "predicted": 54,
+        "correct": 31,
+        "final_failures": 0,
+        "precision": 0.5740740740740741
+      }
+    },
+    "correct": 796,
+    "teacher_matches": null,
+    "teacher_agreement_all_cases": null,
+    "predicted_counts": {
+      "D": 232,
+      "C": 598,
+      "E": 54,
+      "B": 43,
+      "A": 85,
+      "FAIL": 1
+    },
+    "confusion_rows_reference_columns_prediction": {
+      "A": {
+        "A": 60,
+        "B": 5,
+        "C": 21,
+        "D": 16,
+        "E": 4,
+        "FAIL": 0
+      },
+      "B": {
+        "A": 19,
+        "B": 35,
+        "C": 26,
+        "D": 2,
+        "E": 2,
+        "FAIL": 0
+      },
+      "C": {
+        "A": 4,
+        "B": 3,
+        "C": 502,
+        "D": 42,
+        "E": 11,
+        "FAIL": 0
+      },
+      "D": {
+        "A": 2,
+        "B": 0,
+        "C": 38,
+        "D": 168,
+        "E": 6,
+        "FAIL": 1
+      },
+      "E": {
+        "A": 0,
+        "B": 0,
+        "C": 11,
+        "D": 4,
+        "E": 31,
+        "FAIL": 0
+      }
+    }
+  },
+  "constant_c": {
+    "n": 1013,
+    "valid_rate": 1.0,
+    "accuracy": 0.5547877591312932,
+    "macro_f1": 0.14273015873015873,
+    "per_class": {
+      "A": {
+        "support": 106,
+        "recall": 0.0,
+        "fpr": 0.0,
+        "f1": 0.0
+      },
+      "B": {
+        "support": 84,
+        "recall": 0.0,
+        "fpr": 0.0,
+        "f1": 0.0
+      },
+      "C": {
+        "support": 562,
+        "recall": 1.0,
+        "fpr": 1.0,
+        "f1": 0.7136507936507936
+      },
+      "D": {
+        "support": 215,
+        "recall": 0.0,
+        "fpr": 0.0,
+        "f1": 0.0
+      },
+      "E": {
+        "support": 46,
+        "recall": 0.0,
+        "fpr": 0.0,
+        "f1": 0.0
+      }
+    },
+    "correct": 562,
+    "teacher_matches": null,
+    "teacher_agreement_all_cases": null,
+    "predicted_counts": {
+      "C": 1013
+    },
+    "confusion_rows_reference_columns_prediction": {
+      "A": {
+        "A": 0,
+        "B": 0,
+        "C": 106,
+        "D": 0,
+        "E": 0,
+        "FAIL": 0
+      },
+      "B": {
+        "A": 0,
+        "B": 0,
+        "C": 84,
+        "D": 0,
+        "E": 0,
+        "FAIL": 0
+      },
+      "C": {
+        "A": 0,
+        "B": 0,
+        "C": 562,
+        "D": 0,
+        "E": 0,
+        "FAIL": 0
+      },
+      "D": {
+        "A": 0,
+        "B": 0,
+        "C": 215,
+        "D": 0,
+        "E": 0,
+        "FAIL": 0
+      },
+      "E": {
+        "A": 0,
+        "B": 0,
+        "C": 46,
+        "D": 0,
+        "E": 0,
+        "FAIL": 0
+      }
+    }
+  },
+  "runs": {
+    "0": {
+      "evaluation_path": "output/baseline_v3/student_gemma3-270m-it_validation_cuda_run3",
+      "strict_generation": {
+        "n": 1013,
+        "valid_rate": 0.8361303060217177,
+        "accuracy": 0.2675222112537019,
+        "macro_f1": 0.1590702947845805,
+        "per_class": {
+          "A": {
+            "support": 106,
+            "recall": 0.1792452830188679,
+            "fpr": 0.14002205071664828,
+            "f1": 0.15079365079365079,
+            "predicted": 146,
+            "correct": 19,
+            "final_failures": 17,
+            "precision": 0.13013698630136986
+          },
+          "B": {
+            "support": 84,
+            "recall": 0.0,
+            "fpr": 0.002152852529601722,
+            "f1": 0.0,
+            "predicted": 2,
+            "correct": 0,
+            "final_failures": 12,
+            "precision": 0.0
+          },
+          "C": {
+            "support": 562,
+            "recall": 0.3291814946619217,
+            "fpr": 0.31263858093126384,
+            "f1": 0.4166666666666667,
+            "predicted": 326,
+            "correct": 185,
+            "final_failures": 81,
+            "precision": 0.5674846625766872
+          },
+          "D": {
+            "support": 215,
+            "recall": 0.3116279069767442,
+            "fpr": 0.38345864661654133,
+            "f1": 0.22789115646258504,
+            "predicted": 373,
+            "correct": 67,
+            "final_failures": 51,
+            "precision": 0.17962466487935658
+          },
+          "E": {
+            "support": 46,
+            "recall": 0.0,
+            "fpr": 0.0,
+            "f1": 0.0,
+            "predicted": 0,
+            "correct": 0,
+            "final_failures": 5,
+            "precision": null
+          }
+        },
+        "correct": 271,
+        "teacher_matches": 271,
+        "teacher_agreement_all_cases": 0.2675222112537019,
+        "predicted_counts": {
+          "D": 373,
+          "C": 326,
+          "A": 146,
+          "FAIL": 166,
+          "B": 2
+        },
+        "confusion_rows_reference_columns_prediction": {
+          "A": {
+            "A": 19,
+            "B": 0,
+            "C": 36,
+            "D": 34,
+            "E": 0,
+            "FAIL": 17
+          },
+          "B": {
+            "A": 16,
+            "B": 0,
+            "C": 24,
+            "D": 32,
+            "E": 0,
+            "FAIL": 12
+          },
+          "C": {
+            "A": 72,
+            "B": 2,
+            "C": 185,
+            "D": 222,
+            "E": 0,
+            "FAIL": 81
+          },
+          "D": {
+            "A": 33,
+            "B": 0,
+            "C": 64,
+            "D": 67,
+            "E": 0,
+            "FAIL": 51
+          },
+          "E": {
+            "A": 6,
+            "B": 0,
+            "C": 17,
+            "D": 18,
+            "E": 0,
+            "FAIL": 5
+          }
+        }
+      },
+      "first_token_choice": {
+        "n": 1013,
+        "valid_rate": 1.0,
+        "accuracy": 0.2882527147087858,
+        "macro_f1": 0.16403627021516623,
+        "per_class": {
+          "A": {
+            "support": 106,
+            "recall": 0.32075471698113206,
+            "fpr": 0.29106945975744214,
+            "f1": 0.16831683168316833,
+            "predicted": 298,
+            "correct": 34,
+            "final_failures": 0,
+            "precision": 0.11409395973154363
+          },
+          "B": {
+            "support": 84,
+            "recall": 0.0,
+            "fpr": 0.002152852529601722,
+            "f1": 0.0,
+            "predicted": 2,
+            "correct": 0,
+            "final_failures": 0,
+            "precision": 0.0
+          },
+          "C": {
+            "support": 562,
+            "recall": 0.3398576512455516,
+            "fpr": 0.328159645232816,
+            "f1": 0.4239733629300777,
+            "predicted": 339,
+            "correct": 191,
+            "final_failures": 0,
+            "precision": 0.5634218289085545
+          },
+          "D": {
+            "support": 215,
+            "recall": 0.3116279069767442,
+            "fpr": 0.38345864661654133,
+            "f1": 0.22789115646258504,
+            "predicted": 373,
+            "correct": 67,
+            "final_failures": 0,
+            "precision": 0.17962466487935658
+          },
+          "E": {
+            "support": 46,
+            "recall": 0.0,
+            "fpr": 0.001034126163391934,
+            "f1": 0.0,
+            "predicted": 1,
+            "correct": 0,
+            "final_failures": 0,
+            "precision": 0.0
+          }
+        },
+        "correct": 292,
+        "teacher_matches": 289,
+        "teacher_agreement_all_cases": 0.28529121421520237,
+        "predicted_counts": {
+          "D": 373,
+          "C": 339,
+          "A": 298,
+          "B": 2,
+          "E": 1
+        },
+        "confusion_rows_reference_columns_prediction": {
+          "A": {
+            "A": 34,
+            "B": 0,
+            "C": 38,
+            "D": 34,
+            "E": 0,
+            "FAIL": 0
+          },
+          "B": {
+            "A": 28,
+            "B": 0,
+            "C": 24,
+            "D": 32,
+            "E": 0,
+            "FAIL": 0
+          },
+          "C": {
+            "A": 146,
+            "B": 2,
+            "C": 191,
+            "D": 222,
+            "E": 1,
+            "FAIL": 0
+          },
+          "D": {
+            "A": 80,
+            "B": 0,
+            "C": 68,
+            "D": 67,
+            "E": 0,
+            "FAIL": 0
+          },
+          "E": {
+            "A": 10,
+            "B": 0,
+            "C": 18,
+            "D": 18,
+            "E": 0,
+            "FAIL": 0
+          }
+        }
+      },
+      "n_final_empty": 166,
+      "fail_overlap_base": 166,
+      "first_choice_correct_on_empty": 21,
+      "hypothetical_all_empty_correct": {
+        "accuracy": 0.43139190523198423,
+        "macro_f1": 0.32539621290336823,
+        "correct": 437
+      },
+      "evaluation_seconds_sum_attempts": 103.34413321899774,
+      "evaluation_attempts": 1179,
+      "paired_vs_teacher": {
+        "both_correct": 217,
+        "left_only_correct": 54,
+        "right_only_correct": 579,
+        "neither_correct": 163
+      }
+    },
+    "100": {
+      "evaluation_path": "output/lora_eval/gemma3-270m-it_v3_n0100_validation",
+      "strict_generation": {
+        "n": 1013,
+        "valid_rate": 0.9713721618953604,
+        "accuracy": 0.5330700888450148,
+        "macro_f1": 0.1463005840273698,
+        "per_class": {
+          "A": {
+            "support": 106,
+            "recall": 0.0,
+            "fpr": 0.009922822491730982,
+            "f1": 0.0,
+            "predicted": 9,
+            "correct": 0,
+            "final_failures": 2,
+            "precision": 0.0
+          },
+          "B": {
+            "support": 84,
+            "recall": 0.0,
+            "fpr": 0.0,
+            "f1": 0.0,
+            "predicted": 0,
+            "correct": 0,
+            "final_failures": 2,
+            "precision": null
+          },
+          "C": {
+            "support": 562,
+            "recall": 0.9555160142348754,
+            "fpr": 0.9401330376940134,
+            "f1": 0.7051871306631649,
+            "predicted": 961,
+            "correct": 537,
+            "final_failures": 14,
+            "precision": 0.558792924037461
+          },
+          "D": {
+            "support": 215,
+            "recall": 0.013953488372093023,
+            "fpr": 0.012531328320802004,
+            "f1": 0.02631578947368421,
+            "predicted": 13,
+            "correct": 3,
+            "final_failures": 9,
+            "precision": 0.23076923076923078
+          },
+          "E": {
+            "support": 46,
+            "recall": 0.0,
+            "fpr": 0.001034126163391934,
+            "f1": 0.0,
+            "predicted": 1,
+            "correct": 0,
+            "final_failures": 2,
+            "precision": 0.0
+          }
+        },
+        "correct": 540,
+        "teacher_matches": 573,
+        "teacher_agreement_all_cases": 0.5656465942744324,
+        "predicted_counts": {
+          "C": 961,
+          "D": 13,
+          "FAIL": 29,
+          "A": 9,
+          "E": 1
+        },
+        "confusion_rows_reference_columns_prediction": {
+          "A": {
+            "A": 0,
+            "B": 0,
+            "C": 104,
+            "D": 0,
+            "E": 0,
+            "FAIL": 2
+          },
+          "B": {
+            "A": 0,
+            "B": 0,
+            "C": 80,
+            "D": 2,
+            "E": 0,
+            "FAIL": 2
+          },
+          "C": {
+            "A": 4,
+            "B": 0,
+            "C": 537,
+            "D": 7,
+            "E": 0,
+            "FAIL": 14
+          },
+          "D": {
+            "A": 5,
+            "B": 0,
+            "C": 197,
+            "D": 3,
+            "E": 1,
+            "FAIL": 9
+          },
+          "E": {
+            "A": 0,
+            "B": 0,
+            "C": 43,
+            "D": 1,
+            "E": 0,
+            "FAIL": 2
+          }
+        }
+      },
+      "first_token_choice": {
+        "n": 1013,
+        "valid_rate": 1.0,
+        "accuracy": 0.5389930898321816,
+        "macro_f1": 0.14639376218323585,
+        "per_class": {
+          "A": {
+            "support": 106,
+            "recall": 0.0,
+            "fpr": 0.024255788313120176,
+            "f1": 0.0,
+            "predicted": 22,
+            "correct": 0,
+            "final_failures": 0,
+            "precision": 0.0
+          },
+          "B": {
+            "support": 84,
+            "recall": 0.0,
+            "fpr": 0.0,
+            "f1": 0.0,
+            "predicted": 0,
+            "correct": 0,
+            "final_failures": 0,
+            "precision": null
+          },
+          "C": {
+            "support": 562,
+            "recall": 0.9661921708185054,
+            "fpr": 0.9623059866962306,
+            "f1": 0.7056530214424951,
+            "predicted": 977,
+            "correct": 543,
+            "final_failures": 0,
+            "precision": 0.5557830092118731
+          },
+          "D": {
+            "support": 215,
+            "recall": 0.013953488372093023,
+            "fpr": 0.012531328320802004,
+            "f1": 0.02631578947368421,
+            "predicted": 13,
+            "correct": 3,
+            "final_failures": 0,
+            "precision": 0.23076923076923078
+          },
+          "E": {
+            "support": 46,
+            "recall": 0.0,
+            "fpr": 0.001034126163391934,
+            "f1": 0.0,
+            "predicted": 1,
+            "correct": 0,
+            "final_failures": 0,
+            "precision": 0.0
+          }
+        },
+        "correct": 546,
+        "teacher_matches": 580,
+        "teacher_agreement_all_cases": 0.5725567620927937,
+        "predicted_counts": {
+          "C": 977,
+          "D": 13,
+          "A": 22,
+          "E": 1
+        },
+        "confusion_rows_reference_columns_prediction": {
+          "A": {
+            "A": 0,
+            "B": 0,
+            "C": 106,
+            "D": 0,
+            "E": 0,
+            "FAIL": 0
+          },
+          "B": {
+            "A": 1,
+            "B": 0,
+            "C": 81,
+            "D": 2,
+            "E": 0,
+            "FAIL": 0
+          },
+          "C": {
+            "A": 12,
+            "B": 0,
+            "C": 543,
+            "D": 7,
+            "E": 0,
+            "FAIL": 0
+          },
+          "D": {
+            "A": 8,
+            "B": 0,
+            "C": 203,
+            "D": 3,
+            "E": 1,
+            "FAIL": 0
+          },
+          "E": {
+            "A": 1,
+            "B": 0,
+            "C": 44,
+            "D": 1,
+            "E": 0,
+            "FAIL": 0
+          }
+        }
+      },
+      "n_final_empty": 29,
+      "fail_overlap_base": 29,
+      "first_choice_correct_on_empty": 6,
+      "hypothetical_all_empty_correct": {
+        "accuracy": 0.5616979269496545,
+        "macro_f1": 0.19611585400330345,
+        "correct": 569
+      },
+      "evaluation_seconds_sum_attempts": 83.74311049409152,
+      "evaluation_attempts": 1042,
+      "paired_vs_teacher": {
+        "both_correct": 482,
+        "left_only_correct": 58,
+        "right_only_correct": 314,
+        "neither_correct": 159
+      },
+      "training": {
+        "path": "output/lora/gemma3-270m-it_v3_n0100",
+        "seconds": 45.988135079998756,
+        "optimizer_updates": 39,
+        "epoch_loss": [
+          0.6538107299804687,
+          0.48343167185783387,
+          0.4556745481491089
+        ],
+        "n_clipped": 0,
+        "example_exposures_per_second": 6.523421736457336,
+        "teacher_label_counts": {
+          "A": 7,
+          "B": 2,
+          "C": 65,
+          "D": 23,
+          "E": 3
+        },
+        "prefix": {
+          "file": "history_n0100.csv",
+          "n_rows": 100,
+          "first_complaint_id": "8085676",
+          "first_sequence_no": 1,
+          "first_received_at_utc": "2024-01-01T00:45:14.000Z",
+          "trigger_complaint_id": "8101986",
+          "trigger_sequence_no": 100,
+          "trigger_received_at_utc": "2024-01-04T00:39:03.000Z",
+          "history_cases_without_label_through_trigger": 0,
+          "teacher_label_counts": {
+            "A": 7,
+            "B": 2,
+            "C": 65,
+            "D": 23,
+            "E": 3
+          },
+          "ordered_complaint_ids_sha256": "daa2c1bb2c9886c9d43b56b1d290d16b57061670c4be8aa7bef0124a2b99168e",
+          "csv_sha256": "54b9c6d5b7626f5e19accb1baef55f9c4f60c54420e53972a9c3b98ccfffb3bd",
+          "csv_size_bytes": 169663
+        },
+        "adapter_sha256": {
+          "adapter_config.json": "c5d63ac3a47a7d2d08a394a366cb070dc1daa8807c26094fea4de480f0a12adb",
+          "adapter_model.safetensors": "2f0787ab9d0f9782ea6be8eae8992dc43162cfefdf48a3dc1dda0d7021236e90"
+        }
+      },
+      "paired_vs_base": {
+        "both_correct": 185,
+        "left_only_correct": 355,
+        "right_only_correct": 86,
+        "neither_correct": 387
+      }
+    },
+    "200": {
+      "evaluation_path": "output/lora_eval/gemma3-270m-it_v3_n0200_validation",
+      "strict_generation": {
+        "n": 1013,
+        "valid_rate": 0.9713721618953604,
+        "accuracy": 0.5380059230009872,
+        "macro_f1": 0.15037654467995026,
+        "per_class": {
+          "A": {
+            "support": 106,
+            "recall": 0.009433962264150943,
+            "fpr": 0.007717750826901874,
+            "f1": 0.017543859649122806,
+            "predicted": 8,
+            "correct": 1,
+            "final_failures": 2,
+            "precision": 0.125
+          },
+          "B": {
+            "support": 84,
+            "recall": 0.0,
+            "fpr": 0.001076426264800861,
+            "f1": 0.0,
+            "predicted": 1,
+            "correct": 0,
+            "final_failures": 2,
+            "precision": 0.0
+          },
+          "C": {
+            "support": 562,
+            "recall": 0.9626334519572953,
+            "fpr": 0.9467849223946785,
+            "f1": 0.7071895424836602,
+            "predicted": 968,
+            "correct": 541,
+            "final_failures": 14,
+            "precision": 0.5588842975206612
+          },
+          "D": {
+            "support": 215,
+            "recall": 0.013953488372093023,
+            "fpr": 0.0037593984962406013,
+            "f1": 0.027149321266968326,
+            "predicted": 6,
+            "correct": 3,
+            "final_failures": 9,
+            "precision": 0.5
+          },
+          "E": {
+            "support": 46,
+            "recall": 0.0,
+            "fpr": 0.001034126163391934,
+            "f1": 0.0,
+            "predicted": 1,
+            "correct": 0,
+            "final_failures": 2,
+            "precision": 0.0
+          }
+        },
+        "correct": 545,
+        "teacher_matches": 578,
+        "teacher_agreement_all_cases": 0.5705824284304047,
+        "predicted_counts": {
+          "C": 968,
+          "FAIL": 29,
+          "D": 6,
+          "A": 8,
+          "B": 1,
+          "E": 1
+        },
+        "confusion_rows_reference_columns_prediction": {
+          "A": {
+            "A": 1,
+            "B": 0,
+            "C": 103,
+            "D": 0,
+            "E": 0,
+            "FAIL": 2
+          },
+          "B": {
+            "A": 1,
+            "B": 0,
+            "C": 80,
+            "D": 1,
+            "E": 0,
+            "FAIL": 2
+          },
+          "C": {
+            "A": 5,
+            "B": 1,
+            "C": 541,
+            "D": 1,
+            "E": 0,
+            "FAIL": 14
+          },
+          "D": {
+            "A": 1,
+            "B": 0,
+            "C": 201,
+            "D": 3,
+            "E": 1,
+            "FAIL": 9
+          },
+          "E": {
+            "A": 0,
+            "B": 0,
+            "C": 43,
+            "D": 1,
+            "E": 0,
+            "FAIL": 2
+          }
+        }
+      },
+      "first_token_choice": {
+        "n": 1013,
+        "valid_rate": 1.0,
+        "accuracy": 0.5399802566633761,
+        "macro_f1": 0.15261798343195782,
+        "per_class": {
+          "A": {
+            "support": 106,
+            "recall": 0.018867924528301886,
+            "fpr": 0.03638368246968027,
+            "f1": 0.028368794326241134,
+            "predicted": 35,
+            "correct": 2,
+            "final_failures": 0,
+            "precision": 0.05714285714285714
+          },
+          "B": {
+            "support": 84,
+            "recall": 0.0,
+            "fpr": 0.001076426264800861,
+            "f1": 0.0,
+            "predicted": 1,
+            "correct": 0,
+            "final_failures": 0,
+            "precision": 0.0
+          },
+          "C": {
+            "support": 562,
+            "recall": 0.9644128113879004,
+            "fpr": 0.9490022172949002,
+            "f1": 0.7075718015665796,
+            "predicted": 970,
+            "correct": 542,
+            "final_failures": 0,
+            "precision": 0.5587628865979382
+          },
+          "D": {
+            "support": 215,
+            "recall": 0.013953488372093023,
+            "fpr": 0.0037593984962406013,
+            "f1": 0.027149321266968326,
+            "predicted": 6,
+            "correct": 3,
+            "final_failures": 0,
+            "precision": 0.5
+          },
+          "E": {
+            "support": 46,
+            "recall": 0.0,
+            "fpr": 0.001034126163391934,
+            "f1": 0.0,
+            "predicted": 1,
+            "correct": 0,
+            "final_failures": 0,
+            "precision": 0.0
+          }
+        },
+        "correct": 547,
+        "teacher_matches": 580,
+        "teacher_agreement_all_cases": 0.5725567620927937,
+        "predicted_counts": {
+          "C": 970,
+          "A": 35,
+          "D": 6,
+          "B": 1,
+          "E": 1
+        },
+        "confusion_rows_reference_columns_prediction": {
+          "A": {
+            "A": 2,
+            "B": 0,
+            "C": 104,
+            "D": 0,
+            "E": 0,
+            "FAIL": 0
+          },
+          "B": {
+            "A": 3,
+            "B": 0,
+            "C": 80,
+            "D": 1,
+            "E": 0,
+            "FAIL": 0
+          },
+          "C": {
+            "A": 18,
+            "B": 1,
+            "C": 542,
+            "D": 1,
+            "E": 0,
+            "FAIL": 0
+          },
+          "D": {
+            "A": 10,
+            "B": 0,
+            "C": 201,
+            "D": 3,
+            "E": 1,
+            "FAIL": 0
+          },
+          "E": {
+            "A": 2,
+            "B": 0,
+            "C": 43,
+            "D": 1,
+            "E": 0,
+            "FAIL": 0
+          }
+        }
+      },
+      "n_final_empty": 29,
+      "fail_overlap_base": 29,
+      "first_choice_correct_on_empty": 2,
+      "hypothetical_all_empty_correct": {
+        "accuracy": 0.5666337611056268,
+        "macro_f1": 0.2005187091343828,
+        "correct": 574
+      },
+      "evaluation_seconds_sum_attempts": 83.74566609026806,
+      "evaluation_attempts": 1042,
+      "paired_vs_teacher": {
+        "both_correct": 487,
+        "left_only_correct": 58,
+        "right_only_correct": 309,
+        "neither_correct": 159
+      },
+      "training": {
+        "path": "output/lora/gemma3-270m-it_v3_n0200",
+        "seconds": 87.30505908699706,
+        "optimizer_updates": 75,
+        "epoch_loss": [
+          0.6264160704612732,
+          0.49254136443138125,
+          0.4815106534957886
+        ],
+        "n_clipped": 0,
+        "example_exposures_per_second": 6.8724539708760375,
+        "teacher_label_counts": {
+          "A": 12,
+          "B": 6,
+          "C": 123,
+          "D": 51,
+          "E": 8
+        },
+        "prefix": {
+          "file": "history_n0200.csv",
+          "n_rows": 200,
+          "first_complaint_id": "8085676",
+          "first_sequence_no": 1,
+          "first_received_at_utc": "2024-01-01T00:45:14.000Z",
+          "trigger_complaint_id": "8128901",
+          "trigger_sequence_no": 200,
+          "trigger_received_at_utc": "2024-01-08T16:05:33.000Z",
+          "history_cases_without_label_through_trigger": 0,
+          "teacher_label_counts": {
+            "A": 12,
+            "B": 6,
+            "C": 123,
+            "D": 51,
+            "E": 8
+          },
+          "ordered_complaint_ids_sha256": "07d96002b5430166b25edd8e9dc1d49a78e5fa65a6685fc483ec42a45b4795f8",
+          "csv_sha256": "83f717f25bc41666ba760c45279f35e97008310960f822ed29f90b7042337303",
+          "csv_size_bytes": 351787
+        },
+        "adapter_sha256": {
+          "adapter_config.json": "08a52ac04efe5bf666c511a37723cfd0bb6c19a3b2ea8cfa5fefa6a149607d8b",
+          "adapter_model.safetensors": "0418c8ef7ab0d26de3cb292f92a2dc75a55e3d4d02f69054b3e8eb79a7aa74b0"
+        }
+      },
+      "paired_vs_base": {
+        "both_correct": 187,
+        "left_only_correct": 358,
+        "right_only_correct": 84,
+        "neither_correct": 384
+      }
+    },
+    "500": {
+      "evaluation_path": "output/lora_eval/gemma3-270m-it_v3_n0500_validation",
+      "strict_generation": {
+        "n": 1013,
+        "valid_rate": 0.9713721618953604,
+        "accuracy": 0.5735439289239882,
+        "macro_f1": 0.20776050559929038,
+        "per_class": {
+          "A": {
+            "support": 106,
+            "recall": 0.0,
+            "fpr": 0.0,
+            "f1": 0.0,
+            "predicted": 0,
+            "correct": 0,
+            "final_failures": 2,
+            "precision": null
+          },
+          "B": {
+            "support": 84,
+            "recall": 0.0,
+            "fpr": 0.0,
+            "f1": 0.0,
+            "predicted": 0,
+            "correct": 0,
+            "final_failures": 2,
+            "precision": null
+          },
+          "C": {
+            "support": 562,
+            "recall": 0.9501779359430605,
+            "fpr": 0.7849223946784922,
+            "f1": 0.736551724137931,
+            "predicted": 888,
+            "correct": 534,
+            "final_failures": 14,
+            "precision": 0.6013513513513513
+          },
+          "D": {
+            "support": 215,
+            "recall": 0.2186046511627907,
+            "fpr": 0.06140350877192982,
+            "f1": 0.3022508038585209,
+            "predicted": 96,
+            "correct": 47,
+            "final_failures": 9,
+            "precision": 0.4895833333333333
+          },
+          "E": {
+            "support": 46,
+            "recall": 0.0,
+            "fpr": 0.0,
+            "f1": 0.0,
+            "predicted": 0,
+            "correct": 0,
+            "final_failures": 2,
+            "precision": null
+          }
+        },
+        "correct": 581,
+        "teacher_matches": 613,
+        "teacher_agreement_all_cases": 0.6051332675222113,
+        "predicted_counts": {
+          "C": 888,
+          "D": 96,
+          "FAIL": 29
+        },
+        "confusion_rows_reference_columns_prediction": {
+          "A": {
+            "A": 0,
+            "B": 0,
+            "C": 84,
+            "D": 20,
+            "E": 0,
+            "FAIL": 2
+          },
+          "B": {
+            "A": 0,
+            "B": 0,
+            "C": 71,
+            "D": 11,
+            "E": 0,
+            "FAIL": 2
+          },
+          "C": {
+            "A": 0,
+            "B": 0,
+            "C": 534,
+            "D": 14,
+            "E": 0,
+            "FAIL": 14
+          },
+          "D": {
+            "A": 0,
+            "B": 0,
+            "C": 159,
+            "D": 47,
+            "E": 0,
+            "FAIL": 9
+          },
+          "E": {
+            "A": 0,
+            "B": 0,
+            "C": 40,
+            "D": 4,
+            "E": 0,
+            "FAIL": 2
+          }
+        }
+      },
+      "first_token_choice": {
+        "n": 1013,
+        "valid_rate": 1.0,
+        "accuracy": 0.5804540967423495,
+        "macro_f1": 0.20848619667886098,
+        "per_class": {
+          "A": {
+            "support": 106,
+            "recall": 0.0,
+            "fpr": 0.011025358324145534,
+            "f1": 0.0,
+            "predicted": 10,
+            "correct": 0,
+            "final_failures": 0,
+            "precision": 0.0
+          },
+          "B": {
+            "support": 84,
+            "recall": 0.0,
+            "fpr": 0.0,
+            "f1": 0.0,
+            "predicted": 0,
+            "correct": 0,
+            "final_failures": 0,
+            "precision": null
+          },
+          "C": {
+            "support": 562,
+            "recall": 0.9608540925266904,
+            "fpr": 0.8070953436807096,
+            "f1": 0.7366984993178718,
+            "predicted": 904,
+            "correct": 540,
+            "final_failures": 0,
+            "precision": 0.5973451327433629
+          },
+          "D": {
+            "support": 215,
+            "recall": 0.22325581395348837,
+            "fpr": 0.06390977443609022,
+            "f1": 0.3057324840764331,
+            "predicted": 99,
+            "correct": 48,
+            "final_failures": 0,
+            "precision": 0.48484848484848486
+          },
+          "E": {
+            "support": 46,
+            "recall": 0.0,
+            "fpr": 0.0,
+            "f1": 0.0,
+            "predicted": 0,
+            "correct": 0,
+            "final_failures": 0,
+            "precision": null
+          }
+        },
+        "correct": 588,
+        "teacher_matches": 621,
+        "teacher_agreement_all_cases": 0.6130306021717671,
+        "predicted_counts": {
+          "C": 904,
+          "D": 99,
+          "A": 10
+        },
+        "confusion_rows_reference_columns_prediction": {
+          "A": {
+            "A": 0,
+            "B": 0,
+            "C": 86,
+            "D": 20,
+            "E": 0,
+            "FAIL": 0
+          },
+          "B": {
+            "A": 1,
+            "B": 0,
+            "C": 72,
+            "D": 11,
+            "E": 0,
+            "FAIL": 0
+          },
+          "C": {
+            "A": 7,
+            "B": 0,
+            "C": 540,
+            "D": 15,
+            "E": 0,
+            "FAIL": 0
+          },
+          "D": {
+            "A": 2,
+            "B": 0,
+            "C": 165,
+            "D": 48,
+            "E": 0,
+            "FAIL": 0
+          },
+          "E": {
+            "A": 0,
+            "B": 0,
+            "C": 41,
+            "D": 5,
+            "E": 0,
+            "FAIL": 0
+          }
+        }
+      },
+      "n_final_empty": 29,
+      "fail_overlap_base": 29,
+      "first_choice_correct_on_empty": 7,
+      "hypothetical_all_empty_correct": {
+        "accuracy": 0.6021717670286278,
+        "macro_f1": 0.25310317561175355,
+        "correct": 610
+      },
+      "evaluation_seconds_sum_attempts": 84.18114584773139,
+      "evaluation_attempts": 1042,
+      "paired_vs_teacher": {
+        "both_correct": 524,
+        "left_only_correct": 57,
+        "right_only_correct": 272,
+        "neither_correct": 160
+      },
+      "training": {
+        "path": "output/lora/gemma3-270m-it_v3_n0500",
+        "seconds": 221.80875824700342,
+        "optimizer_updates": 189,
+        "epoch_loss": [
+          0.5963401327133179,
+          0.5081430912017822,
+          0.4872932490110397
+        ],
+        "n_clipped": 4,
+        "example_exposures_per_second": 6.762582378869003,
+        "teacher_label_counts": {
+          "A": 22,
+          "B": 12,
+          "C": 308,
+          "D": 130,
+          "E": 28
+        },
+        "prefix": {
+          "file": "history_n0500.csv",
+          "n_rows": 500,
+          "first_complaint_id": "8085676",
+          "first_sequence_no": 1,
+          "first_received_at_utc": "2024-01-01T00:45:14.000Z",
+          "trigger_complaint_id": "8179280",
+          "trigger_sequence_no": 500,
+          "trigger_received_at_utc": "2024-01-18T17:34:28.000Z",
+          "history_cases_without_label_through_trigger": 0,
+          "teacher_label_counts": {
+            "A": 22,
+            "B": 12,
+            "C": 308,
+            "D": 130,
+            "E": 28
+          },
+          "ordered_complaint_ids_sha256": "506489756b6729aaa911a01bb398e76f4daef71e5f6d58e6a1860b44228bf4dc",
+          "csv_sha256": "18f8cb46a83fba40502ee08dd259fd4de34e1944b0f5d513fc28d3bc9087d8e1",
+          "csv_size_bytes": 911777
+        },
+        "adapter_sha256": {
+          "adapter_config.json": "08a52ac04efe5bf666c511a37723cfd0bb6c19a3b2ea8cfa5fefa6a149607d8b",
+          "adapter_model.safetensors": "a24241fede7b4009abe336cf4090043425ce840e46760904c36475b3346d23dc"
+        }
+      },
+      "paired_vs_base": {
+        "both_correct": 202,
+        "left_only_correct": 379,
+        "right_only_correct": 69,
+        "neither_correct": 363
+      }
+    },
+    "1000": {
+      "evaluation_path": "output/lora_eval/gemma3-270m-it_v3_n1000_validation",
+      "strict_generation": {
+        "n": 1013,
+        "valid_rate": 0.9713721618953604,
+        "accuracy": 0.6781836130306022,
+        "macro_f1": 0.5430429708842665,
+        "per_class": {
+          "A": {
+            "support": 106,
+            "recall": 0.42452830188679247,
+            "fpr": 0.019845644983461964,
+            "f1": 0.5325443786982249,
+            "predicted": 63,
+            "correct": 45,
+            "final_failures": 2,
+            "precision": 0.7142857142857143
+          },
+          "B": {
+            "support": 84,
+            "recall": 0.15476190476190477,
+            "fpr": 0.002152852529601722,
+            "f1": 0.26262626262626265,
+            "predicted": 15,
+            "correct": 13,
+            "final_failures": 2,
+            "precision": 0.8666666666666667
+          },
+          "C": {
+            "support": 562,
+            "recall": 0.7953736654804271,
+            "fpr": 0.2572062084257206,
+            "f1": 0.7946666666666666,
+            "predicted": 563,
+            "correct": 447,
+            "final_failures": 14,
+            "precision": 0.7939609236234458
+          },
+          "D": {
+            "support": 215,
+            "recall": 0.7395348837209302,
+            "fpr": 0.17418546365914786,
+            "f1": 0.6198830409356725,
+            "predicted": 298,
+            "correct": 159,
+            "final_failures": 9,
+            "precision": 0.5335570469798657
+          },
+          "E": {
+            "support": 46,
+            "recall": 0.5,
+            "fpr": 0.022750775594622543,
+            "f1": 0.5054945054945055,
+            "predicted": 45,
+            "correct": 23,
+            "final_failures": 2,
+            "precision": 0.5111111111111111
+          }
+        },
+        "correct": 687,
+        "teacher_matches": 774,
+        "teacher_agreement_all_cases": 0.7640671273445212,
+        "predicted_counts": {
+          "D": 298,
+          "C": 563,
+          "E": 45,
+          "B": 15,
+          "A": 63,
+          "FAIL": 29
+        },
+        "confusion_rows_reference_columns_prediction": {
+          "A": {
+            "A": 45,
+            "B": 0,
+            "C": 26,
+            "D": 30,
+            "E": 3,
+            "FAIL": 2
+          },
+          "B": {
+            "A": 13,
+            "B": 13,
+            "C": 34,
+            "D": 19,
+            "E": 3,
+            "FAIL": 2
+          },
+          "C": {
+            "A": 4,
+            "B": 2,
+            "C": 447,
+            "D": 83,
+            "E": 12,
+            "FAIL": 14
+          },
+          "D": {
+            "A": 1,
+            "B": 0,
+            "C": 42,
+            "D": 159,
+            "E": 4,
+            "FAIL": 9
+          },
+          "E": {
+            "A": 0,
+            "B": 0,
+            "C": 14,
+            "D": 7,
+            "E": 23,
+            "FAIL": 2
+          }
+        }
+      },
+      "first_token_choice": {
+        "n": 1013,
+        "valid_rate": 1.0,
+        "accuracy": 0.6920039486673247,
+        "macro_f1": 0.5439016652805692,
+        "per_class": {
+          "A": {
+            "support": 106,
+            "recall": 0.42452830188679247,
+            "fpr": 0.019845644983461964,
+            "f1": 0.5325443786982249,
+            "predicted": 63,
+            "correct": 45,
+            "final_failures": 0,
+            "precision": 0.7142857142857143
+          },
+          "B": {
+            "support": 84,
+            "recall": 0.15476190476190477,
+            "fpr": 0.002152852529601722,
+            "f1": 0.26262626262626265,
+            "predicted": 15,
+            "correct": 13,
+            "final_failures": 0,
+            "precision": 0.8666666666666667
+          },
+          "C": {
+            "support": 562,
+            "recall": 0.8202846975088968,
+            "fpr": 0.29046563192904656,
+            "f1": 0.7989601386481803,
+            "predicted": 592,
+            "correct": 461,
+            "final_failures": 0,
+            "precision": 0.7787162162162162
+          },
+          "D": {
+            "support": 215,
+            "recall": 0.7395348837209302,
+            "fpr": 0.17418546365914786,
+            "f1": 0.6198830409356725,
+            "predicted": 298,
+            "correct": 159,
+            "final_failures": 0,
+            "precision": 0.5335570469798657
+          },
+          "E": {
+            "support": 46,
+            "recall": 0.5,
+            "fpr": 0.022750775594622543,
+            "f1": 0.5054945054945055,
+            "predicted": 45,
+            "correct": 23,
+            "final_failures": 0,
+            "precision": 0.5111111111111111
+          }
+        },
+        "correct": 701,
+        "teacher_matches": 790,
+        "teacher_agreement_all_cases": 0.7798617966436328,
+        "predicted_counts": {
+          "D": 298,
+          "C": 592,
+          "E": 45,
+          "B": 15,
+          "A": 63
+        },
+        "confusion_rows_reference_columns_prediction": {
+          "A": {
+            "A": 45,
+            "B": 0,
+            "C": 28,
+            "D": 30,
+            "E": 3,
+            "FAIL": 0
+          },
+          "B": {
+            "A": 13,
+            "B": 13,
+            "C": 36,
+            "D": 19,
+            "E": 3,
+            "FAIL": 0
+          },
+          "C": {
+            "A": 4,
+            "B": 2,
+            "C": 461,
+            "D": 83,
+            "E": 12,
+            "FAIL": 0
+          },
+          "D": {
+            "A": 1,
+            "B": 0,
+            "C": 51,
+            "D": 159,
+            "E": 4,
+            "FAIL": 0
+          },
+          "E": {
+            "A": 0,
+            "B": 0,
+            "C": 16,
+            "D": 7,
+            "E": 23,
+            "FAIL": 0
+          }
+        }
+      },
+      "n_final_empty": 29,
+      "fail_overlap_base": 29,
+      "first_choice_correct_on_empty": 14,
+      "hypothetical_all_empty_correct": {
+        "accuracy": 0.7068114511352419,
+        "macro_f1": 0.567506375317419,
+        "correct": 716
+      },
+      "evaluation_seconds_sum_attempts": 85.13466498920752,
+      "evaluation_attempts": 1042,
+      "paired_vs_teacher": {
+        "both_correct": 648,
+        "left_only_correct": 39,
+        "right_only_correct": 148,
+        "neither_correct": 178
+      },
+      "training": {
+        "path": "output/lora/gemma3-270m-it_v3_n1000",
+        "seconds": 456.36636551599076,
+        "optimizer_updates": 375,
+        "epoch_loss": [
+          0.5584039678573608,
+          0.4473759160637856,
+          0.28216261219978334
+        ],
+        "n_clipped": 7,
+        "example_exposures_per_second": 6.573665867352098,
+        "teacher_label_counts": {
+          "A": 61,
+          "B": 23,
+          "C": 621,
+          "D": 245,
+          "E": 50
+        },
+        "prefix": {
+          "file": "history_n1000.csv",
+          "n_rows": 1000,
+          "first_complaint_id": "8085676",
+          "first_sequence_no": 1,
+          "first_received_at_utc": "2024-01-01T00:45:14.000Z",
+          "trigger_complaint_id": "8267761",
+          "trigger_sequence_no": 1000,
+          "trigger_received_at_utc": "2024-02-01T20:53:36.000Z",
+          "history_cases_without_label_through_trigger": 0,
+          "teacher_label_counts": {
+            "A": 61,
+            "B": 23,
+            "C": 621,
+            "D": 245,
+            "E": 50
+          },
+          "ordered_complaint_ids_sha256": "4a8f8b846b016174901616c16d9677550f9f7d813b7cbaec4cbf855f417a7105",
+          "csv_sha256": "df38c073db6efb0316b8effc009ed01e9be61121102b97ae60b3b761c93d0ea2",
+          "csv_size_bytes": 1905438
+        },
+        "adapter_sha256": {
+          "adapter_config.json": "c5d63ac3a47a7d2d08a394a366cb070dc1daa8807c26094fea4de480f0a12adb",
+          "adapter_model.safetensors": "23d65baddf4968eb2b319df5faf3f5164acc6f8586716bb833a144d5cc0e5b7f"
+        }
+      },
+      "paired_vs_base": {
+        "both_correct": 204,
+        "left_only_correct": 483,
+        "right_only_correct": 67,
+        "neither_correct": 259
+      }
+    },
+    "2000": {
+      "evaluation_path": "output/lora_eval/gemma3-270m-it_v3_n2000_validation",
+      "strict_generation": {
+        "n": 1013,
+        "valid_rate": 0.9713721618953604,
+        "accuracy": 0.7107601184600197,
+        "macro_f1": 0.5589143108676523,
+        "per_class": {
+          "A": {
+            "support": 106,
+            "recall": 0.49056603773584906,
+            "fpr": 0.029768467475192944,
+            "f1": 0.5621621621621622,
+            "predicted": 79,
+            "correct": 52,
+            "final_failures": 2,
+            "precision": 0.6582278481012658
+          },
+          "B": {
+            "support": 84,
+            "recall": 0.13095238095238096,
+            "fpr": 0.002152852529601722,
+            "f1": 0.2268041237113402,
+            "predicted": 13,
+            "correct": 11,
+            "final_failures": 2,
+            "precision": 0.8461538461538461
+          },
+          "C": {
+            "support": 562,
+            "recall": 0.8790035587188612,
+            "fpr": 0.35698447893569846,
+            "f1": 0.8118323746918652,
+            "predicted": 655,
+            "correct": 494,
+            "final_failures": 14,
+            "precision": 0.7541984732824427
+          },
+          "D": {
+            "support": 215,
+            "recall": 0.6651162790697674,
+            "fpr": 0.07769423558897243,
+            "f1": 0.680952380952381,
+            "predicted": 205,
+            "correct": 143,
+            "final_failures": 9,
+            "precision": 0.697560975609756
+          },
+          "E": {
+            "support": 46,
+            "recall": 0.43478260869565216,
+            "fpr": 0.012409513960703205,
+            "f1": 0.5128205128205128,
+            "predicted": 32,
+            "correct": 20,
+            "final_failures": 2,
+            "precision": 0.625
+          }
+        },
+        "correct": 720,
+        "teacher_matches": 804,
+        "teacher_agreement_all_cases": 0.7936821322803553,
+        "predicted_counts": {
+          "C": 655,
+          "D": 205,
+          "E": 32,
+          "A": 79,
+          "FAIL": 29,
+          "B": 13
+        },
+        "confusion_rows_reference_columns_prediction": {
+          "A": {
+            "A": 52,
+            "B": 1,
+            "C": 39,
+            "D": 11,
+            "E": 1,
+            "FAIL": 2
+          },
+          "B": {
+            "A": 19,
+            "B": 11,
+            "C": 43,
+            "D": 8,
+            "E": 1,
+            "FAIL": 2
+          },
+          "C": {
+            "A": 5,
+            "B": 1,
+            "C": 494,
+            "D": 40,
+            "E": 8,
+            "FAIL": 14
+          },
+          "D": {
+            "A": 1,
+            "B": 0,
+            "C": 60,
+            "D": 143,
+            "E": 2,
+            "FAIL": 9
+          },
+          "E": {
+            "A": 2,
+            "B": 0,
+            "C": 19,
+            "D": 3,
+            "E": 20,
+            "FAIL": 2
+          }
+        }
+      },
+      "first_token_choice": {
+        "n": 1013,
+        "valid_rate": 1.0,
+        "accuracy": 0.7245804540967423,
+        "macro_f1": 0.5596296978875457,
+        "per_class": {
+          "A": {
+            "support": 106,
+            "recall": 0.49056603773584906,
+            "fpr": 0.029768467475192944,
+            "f1": 0.5621621621621622,
+            "predicted": 79,
+            "correct": 52,
+            "final_failures": 0,
+            "precision": 0.6582278481012658
+          },
+          "B": {
+            "support": 84,
+            "recall": 0.13095238095238096,
+            "fpr": 0.002152852529601722,
+            "f1": 0.2268041237113402,
+            "predicted": 13,
+            "correct": 11,
+            "final_failures": 0,
+            "precision": 0.8461538461538461
+          },
+          "C": {
+            "support": 562,
+            "recall": 0.9039145907473309,
+            "fpr": 0.3902439024390244,
+            "f1": 0.8154093097913323,
+            "predicted": 684,
+            "correct": 508,
+            "final_failures": 0,
+            "precision": 0.7426900584795322
+          },
+          "D": {
+            "support": 215,
+            "recall": 0.6651162790697674,
+            "fpr": 0.07769423558897243,
+            "f1": 0.680952380952381,
+            "predicted": 205,
+            "correct": 143,
+            "final_failures": 0,
+            "precision": 0.697560975609756
+          },
+          "E": {
+            "support": 46,
+            "recall": 0.43478260869565216,
+            "fpr": 0.012409513960703205,
+            "f1": 0.5128205128205128,
+            "predicted": 32,
+            "correct": 20,
+            "final_failures": 0,
+            "precision": 0.625
+          }
+        },
+        "correct": 734,
+        "teacher_matches": 820,
+        "teacher_agreement_all_cases": 0.8094768015794669,
+        "predicted_counts": {
+          "C": 684,
+          "D": 205,
+          "E": 32,
+          "A": 79,
+          "B": 13
+        },
+        "confusion_rows_reference_columns_prediction": {
+          "A": {
+            "A": 52,
+            "B": 1,
+            "C": 41,
+            "D": 11,
+            "E": 1,
+            "FAIL": 0
+          },
+          "B": {
+            "A": 19,
+            "B": 11,
+            "C": 45,
+            "D": 8,
+            "E": 1,
+            "FAIL": 0
+          },
+          "C": {
+            "A": 5,
+            "B": 1,
+            "C": 508,
+            "D": 40,
+            "E": 8,
+            "FAIL": 0
+          },
+          "D": {
+            "A": 1,
+            "B": 0,
+            "C": 69,
+            "D": 143,
+            "E": 2,
+            "FAIL": 0
+          },
+          "E": {
+            "A": 2,
+            "B": 0,
+            "C": 21,
+            "D": 3,
+            "E": 20,
+            "FAIL": 0
+          }
+        }
+      },
+      "n_final_empty": 29,
+      "fail_overlap_base": 29,
+      "first_choice_correct_on_empty": 14,
+      "hypothetical_all_empty_correct": {
+        "accuracy": 0.7393879565646594,
+        "macro_f1": 0.5848272651937774,
+        "correct": 749
+      },
+      "evaluation_seconds_sum_attempts": 86.80210750625702,
+      "evaluation_attempts": 1042,
+      "paired_vs_teacher": {
+        "both_correct": 673,
+        "left_only_correct": 47,
+        "right_only_correct": 123,
+        "neither_correct": 170
+      },
+      "training": {
+        "path": "output/lora/gemma3-270m-it_v3_n2000",
+        "seconds": 894.1795134550048,
+        "optimizer_updates": 750,
+        "epoch_loss": [
+          0.5250724093914032,
+          0.28168202842772005,
+          0.21322807903587818
+        ],
+        "n_clipped": 8,
+        "example_exposures_per_second": 6.7100620286151536,
+        "teacher_label_counts": {
+          "A": 131,
+          "B": 48,
+          "C": 1230,
+          "D": 478,
+          "E": 113
+        },
+        "prefix": {
+          "file": "history_n2000.csv",
+          "n_rows": 2000,
+          "first_complaint_id": "8085676",
+          "first_sequence_no": 1,
+          "first_received_at_utc": "2024-01-01T00:45:14.000Z",
+          "trigger_complaint_id": "8441370",
+          "trigger_sequence_no": 2001,
+          "trigger_received_at_utc": "2024-02-28T21:52:55.000Z",
+          "history_cases_without_label_through_trigger": 1,
+          "teacher_label_counts": {
+            "A": 131,
+            "B": 48,
+            "C": 1230,
+            "D": 478,
+            "E": 113
+          },
+          "ordered_complaint_ids_sha256": "99f29db255b56a9f07579ffc85c54f88e09f1133f8e0e552b0dd08d598f3ca46",
+          "csv_sha256": "81835da73b5842447eb767a5f3741deb7baec1bfb38a4fa033440fff2e688a9c",
+          "csv_size_bytes": 3652644
+        },
+        "adapter_sha256": {
+          "adapter_config.json": "c5d63ac3a47a7d2d08a394a366cb070dc1daa8807c26094fea4de480f0a12adb",
+          "adapter_model.safetensors": "a4eff37ce6706685ce5fb4246d423bb042f0d6c42e5efc55fcd17cac8d9c7ebb"
+        }
+      },
+      "paired_vs_base": {
+        "both_correct": 217,
+        "left_only_correct": 503,
+        "right_only_correct": 54,
+        "neither_correct": 239
+      }
+    },
+    "3000": {
+      "evaluation_path": "output/lora_eval/gemma3-270m-it_v3_n3000_validation",
+      "strict_generation": {
+        "n": 1013,
+        "valid_rate": 0.9713721618953604,
+        "accuracy": 0.7018756169792695,
+        "macro_f1": 0.5443094991069541,
+        "per_class": {
+          "A": {
+            "support": 106,
+            "recall": 0.39622641509433965,
+            "fpr": 0.019845644983461964,
+            "f1": 0.5060240963855421,
+            "predicted": 60,
+            "correct": 42,
+            "final_failures": 2,
+            "precision": 0.7
+          },
+          "B": {
+            "support": 84,
+            "recall": 0.13095238095238096,
+            "fpr": 0.0032292787944025836,
+            "f1": 0.22448979591836735,
+            "predicted": 14,
+            "correct": 11,
+            "final_failures": 2,
+            "precision": 0.7857142857142857
+          },
+          "C": {
+            "support": 562,
+            "recall": 0.8665480427046264,
+            "fpr": 0.35033259423503327,
+            "f1": 0.8069594034797017,
+            "predicted": 645,
+            "correct": 487,
+            "final_failures": 14,
+            "precision": 0.7550387596899225
+          },
+          "D": {
+            "support": 215,
+            "recall": 0.6744186046511628,
+            "fpr": 0.07644110275689223,
+            "f1": 0.6888361045130641,
+            "predicted": 206,
+            "correct": 145,
+            "final_failures": 9,
+            "precision": 0.7038834951456311
+          },
+          "E": {
+            "support": 46,
+            "recall": 0.5652173913043478,
+            "fpr": 0.03412616339193381,
+            "f1": 0.49523809523809526,
+            "predicted": 59,
+            "correct": 26,
+            "final_failures": 2,
+            "precision": 0.4406779661016949
+          }
+        },
+        "correct": 711,
+        "teacher_matches": 819,
+        "teacher_agreement_all_cases": 0.8084896347482725,
+        "predicted_counts": {
+          "C": 645,
+          "D": 206,
+          "E": 59,
+          "A": 60,
+          "B": 14,
+          "FAIL": 29
+        },
+        "confusion_rows_reference_columns_prediction": {
+          "A": {
+            "A": 42,
+            "B": 2,
+            "C": 39,
+            "D": 12,
+            "E": 9,
+            "FAIL": 2
+          },
+          "B": {
+            "A": 15,
+            "B": 11,
+            "C": 48,
+            "D": 5,
+            "E": 3,
+            "FAIL": 2
+          },
+          "C": {
+            "A": 3,
+            "B": 1,
+            "C": 487,
+            "D": 41,
+            "E": 16,
+            "FAIL": 14
+          },
+          "D": {
+            "A": 0,
+            "B": 0,
+            "C": 56,
+            "D": 145,
+            "E": 5,
+            "FAIL": 9
+          },
+          "E": {
+            "A": 0,
+            "B": 0,
+            "C": 15,
+            "D": 3,
+            "E": 26,
+            "FAIL": 2
+          }
+        }
+      },
+      "first_token_choice": {
+        "n": 1013,
+        "valid_rate": 1.0,
+        "accuracy": 0.7156959526159921,
+        "macro_f1": 0.5450535407411109,
+        "per_class": {
+          "A": {
+            "support": 106,
+            "recall": 0.39622641509433965,
+            "fpr": 0.019845644983461964,
+            "f1": 0.5060240963855421,
+            "predicted": 60,
+            "correct": 42,
+            "final_failures": 0,
+            "precision": 0.7
+          },
+          "B": {
+            "support": 84,
+            "recall": 0.13095238095238096,
+            "fpr": 0.0032292787944025836,
+            "f1": 0.22448979591836735,
+            "predicted": 14,
+            "correct": 11,
+            "final_failures": 0,
+            "precision": 0.7857142857142857
+          },
+          "C": {
+            "support": 562,
+            "recall": 0.891459074733096,
+            "fpr": 0.3835920177383592,
+            "f1": 0.8106796116504854,
+            "predicted": 674,
+            "correct": 501,
+            "final_failures": 0,
+            "precision": 0.7433234421364985
+          },
+          "D": {
+            "support": 215,
+            "recall": 0.6744186046511628,
+            "fpr": 0.07644110275689223,
+            "f1": 0.6888361045130641,
+            "predicted": 206,
+            "correct": 145,
+            "final_failures": 0,
+            "precision": 0.7038834951456311
+          },
+          "E": {
+            "support": 46,
+            "recall": 0.5652173913043478,
+            "fpr": 0.03412616339193381,
+            "f1": 0.49523809523809526,
+            "predicted": 59,
+            "correct": 26,
+            "final_failures": 0,
+            "precision": 0.4406779661016949
+          }
+        },
+        "correct": 725,
+        "teacher_matches": 835,
+        "teacher_agreement_all_cases": 0.824284304047384,
+        "predicted_counts": {
+          "C": 674,
+          "D": 206,
+          "E": 59,
+          "A": 60,
+          "B": 14
+        },
+        "confusion_rows_reference_columns_prediction": {
+          "A": {
+            "A": 42,
+            "B": 2,
+            "C": 41,
+            "D": 12,
+            "E": 9,
+            "FAIL": 0
+          },
+          "B": {
+            "A": 15,
+            "B": 11,
+            "C": 50,
+            "D": 5,
+            "E": 3,
+            "FAIL": 0
+          },
+          "C": {
+            "A": 3,
+            "B": 1,
+            "C": 501,
+            "D": 41,
+            "E": 16,
+            "FAIL": 0
+          },
+          "D": {
+            "A": 0,
+            "B": 0,
+            "C": 65,
+            "D": 145,
+            "E": 5,
+            "FAIL": 0
+          },
+          "E": {
+            "A": 0,
+            "B": 0,
+            "C": 17,
+            "D": 3,
+            "E": 26,
+            "FAIL": 0
+          }
+        }
+      },
+      "n_final_empty": 29,
+      "fail_overlap_base": 29,
+      "first_choice_correct_on_empty": 14,
+      "hypothetical_all_empty_correct": {
+        "accuracy": 0.7305034550839091,
+        "macro_f1": 0.568818380039419,
+        "correct": 740
+      },
+      "evaluation_seconds_sum_attempts": 85.90549978490162,
+      "evaluation_attempts": 1042,
+      "paired_vs_teacher": {
+        "both_correct": 676,
+        "left_only_correct": 35,
+        "right_only_correct": 120,
+        "neither_correct": 182
+      },
+      "training": {
+        "path": "output/lora/gemma3-270m-it_v3_n3000",
+        "seconds": 1346.005654595996,
+        "optimizer_updates": 1125,
+        "epoch_loss": [
+          0.45094820538163183,
+          0.2322344816873471,
+          0.18190366548423967
+        ],
+        "n_clipped": 11,
+        "example_exposures_per_second": 6.68645036465419,
+        "teacher_label_counts": {
+          "A": 210,
+          "B": 70,
+          "C": 1807,
+          "D": 749,
+          "E": 164
+        },
+        "prefix": {
+          "file": "history_n3000.csv",
+          "n_rows": 3000,
+          "first_complaint_id": "8085676",
+          "first_sequence_no": 1,
+          "first_received_at_utc": "2024-01-01T00:45:14.000Z",
+          "trigger_complaint_id": "8629023",
+          "trigger_sequence_no": 3002,
+          "trigger_received_at_utc": "2024-03-27T02:04:35.000Z",
+          "history_cases_without_label_through_trigger": 2,
+          "teacher_label_counts": {
+            "A": 210,
+            "B": 70,
+            "C": 1807,
+            "D": 749,
+            "E": 164
+          },
+          "ordered_complaint_ids_sha256": "1b14312bb08c6139d592f44fd03f664d872194c635107e091532ea917c24c6eb",
+          "csv_sha256": "48057cc462727690befeeefa9b66d3a7792403c82217cd63e991b0e0cfa82ed8",
+          "csv_size_bytes": 5464261
+        },
+        "adapter_sha256": {
+          "adapter_config.json": "c5d63ac3a47a7d2d08a394a366cb070dc1daa8807c26094fea4de480f0a12adb",
+          "adapter_model.safetensors": "0e3608ecc1c017d2a7cc9173b661df0e4736f27758bcf284c16f97725873371b"
+        }
+      },
+      "paired_vs_base": {
+        "both_correct": 210,
+        "left_only_correct": 501,
+        "right_only_correct": 61,
+        "neither_correct": 241
+      }
+    },
+    "4000": {
+      "evaluation_path": "output/lora_eval/gemma3-270m-it_v3_n4000_validation",
+      "strict_generation": {
+        "n": 1013,
+        "valid_rate": 0.9713721618953604,
+        "accuracy": 0.7235932872655478,
+        "macro_f1": 0.5641613102556827,
+        "per_class": {
+          "A": {
+            "support": 106,
+            "recall": 0.5094339622641509,
+            "fpr": 0.030871003307607496,
+            "f1": 0.574468085106383,
+            "predicted": 82,
+            "correct": 54,
+            "final_failures": 2,
+            "precision": 0.6585365853658537
+          },
+          "B": {
+            "support": 84,
+            "recall": 0.11904761904761904,
+            "fpr": 0.004305705059203444,
+            "f1": 0.20408163265306123,
+            "predicted": 14,
+            "correct": 10,
+            "final_failures": 2,
+            "precision": 0.7142857142857143
+          },
+          "C": {
+            "support": 562,
+            "recall": 0.896797153024911,
+            "fpr": 0.3436807095343681,
+            "f1": 0.8255528255528255,
+            "predicted": 659,
+            "correct": 504,
+            "final_failures": 14,
+            "precision": 0.7647951441578149
+          },
+          "D": {
+            "support": 215,
+            "recall": 0.6744186046511628,
+            "fpr": 0.06516290726817042,
+            "f1": 0.7038834951456311,
+            "predicted": 197,
+            "correct": 145,
+            "final_failures": 9,
+            "precision": 0.7360406091370558
+          },
+          "E": {
+            "support": 46,
+            "recall": 0.43478260869565216,
+            "fpr": 0.012409513960703205,
+            "f1": 0.5128205128205128,
+            "predicted": 32,
+            "correct": 20,
+            "final_failures": 2,
+            "precision": 0.625
+          }
+        },
+        "correct": 733,
+        "teacher_matches": 828,
+        "teacher_agreement_all_cases": 0.8173741362290227,
+        "predicted_counts": {
+          "C": 659,
+          "D": 197,
+          "E": 32,
+          "A": 82,
+          "B": 14,
+          "FAIL": 29
+        },
+        "confusion_rows_reference_columns_prediction": {
+          "A": {
+            "A": 54,
+            "B": 2,
+            "C": 33,
+            "D": 11,
+            "E": 4,
+            "FAIL": 2
+          },
+          "B": {
+            "A": 24,
+            "B": 10,
+            "C": 45,
+            "D": 3,
+            "E": 0,
+            "FAIL": 2
+          },
+          "C": {
+            "A": 2,
+            "B": 2,
+            "C": 504,
+            "D": 34,
+            "E": 6,
+            "FAIL": 14
+          },
+          "D": {
+            "A": 2,
+            "B": 0,
+            "C": 57,
+            "D": 145,
+            "E": 2,
+            "FAIL": 9
+          },
+          "E": {
+            "A": 0,
+            "B": 0,
+            "C": 20,
+            "D": 4,
+            "E": 20,
+            "FAIL": 2
+          }
+        }
+      },
+      "first_token_choice": {
+        "n": 1013,
+        "valid_rate": 1.0,
+        "accuracy": 0.7374136229022705,
+        "macro_f1": 0.5648107451451176,
+        "per_class": {
+          "A": {
+            "support": 106,
+            "recall": 0.5094339622641509,
+            "fpr": 0.030871003307607496,
+            "f1": 0.574468085106383,
+            "predicted": 82,
+            "correct": 54,
+            "final_failures": 0,
+            "precision": 0.6585365853658537
+          },
+          "B": {
+            "support": 84,
+            "recall": 0.11904761904761904,
+            "fpr": 0.004305705059203444,
+            "f1": 0.20408163265306123,
+            "predicted": 14,
+            "correct": 10,
+            "final_failures": 0,
+            "precision": 0.7142857142857143
+          },
+          "C": {
+            "support": 562,
+            "recall": 0.9217081850533808,
+            "fpr": 0.376940133037694,
+            "f1": 0.8288,
+            "predicted": 688,
+            "correct": 518,
+            "final_failures": 0,
+            "precision": 0.752906976744186
+          },
+          "D": {
+            "support": 215,
+            "recall": 0.6744186046511628,
+            "fpr": 0.06516290726817042,
+            "f1": 0.7038834951456311,
+            "predicted": 197,
+            "correct": 145,
+            "final_failures": 0,
+            "precision": 0.7360406091370558
+          },
+          "E": {
+            "support": 46,
+            "recall": 0.43478260869565216,
+            "fpr": 0.012409513960703205,
+            "f1": 0.5128205128205128,
+            "predicted": 32,
+            "correct": 20,
+            "final_failures": 0,
+            "precision": 0.625
+          }
+        },
+        "correct": 747,
+        "teacher_matches": 844,
+        "teacher_agreement_all_cases": 0.8331688055281342,
+        "predicted_counts": {
+          "C": 688,
+          "D": 197,
+          "E": 32,
+          "A": 82,
+          "B": 14
+        },
+        "confusion_rows_reference_columns_prediction": {
+          "A": {
+            "A": 54,
+            "B": 2,
+            "C": 35,
+            "D": 11,
+            "E": 4,
+            "FAIL": 0
+          },
+          "B": {
+            "A": 24,
+            "B": 10,
+            "C": 47,
+            "D": 3,
+            "E": 0,
+            "FAIL": 0
+          },
+          "C": {
+            "A": 2,
+            "B": 2,
+            "C": 518,
+            "D": 34,
+            "E": 6,
+            "FAIL": 0
+          },
+          "D": {
+            "A": 2,
+            "B": 0,
+            "C": 66,
+            "D": 145,
+            "E": 2,
+            "FAIL": 0
+          },
+          "E": {
+            "A": 0,
+            "B": 0,
+            "C": 22,
+            "D": 4,
+            "E": 20,
+            "FAIL": 0
+          }
+        }
+      },
+      "n_final_empty": 29,
+      "fail_overlap_base": 29,
+      "first_choice_correct_on_empty": 14,
+      "hypothetical_all_empty_correct": {
+        "accuracy": 0.7522211253701876,
+        "macro_f1": 0.5899863059805552,
+        "correct": 762
+      },
+      "evaluation_seconds_sum_attempts": 85.20266568366787,
+      "evaluation_attempts": 1042,
+      "paired_vs_teacher": {
+        "both_correct": 689,
+        "left_only_correct": 44,
+        "right_only_correct": 107,
+        "neither_correct": 173
+      },
+      "training": {
+        "path": "output/lora/gemma3-270m-it_v3_n4000",
+        "seconds": 1807.040207676997,
+        "optimizer_updates": 1500,
+        "epoch_loss": [
+          0.4296882794722915,
+          0.22425432219821959,
+          0.17314736964274197
+        ],
+        "n_clipped": 15,
+        "example_exposures_per_second": 6.640693410705206,
+        "teacher_label_counts": {
+          "A": 284,
+          "B": 92,
+          "C": 2436,
+          "D": 973,
+          "E": 215
+        },
+        "prefix": {
+          "file": "history_n4000.csv",
+          "n_rows": 4000,
+          "first_complaint_id": "8085676",
+          "first_sequence_no": 1,
+          "first_received_at_utc": "2024-01-01T00:45:14.000Z",
+          "trigger_complaint_id": "8849631",
+          "trigger_sequence_no": 4002,
+          "trigger_received_at_utc": "2024-04-24T21:41:43.000Z",
+          "history_cases_without_label_through_trigger": 2,
+          "teacher_label_counts": {
+            "A": 284,
+            "B": 92,
+            "C": 2436,
+            "D": 973,
+            "E": 215
+          },
+          "ordered_complaint_ids_sha256": "230752ba831d6c0718ac05901973598f5c51833c8af86cf03dd41625a0783143",
+          "csv_sha256": "87e8c68c0d0c6812bba26eb0f3379033cb8d3be4269f847251a31baff48a2271",
+          "csv_size_bytes": 7332542
+        },
+        "adapter_sha256": {
+          "adapter_config.json": "08a52ac04efe5bf666c511a37723cfd0bb6c19a3b2ea8cfa5fefa6a149607d8b",
+          "adapter_model.safetensors": "2002d373c66bc1a558d9009759b82f3417c3cfc5576e057745ac8d82d1733c1b"
+        }
+      },
+      "paired_vs_base": {
+        "both_correct": 218,
+        "left_only_correct": 515,
+        "right_only_correct": 53,
+        "neither_correct": 227
+      }
+    },
+    "5000": {
+      "evaluation_path": "output/lora_eval/gemma3-270m-it_v3_n5000_validation",
+      "strict_generation": {
+        "n": 1013,
+        "valid_rate": 0.9713721618953604,
+        "accuracy": 0.7265547877591313,
+        "macro_f1": 0.6028908547424535,
+        "per_class": {
+          "A": {
+            "support": 106,
+            "recall": 0.5566037735849056,
+            "fpr": 0.037486218302094816,
+            "f1": 0.592964824120603,
+            "predicted": 93,
+            "correct": 59,
+            "final_failures": 2,
+            "precision": 0.6344086021505376
+          },
+          "B": {
+            "support": 84,
+            "recall": 0.23809523809523808,
+            "fpr": 0.011840688912809472,
+            "f1": 0.34782608695652173,
+            "predicted": 31,
+            "correct": 20,
+            "final_failures": 2,
+            "precision": 0.6451612903225806
+          },
+          "C": {
+            "support": 562,
+            "recall": 0.8540925266903915,
+            "fpr": 0.25942350332594233,
+            "f1": 0.8283002588438308,
+            "predicted": 597,
+            "correct": 480,
+            "final_failures": 14,
+            "precision": 0.8040201005025126
+          },
+          "D": {
+            "support": 215,
+            "recall": 0.6883720930232559,
+            "fpr": 0.06516290726817042,
+            "f1": 0.7132530120481928,
+            "predicted": 200,
+            "correct": 148,
+            "final_failures": 9,
+            "precision": 0.74
+          },
+          "E": {
+            "support": 46,
+            "recall": 0.6304347826086957,
+            "fpr": 0.03516028955532575,
+            "f1": 0.5321100917431193,
+            "predicted": 63,
+            "correct": 29,
+            "final_failures": 2,
+            "precision": 0.4603174603174603
+          }
+        },
+        "correct": 736,
+        "teacher_matches": 826,
+        "teacher_agreement_all_cases": 0.8153998025666338,
+        "predicted_counts": {
+          "C": 597,
+          "D": 200,
+          "E": 63,
+          "B": 31,
+          "A": 93,
+          "FAIL": 29
+        },
+        "confusion_rows_reference_columns_prediction": {
+          "A": {
+            "A": 59,
+            "B": 6,
+            "C": 24,
+            "D": 9,
+            "E": 6,
+            "FAIL": 2
+          },
+          "B": {
+            "A": 23,
+            "B": 20,
+            "C": 33,
+            "D": 3,
+            "E": 3,
+            "FAIL": 2
+          },
+          "C": {
+            "A": 7,
+            "B": 5,
+            "C": 480,
+            "D": 36,
+            "E": 20,
+            "FAIL": 14
+          },
+          "D": {
+            "A": 3,
+            "B": 0,
+            "C": 50,
+            "D": 148,
+            "E": 5,
+            "FAIL": 9
+          },
+          "E": {
+            "A": 1,
+            "B": 0,
+            "C": 10,
+            "D": 4,
+            "E": 29,
+            "FAIL": 2
+          }
+        }
+      },
+      "first_token_choice": {
+        "n": 1013,
+        "valid_rate": 1.0,
+        "accuracy": 0.7403751233958539,
+        "macro_f1": 0.6035607693036538,
+        "per_class": {
+          "A": {
+            "support": 106,
+            "recall": 0.5566037735849056,
+            "fpr": 0.037486218302094816,
+            "f1": 0.592964824120603,
+            "predicted": 93,
+            "correct": 59,
+            "final_failures": 0,
+            "precision": 0.6344086021505376
+          },
+          "B": {
+            "support": 84,
+            "recall": 0.23809523809523808,
+            "fpr": 0.011840688912809472,
+            "f1": 0.34782608695652173,
+            "predicted": 31,
+            "correct": 20,
+            "final_failures": 0,
+            "precision": 0.6451612903225806
+          },
+          "C": {
+            "support": 562,
+            "recall": 0.8790035587188612,
+            "fpr": 0.2926829268292683,
+            "f1": 0.8316498316498316,
+            "predicted": 626,
+            "correct": 494,
+            "final_failures": 0,
+            "precision": 0.7891373801916933
+          },
+          "D": {
+            "support": 215,
+            "recall": 0.6883720930232559,
+            "fpr": 0.06516290726817042,
+            "f1": 0.7132530120481928,
+            "predicted": 200,
+            "correct": 148,
+            "final_failures": 0,
+            "precision": 0.74
+          },
+          "E": {
+            "support": 46,
+            "recall": 0.6304347826086957,
+            "fpr": 0.03516028955532575,
+            "f1": 0.5321100917431193,
+            "predicted": 63,
+            "correct": 29,
+            "final_failures": 0,
+            "precision": 0.4603174603174603
+          }
+        },
+        "correct": 750,
+        "teacher_matches": 842,
+        "teacher_agreement_all_cases": 0.8311944718657454,
+        "predicted_counts": {
+          "C": 626,
+          "D": 200,
+          "E": 63,
+          "B": 31,
+          "A": 93
+        },
+        "confusion_rows_reference_columns_prediction": {
+          "A": {
+            "A": 59,
+            "B": 6,
+            "C": 26,
+            "D": 9,
+            "E": 6,
+            "FAIL": 0
+          },
+          "B": {
+            "A": 23,
+            "B": 20,
+            "C": 35,
+            "D": 3,
+            "E": 3,
+            "FAIL": 0
+          },
+          "C": {
+            "A": 7,
+            "B": 5,
+            "C": 494,
+            "D": 36,
+            "E": 20,
+            "FAIL": 0
+          },
+          "D": {
+            "A": 3,
+            "B": 0,
+            "C": 59,
+            "D": 148,
+            "E": 5,
+            "FAIL": 0
+          },
+          "E": {
+            "A": 1,
+            "B": 0,
+            "C": 12,
+            "D": 4,
+            "E": 29,
+            "FAIL": 0
+          }
+        }
+      },
+      "n_final_empty": 29,
+      "fail_overlap_base": 29,
+      "first_choice_correct_on_empty": 14,
+      "hypothetical_all_empty_correct": {
+        "accuracy": 0.7551826258637709,
+        "macro_f1": 0.6248885772950172,
+        "correct": 765
+      },
+      "evaluation_seconds_sum_attempts": 85.17494006200286,
+      "evaluation_attempts": 1042,
+      "paired_vs_teacher": {
+        "both_correct": 691,
+        "left_only_correct": 45,
+        "right_only_correct": 105,
+        "neither_correct": 172
+      },
+      "training": {
+        "path": "output/lora/gemma3-270m-it_v3_n5000",
+        "seconds": 2302.3471386890014,
+        "optimizer_updates": 1875,
+        "epoch_loss": [
+          0.36513561570346353,
+          0.20906977133899926,
+          0.17090340692140163
+        ],
+        "n_clipped": 19,
+        "example_exposures_per_second": 6.515090512606745,
+        "teacher_label_counts": {
+          "A": 380,
+          "B": 125,
+          "C": 3015,
+          "D": 1211,
+          "E": 269
+        },
+        "prefix": {
+          "file": "history_n5000.csv",
+          "n_rows": 5000,
+          "first_complaint_id": "8085676",
+          "first_sequence_no": 1,
+          "first_received_at_utc": "2024-01-01T00:45:14.000Z",
+          "trigger_complaint_id": "9114812",
+          "trigger_sequence_no": 5002,
+          "trigger_received_at_utc": "2024-05-28T20:49:44.000Z",
+          "history_cases_without_label_through_trigger": 2,
+          "teacher_label_counts": {
+            "A": 380,
+            "B": 125,
+            "C": 3015,
+            "D": 1211,
+            "E": 269
+          },
+          "ordered_complaint_ids_sha256": "b4c46c2aefa32615772ee6b436b9b4e84b36ce80f52d8012daadd30ca5c38d32",
+          "csv_sha256": "f2f432c1db5e3b0c0efd5ab731b57f3dac135f8af63b1b1f1daa3af504049288",
+          "csv_size_bytes": 9177193
+        },
+        "adapter_sha256": {
+          "adapter_config.json": "08a52ac04efe5bf666c511a37723cfd0bb6c19a3b2ea8cfa5fefa6a149607d8b",
+          "adapter_model.safetensors": "cc7ae33ee2aa218c1f997a0ff63d036507a1fcfc964b42a1d99cacef52da5b41"
+        }
+      },
+      "paired_vs_base": {
+        "both_correct": 213,
+        "left_only_correct": 523,
+        "right_only_correct": 58,
+        "neither_correct": 219
+      }
+    },
+    "6000": {
+      "evaluation_path": "output/lora_eval/gemma3-270m-it_v3_n6000_validation",
+      "strict_generation": {
+        "n": 1013,
+        "valid_rate": 0.9713721618953604,
+        "accuracy": 0.7255676209279368,
+        "macro_f1": 0.5769851080343543,
+        "per_class": {
+          "A": {
+            "support": 106,
+            "recall": 0.6037735849056604,
+            "fpr": 0.047409040793825796,
+            "f1": 0.6009389671361502,
+            "predicted": 107,
+            "correct": 64,
+            "final_failures": 2,
+            "precision": 0.5981308411214953
+          },
+          "B": {
+            "support": 84,
+            "recall": 0.14285714285714285,
+            "fpr": 0.006458557588805167,
+            "f1": 0.23529411764705882,
+            "predicted": 18,
+            "correct": 12,
+            "final_failures": 2,
+            "precision": 0.6666666666666666
+          },
+          "C": {
+            "support": 562,
+            "recall": 0.8309608540925267,
+            "fpr": 0.20620842572062084,
+            "f1": 0.8324420677361853,
+            "predicted": 560,
+            "correct": 467,
+            "final_failures": 14,
+            "precision": 0.8339285714285715
+          },
+          "D": {
+            "support": 215,
+            "recall": 0.7906976744186046,
+            "fpr": 0.10776942355889724,
+            "f1": 0.721868365180467,
+            "predicted": 256,
+            "correct": 170,
+            "final_failures": 9,
+            "precision": 0.6640625
+          },
+          "E": {
+            "support": 46,
+            "recall": 0.4782608695652174,
+            "fpr": 0.02171664943123061,
+            "f1": 0.4943820224719101,
+            "predicted": 43,
+            "correct": 22,
+            "final_failures": 2,
+            "precision": 0.5116279069767442
+          }
+        },
+        "correct": 735,
+        "teacher_matches": 832,
+        "teacher_agreement_all_cases": 0.8213228035538006,
+        "predicted_counts": {
+          "C": 560,
+          "D": 256,
+          "E": 43,
+          "A": 107,
+          "B": 18,
+          "FAIL": 29
+        },
+        "confusion_rows_reference_columns_prediction": {
+          "A": {
+            "A": 64,
+            "B": 2,
+            "C": 20,
+            "D": 14,
+            "E": 4,
+            "FAIL": 2
+          },
+          "B": {
+            "A": 34,
+            "B": 12,
+            "C": 30,
+            "D": 5,
+            "E": 1,
+            "FAIL": 2
+          },
+          "C": {
+            "A": 5,
+            "B": 4,
+            "C": 467,
+            "D": 61,
+            "E": 11,
+            "FAIL": 14
+          },
+          "D": {
+            "A": 3,
+            "B": 0,
+            "C": 28,
+            "D": 170,
+            "E": 5,
+            "FAIL": 9
+          },
+          "E": {
+            "A": 1,
+            "B": 0,
+            "C": 15,
+            "D": 6,
+            "E": 22,
+            "FAIL": 2
+          }
+        }
+      },
+      "first_token_choice": {
+        "n": 1013,
+        "valid_rate": 1.0,
+        "accuracy": 0.7393879565646594,
+        "macro_f1": 0.5776556866678296,
+        "per_class": {
+          "A": {
+            "support": 106,
+            "recall": 0.6037735849056604,
+            "fpr": 0.047409040793825796,
+            "f1": 0.6009389671361502,
+            "predicted": 107,
+            "correct": 64,
+            "final_failures": 0,
+            "precision": 0.5981308411214953
+          },
+          "B": {
+            "support": 84,
+            "recall": 0.14285714285714285,
+            "fpr": 0.006458557588805167,
+            "f1": 0.23529411764705882,
+            "predicted": 18,
+            "correct": 12,
+            "final_failures": 0,
+            "precision": 0.6666666666666666
+          },
+          "C": {
+            "support": 562,
+            "recall": 0.8558718861209964,
+            "fpr": 0.2394678492239468,
+            "f1": 0.8357949609035621,
+            "predicted": 589,
+            "correct": 481,
+            "final_failures": 0,
+            "precision": 0.8166383701188455
+          },
+          "D": {
+            "support": 215,
+            "recall": 0.7906976744186046,
+            "fpr": 0.10776942355889724,
+            "f1": 0.721868365180467,
+            "predicted": 256,
+            "correct": 170,
+            "final_failures": 0,
+            "precision": 0.6640625
+          },
+          "E": {
+            "support": 46,
+            "recall": 0.4782608695652174,
+            "fpr": 0.02171664943123061,
+            "f1": 0.4943820224719101,
+            "predicted": 43,
+            "correct": 22,
+            "final_failures": 0,
+            "precision": 0.5116279069767442
+          }
+        },
+        "correct": 749,
+        "teacher_matches": 848,
+        "teacher_agreement_all_cases": 0.8371174728529122,
+        "predicted_counts": {
+          "C": 589,
+          "D": 256,
+          "E": 43,
+          "A": 107,
+          "B": 18
+        },
+        "confusion_rows_reference_columns_prediction": {
+          "A": {
+            "A": 64,
+            "B": 2,
+            "C": 22,
+            "D": 14,
+            "E": 4,
+            "FAIL": 0
+          },
+          "B": {
+            "A": 34,
+            "B": 12,
+            "C": 32,
+            "D": 5,
+            "E": 1,
+            "FAIL": 0
+          },
+          "C": {
+            "A": 5,
+            "B": 4,
+            "C": 481,
+            "D": 61,
+            "E": 11,
+            "FAIL": 0
+          },
+          "D": {
+            "A": 3,
+            "B": 0,
+            "C": 37,
+            "D": 170,
+            "E": 5,
+            "FAIL": 0
+          },
+          "E": {
+            "A": 1,
+            "B": 0,
+            "C": 17,
+            "D": 6,
+            "E": 22,
+            "FAIL": 0
+          }
+        }
+      },
+      "n_final_empty": 29,
+      "fail_overlap_base": 29,
+      "first_choice_correct_on_empty": 14,
+      "hypothetical_all_empty_correct": {
+        "accuracy": 0.7541954590325765,
+        "macro_f1": 0.6006642208648432,
+        "correct": 764
+      },
+      "evaluation_seconds_sum_attempts": 84.99786168595892,
+      "evaluation_attempts": 1042,
+      "paired_vs_teacher": {
+        "both_correct": 692,
+        "left_only_correct": 43,
+        "right_only_correct": 104,
+        "neither_correct": 174
+      },
+      "training": {
+        "path": "output/lora/gemma3-270m-it_v3_n6000",
+        "seconds": 2691.0766536059964,
+        "optimizer_updates": 2250,
+        "epoch_loss": [
+          0.37803431299701334,
+          0.2067681583520025,
+          0.16811809333941588
+        ],
+        "n_clipped": 25,
+        "example_exposures_per_second": 6.688772679841843,
+        "teacher_label_counts": {
+          "A": 469,
+          "B": 151,
+          "C": 3595,
+          "D": 1480,
+          "E": 305
+        },
+        "prefix": {
+          "file": "history_n6000.csv",
+          "n_rows": 6000,
+          "first_complaint_id": "8085676",
+          "first_sequence_no": 1,
+          "first_received_at_utc": "2024-01-01T00:45:14.000Z",
+          "trigger_complaint_id": "9389412",
+          "trigger_sequence_no": 6003,
+          "trigger_received_at_utc": "2024-06-30T20:09:01.000Z",
+          "history_cases_without_label_through_trigger": 3,
+          "teacher_label_counts": {
+            "A": 469,
+            "B": 151,
+            "C": 3595,
+            "D": 1480,
+            "E": 305
+          },
+          "ordered_complaint_ids_sha256": "acd2c8c7d4d58cec22adff789c985f6f1a6b4415bf68d62444c5657538e06494",
+          "csv_sha256": "d6054fe6339a46d7803421ca58bdccc9e3ade35480b6e63aae681585c54dc1e6",
+          "csv_size_bytes": 10993402
+        },
+        "adapter_sha256": {
+          "adapter_config.json": "08a52ac04efe5bf666c511a37723cfd0bb6c19a3b2ea8cfa5fefa6a149607d8b",
+          "adapter_model.safetensors": "e18969ce7951a1b10d641d709f9d590f9c34d34a4ab7ae66d87d1cab9fffbeaa"
+        }
+      },
+      "paired_vs_base": {
+        "both_correct": 215,
+        "left_only_correct": 520,
+        "right_only_correct": 56,
+        "neither_correct": 222
+      }
+    },
+    "7000": {
+      "evaluation_path": "output/lora_eval/gemma3-270m-it_v3_n7000_validation",
+      "strict_generation": {
+        "n": 1013,
+        "valid_rate": 0.9713721618953604,
+        "accuracy": 0.7393879565646594,
+        "macro_f1": 0.6366425257552889,
+        "per_class": {
+          "A": {
+            "support": 106,
+            "recall": 0.4716981132075472,
+            "fpr": 0.017640573318632856,
+            "f1": 0.5813953488372093,
+            "predicted": 66,
+            "correct": 50,
+            "final_failures": 2,
+            "precision": 0.7575757575757576
+          },
+          "B": {
+            "support": 84,
+            "recall": 0.39285714285714285,
+            "fpr": 0.022604951560818085,
+            "f1": 0.4782608695652174,
+            "predicted": 54,
+            "correct": 33,
+            "final_failures": 2,
+            "precision": 0.6111111111111112
+          },
+          "C": {
+            "support": 562,
+            "recall": 0.8736654804270463,
+            "fpr": 0.2682926829268293,
+            "f1": 0.8364565587734242,
+            "predicted": 612,
+            "correct": 491,
+            "final_failures": 14,
+            "precision": 0.8022875816993464
+          },
+          "D": {
+            "support": 215,
+            "recall": 0.6930232558139535,
+            "fpr": 0.07518796992481203,
+            "f1": 0.7028301886792453,
+            "predicted": 209,
+            "correct": 149,
+            "final_failures": 9,
+            "precision": 0.7129186602870813
+          },
+          "E": {
+            "support": 46,
+            "recall": 0.5652173913043478,
+            "fpr": 0.017580144777662874,
+            "f1": 0.5842696629213483,
+            "predicted": 43,
+            "correct": 26,
+            "final_failures": 2,
+            "precision": 0.6046511627906976
+          }
+        },
+        "correct": 749,
+        "teacher_matches": 834,
+        "teacher_agreement_all_cases": 0.8232971372161896,
+        "predicted_counts": {
+          "C": 612,
+          "D": 209,
+          "E": 43,
+          "B": 54,
+          "A": 66,
+          "FAIL": 29
+        },
+        "confusion_rows_reference_columns_prediction": {
+          "A": {
+            "A": 50,
+            "B": 15,
+            "C": 26,
+            "D": 10,
+            "E": 3,
+            "FAIL": 2
+          },
+          "B": {
+            "A": 12,
+            "B": 33,
+            "C": 32,
+            "D": 3,
+            "E": 2,
+            "FAIL": 2
+          },
+          "C": {
+            "A": 1,
+            "B": 5,
+            "C": 491,
+            "D": 42,
+            "E": 9,
+            "FAIL": 14
+          },
+          "D": {
+            "A": 3,
+            "B": 0,
+            "C": 51,
+            "D": 149,
+            "E": 3,
+            "FAIL": 9
+          },
+          "E": {
+            "A": 0,
+            "B": 1,
+            "C": 12,
+            "D": 5,
+            "E": 26,
+            "FAIL": 2
+          }
+        }
+      },
+      "first_token_choice": {
+        "n": 1013,
+        "valid_rate": 1.0,
+        "accuracy": 0.7532082922013821,
+        "macro_f1": 0.6372647634602882,
+        "per_class": {
+          "A": {
+            "support": 106,
+            "recall": 0.4716981132075472,
+            "fpr": 0.017640573318632856,
+            "f1": 0.5813953488372093,
+            "predicted": 66,
+            "correct": 50,
+            "final_failures": 0,
+            "precision": 0.7575757575757576
+          },
+          "B": {
+            "support": 84,
+            "recall": 0.39285714285714285,
+            "fpr": 0.022604951560818085,
+            "f1": 0.4782608695652174,
+            "predicted": 54,
+            "correct": 33,
+            "final_failures": 0,
+            "precision": 0.6111111111111112
+          },
+          "C": {
+            "support": 562,
+            "recall": 0.8985765124555161,
+            "fpr": 0.30155210643015523,
+            "f1": 0.8395677472984207,
+            "predicted": 641,
+            "correct": 505,
+            "final_failures": 0,
+            "precision": 0.7878315132605305
+          },
+          "D": {
+            "support": 215,
+            "recall": 0.6930232558139535,
+            "fpr": 0.07518796992481203,
+            "f1": 0.7028301886792453,
+            "predicted": 209,
+            "correct": 149,
+            "final_failures": 0,
+            "precision": 0.7129186602870813
+          },
+          "E": {
+            "support": 46,
+            "recall": 0.5652173913043478,
+            "fpr": 0.017580144777662874,
+            "f1": 0.5842696629213483,
+            "predicted": 43,
+            "correct": 26,
+            "final_failures": 0,
+            "precision": 0.6046511627906976
+          }
+        },
+        "correct": 763,
+        "teacher_matches": 850,
+        "teacher_agreement_all_cases": 0.8390918065153011,
+        "predicted_counts": {
+          "C": 641,
+          "D": 209,
+          "E": 43,
+          "B": 54,
+          "A": 66
+        },
+        "confusion_rows_reference_columns_prediction": {
+          "A": {
+            "A": 50,
+            "B": 15,
+            "C": 28,
+            "D": 10,
+            "E": 3,
+            "FAIL": 0
+          },
+          "B": {
+            "A": 12,
+            "B": 33,
+            "C": 34,
+            "D": 3,
+            "E": 2,
+            "FAIL": 0
+          },
+          "C": {
+            "A": 1,
+            "B": 5,
+            "C": 505,
+            "D": 42,
+            "E": 9,
+            "FAIL": 0
+          },
+          "D": {
+            "A": 3,
+            "B": 0,
+            "C": 60,
+            "D": 149,
+            "E": 3,
+            "FAIL": 0
+          },
+          "E": {
+            "A": 0,
+            "B": 1,
+            "C": 14,
+            "D": 5,
+            "E": 26,
+            "FAIL": 0
+          }
+        }
+      },
+      "n_final_empty": 29,
+      "fail_overlap_base": 29,
+      "first_choice_correct_on_empty": 14,
+      "hypothetical_all_empty_correct": {
+        "accuracy": 0.7680157946692991,
+        "macro_f1": 0.6586092525568515,
+        "correct": 778
+      },
+      "evaluation_seconds_sum_attempts": 84.63113532647549,
+      "evaluation_attempts": 1042,
+      "paired_vs_teacher": {
+        "both_correct": 700,
+        "left_only_correct": 49,
+        "right_only_correct": 96,
+        "neither_correct": 168
+      },
+      "training": {
+        "path": "output/lora/gemma3-270m-it_v3_n7000",
+        "seconds": 3207.748664234008,
+        "optimizer_updates": 2625,
+        "epoch_loss": [
+          0.348602019302547,
+          0.20149480277938503,
+          0.15771125347885703
+        ],
+        "n_clipped": 30,
+        "example_exposures_per_second": 6.546647570661425,
+        "teacher_label_counts": {
+          "A": 561,
+          "B": 180,
+          "C": 4189,
+          "D": 1718,
+          "E": 352
+        },
+        "prefix": {
+          "file": "history_n7000.csv",
+          "n_rows": 7000,
+          "first_complaint_id": "8085676",
+          "first_sequence_no": 1,
+          "first_received_at_utc": "2024-01-01T00:45:14.000Z",
+          "trigger_complaint_id": "9664806",
+          "trigger_sequence_no": 7004,
+          "trigger_received_at_utc": "2024-07-31T01:21:43.000Z",
+          "history_cases_without_label_through_trigger": 4,
+          "teacher_label_counts": {
+            "A": 561,
+            "B": 180,
+            "C": 4189,
+            "D": 1718,
+            "E": 352
+          },
+          "ordered_complaint_ids_sha256": "c8b43c28283b5c4a3160ccdf6b21df443aae2ba12039b382f317a25583efefd0",
+          "csv_sha256": "b1e37d1e3add0f419dcfba22ff4789f67a7945868d8a8f5920d8f600581a6f91",
+          "csv_size_bytes": 12817314
+        },
+        "adapter_sha256": {
+          "adapter_config.json": "08a52ac04efe5bf666c511a37723cfd0bb6c19a3b2ea8cfa5fefa6a149607d8b",
+          "adapter_model.safetensors": "99592d394d22af663f0cfe8554d5230da58ce0967fe552058694ffa2c1ddf8f3"
+        }
+      },
+      "paired_vs_base": {
+        "both_correct": 212,
+        "left_only_correct": 537,
+        "right_only_correct": 59,
+        "neither_correct": 205
+      }
+    },
+    "8000": {
+      "evaluation_path": "output/lora_eval/gemma3-270m-it_v3_n8000_validation",
+      "strict_generation": {
+        "n": 1013,
+        "valid_rate": 0.9713721618953604,
+        "accuracy": 0.7482724580454096,
+        "macro_f1": 0.639279857824196,
+        "per_class": {
+          "A": {
+            "support": 106,
+            "recall": 0.5471698113207547,
+            "fpr": 0.026460859977949284,
+            "f1": 0.6170212765957447,
+            "predicted": 82,
+            "correct": 58,
+            "final_failures": 2,
+            "precision": 0.7073170731707317
+          },
+          "B": {
+            "support": 84,
+            "recall": 0.32142857142857145,
+            "fpr": 0.012917115177610334,
+            "f1": 0.43902439024390244,
+            "predicted": 39,
+            "correct": 27,
+            "final_failures": 2,
+            "precision": 0.6923076923076923
+          },
+          "C": {
+            "support": 562,
+            "recall": 0.8701067615658363,
+            "fpr": 0.24611973392461198,
+            "f1": 0.8416523235800344,
+            "predicted": 600,
+            "correct": 489,
+            "final_failures": 14,
+            "precision": 0.815
+          },
+          "D": {
+            "support": 215,
+            "recall": 0.7441860465116279,
+            "fpr": 0.08145363408521303,
+            "f1": 0.7272727272727273,
+            "predicted": 225,
+            "correct": 160,
+            "final_failures": 9,
+            "precision": 0.7111111111111111
+          },
+          "E": {
+            "support": 46,
+            "recall": 0.5217391304347826,
+            "fpr": 0.014477766287487074,
+            "f1": 0.5714285714285714,
+            "predicted": 38,
+            "correct": 24,
+            "final_failures": 2,
+            "precision": 0.631578947368421
+          }
+        },
+        "correct": 758,
+        "teacher_matches": 846,
+        "teacher_agreement_all_cases": 0.8351431391905232,
+        "predicted_counts": {
+          "C": 600,
+          "D": 225,
+          "B": 39,
+          "E": 38,
+          "A": 82,
+          "FAIL": 29
+        },
+        "confusion_rows_reference_columns_prediction": {
+          "A": {
+            "A": 58,
+            "B": 6,
+            "C": 24,
+            "D": 13,
+            "E": 3,
+            "FAIL": 2
+          },
+          "B": {
+            "A": 19,
+            "B": 27,
+            "C": 31,
+            "D": 3,
+            "E": 2,
+            "FAIL": 2
+          },
+          "C": {
+            "A": 2,
+            "B": 6,
+            "C": 489,
+            "D": 44,
+            "E": 7,
+            "FAIL": 14
+          },
+          "D": {
+            "A": 3,
+            "B": 0,
+            "C": 41,
+            "D": 160,
+            "E": 2,
+            "FAIL": 9
+          },
+          "E": {
+            "A": 0,
+            "B": 0,
+            "C": 15,
+            "D": 5,
+            "E": 24,
+            "FAIL": 2
+          }
+        }
+      },
+      "first_token_choice": {
+        "n": 1013,
+        "valid_rate": 1.0,
+        "accuracy": 0.7620927936821322,
+        "macro_f1": 0.6398830622937475,
+        "per_class": {
+          "A": {
+            "support": 106,
+            "recall": 0.5471698113207547,
+            "fpr": 0.026460859977949284,
+            "f1": 0.6170212765957447,
+            "predicted": 82,
+            "correct": 58,
+            "final_failures": 0,
+            "precision": 0.7073170731707317
+          },
+          "B": {
+            "support": 84,
+            "recall": 0.32142857142857145,
+            "fpr": 0.012917115177610334,
+            "f1": 0.43902439024390244,
+            "predicted": 39,
+            "correct": 27,
+            "final_failures": 0,
+            "precision": 0.6923076923076923
+          },
+          "C": {
+            "support": 562,
+            "recall": 0.895017793594306,
+            "fpr": 0.2793791574279379,
+            "f1": 0.8446683459277917,
+            "predicted": 629,
+            "correct": 503,
+            "final_failures": 0,
+            "precision": 0.7996820349761526
+          },
+          "D": {
+            "support": 215,
+            "recall": 0.7441860465116279,
+            "fpr": 0.08145363408521303,
+            "f1": 0.7272727272727273,
+            "predicted": 225,
+            "correct": 160,
+            "final_failures": 0,
+            "precision": 0.7111111111111111
+          },
+          "E": {
+            "support": 46,
+            "recall": 0.5217391304347826,
+            "fpr": 0.014477766287487074,
+            "f1": 0.5714285714285714,
+            "predicted": 38,
+            "correct": 24,
+            "final_failures": 0,
+            "precision": 0.631578947368421
+          }
+        },
+        "correct": 772,
+        "teacher_matches": 862,
+        "teacher_agreement_all_cases": 0.8509378084896347,
+        "predicted_counts": {
+          "C": 629,
+          "D": 225,
+          "B": 39,
+          "E": 38,
+          "A": 82
+        },
+        "confusion_rows_reference_columns_prediction": {
+          "A": {
+            "A": 58,
+            "B": 6,
+            "C": 26,
+            "D": 13,
+            "E": 3,
+            "FAIL": 0
+          },
+          "B": {
+            "A": 19,
+            "B": 27,
+            "C": 33,
+            "D": 3,
+            "E": 2,
+            "FAIL": 0
+          },
+          "C": {
+            "A": 2,
+            "B": 6,
+            "C": 503,
+            "D": 44,
+            "E": 7,
+            "FAIL": 0
+          },
+          "D": {
+            "A": 3,
+            "B": 0,
+            "C": 50,
+            "D": 160,
+            "E": 2,
+            "FAIL": 0
+          },
+          "E": {
+            "A": 0,
+            "B": 0,
+            "C": 17,
+            "D": 5,
+            "E": 24,
+            "FAIL": 0
+          }
+        }
+      },
+      "n_final_empty": 29,
+      "fail_overlap_base": 29,
+      "first_choice_correct_on_empty": 14,
+      "hypothetical_all_empty_correct": {
+        "accuracy": 0.7769002961500494,
+        "macro_f1": 0.6616912502790246,
+        "correct": 787
+      },
+      "evaluation_seconds_sum_attempts": 84.9780930318957,
+      "evaluation_attempts": 1042,
+      "paired_vs_teacher": {
+        "both_correct": 710,
+        "left_only_correct": 48,
+        "right_only_correct": 86,
+        "neither_correct": 169
+      },
+      "training": {
+        "path": "output/lora/gemma3-270m-it_v3_n8000",
+        "seconds": 3685.767690623994,
+        "optimizer_updates": 3000,
+        "epoch_loss": [
+          0.32152888455428186,
+          0.19424075563298537,
+          0.1568281860454008
+        ],
+        "n_clipped": 34,
+        "example_exposures_per_second": 6.511533556781719,
+        "teacher_label_counts": {
+          "A": 637,
+          "B": 211,
+          "C": 4788,
+          "D": 1958,
+          "E": 406
+        },
+        "prefix": {
+          "file": "history_n8000.csv",
+          "n_rows": 8000,
+          "first_complaint_id": "8085676",
+          "first_sequence_no": 1,
+          "first_received_at_utc": "2024-01-01T00:45:14.000Z",
+          "trigger_complaint_id": "9942279",
+          "trigger_sequence_no": 8004,
+          "trigger_received_at_utc": "2024-08-28T16:41:07.000Z",
+          "history_cases_without_label_through_trigger": 4,
+          "teacher_label_counts": {
+            "A": 637,
+            "B": 211,
+            "C": 4788,
+            "D": 1958,
+            "E": 406
+          },
+          "ordered_complaint_ids_sha256": "1dcdc42aa55d54f69f2cf60d8a4593e4f9bca7d9a853267206dc530f10fcfb89",
+          "csv_sha256": "21472c037e8720522d5f7cb8ec3967083c68eb3f1a02fcc6c0fcecc1b342aa1d",
+          "csv_size_bytes": 14648207
+        },
+        "adapter_sha256": {
+          "adapter_config.json": "08a52ac04efe5bf666c511a37723cfd0bb6c19a3b2ea8cfa5fefa6a149607d8b",
+          "adapter_model.safetensors": "53137d5109f08a096c3db6de21aee7269b218ff8001e20a0602327904868bca2"
+        }
+      },
+      "paired_vs_base": {
+        "both_correct": 215,
+        "left_only_correct": 543,
+        "right_only_correct": 56,
+        "neither_correct": 199
+      }
+    },
+    "9000": {
+      "evaluation_path": "output/lora_eval/gemma3-270m-it_v3_n9000_validation",
+      "strict_generation": {
+        "n": 1013,
+        "valid_rate": 0.9713721618953604,
+        "accuracy": 0.7453109575518263,
+        "macro_f1": 0.6273563335446619,
+        "per_class": {
+          "A": {
+            "support": 106,
+            "recall": 0.5660377358490566,
+            "fpr": 0.02866593164277839,
+            "f1": 0.625,
+            "predicted": 86,
+            "correct": 60,
+            "final_failures": 2,
+            "precision": 0.6976744186046512
+          },
+          "B": {
+            "support": 84,
+            "recall": 0.2857142857142857,
+            "fpr": 0.008611410118406888,
+            "f1": 0.41379310344827586,
+            "predicted": 32,
+            "correct": 24,
+            "final_failures": 2,
+            "precision": 0.75
+          },
+          "C": {
+            "support": 562,
+            "recall": 0.8612099644128114,
+            "fpr": 0.24833702882483372,
+            "f1": 0.8359240069084629,
+            "predicted": 596,
+            "correct": 484,
+            "final_failures": 14,
+            "precision": 0.8120805369127517
+          },
+          "D": {
+            "support": 215,
+            "recall": 0.7674418604651163,
+            "fpr": 0.08395989974937343,
+            "f1": 0.738255033557047,
+            "predicted": 232,
+            "correct": 165,
+            "final_failures": 9,
+            "precision": 0.7112068965517241
+          },
+          "E": {
+            "support": 46,
+            "recall": 0.4782608695652174,
+            "fpr": 0.016546018614270942,
+            "f1": 0.5238095238095238,
+            "predicted": 38,
+            "correct": 22,
+            "final_failures": 2,
+            "precision": 0.5789473684210527
+          }
+        },
+        "correct": 755,
+        "teacher_matches": 854,
+        "teacher_agreement_all_cases": 0.843040473840079,
+        "predicted_counts": {
+          "D": 232,
+          "C": 596,
+          "E": 38,
+          "B": 32,
+          "A": 86,
+          "FAIL": 29
+        },
+        "confusion_rows_reference_columns_prediction": {
+          "A": {
+            "A": 60,
+            "B": 5,
+            "C": 27,
+            "D": 10,
+            "E": 2,
+            "FAIL": 2
+          },
+          "B": {
+            "A": 19,
+            "B": 24,
+            "C": 34,
+            "D": 3,
+            "E": 2,
+            "FAIL": 2
+          },
+          "C": {
+            "A": 4,
+            "B": 3,
+            "C": 484,
+            "D": 47,
+            "E": 10,
+            "FAIL": 14
+          },
+          "D": {
+            "A": 3,
+            "B": 0,
+            "C": 36,
+            "D": 165,
+            "E": 2,
+            "FAIL": 9
+          },
+          "E": {
+            "A": 0,
+            "B": 0,
+            "C": 15,
+            "D": 7,
+            "E": 22,
+            "FAIL": 2
+          }
+        }
+      },
+      "first_token_choice": {
+        "n": 1013,
+        "valid_rate": 1.0,
+        "accuracy": 0.7591312931885489,
+        "macro_f1": 0.6279895608066088,
+        "per_class": {
+          "A": {
+            "support": 106,
+            "recall": 0.5660377358490566,
+            "fpr": 0.02866593164277839,
+            "f1": 0.625,
+            "predicted": 86,
+            "correct": 60,
+            "final_failures": 0,
+            "precision": 0.6976744186046512
+          },
+          "B": {
+            "support": 84,
+            "recall": 0.2857142857142857,
+            "fpr": 0.008611410118406888,
+            "f1": 0.41379310344827586,
+            "predicted": 32,
+            "correct": 24,
+            "final_failures": 0,
+            "precision": 0.75
+          },
+          "C": {
+            "support": 562,
+            "recall": 0.8861209964412812,
+            "fpr": 0.28159645232815966,
+            "f1": 0.8390901432181971,
+            "predicted": 625,
+            "correct": 498,
+            "final_failures": 0,
+            "precision": 0.7968
+          },
+          "D": {
+            "support": 215,
+            "recall": 0.7674418604651163,
+            "fpr": 0.08395989974937343,
+            "f1": 0.738255033557047,
+            "predicted": 232,
+            "correct": 165,
+            "final_failures": 0,
+            "precision": 0.7112068965517241
+          },
+          "E": {
+            "support": 46,
+            "recall": 0.4782608695652174,
+            "fpr": 0.016546018614270942,
+            "f1": 0.5238095238095238,
+            "predicted": 38,
+            "correct": 22,
+            "final_failures": 0,
+            "precision": 0.5789473684210527
+          }
+        },
+        "correct": 769,
+        "teacher_matches": 870,
+        "teacher_agreement_all_cases": 0.8588351431391905,
+        "predicted_counts": {
+          "D": 232,
+          "C": 625,
+          "E": 38,
+          "B": 32,
+          "A": 86
+        },
+        "confusion_rows_reference_columns_prediction": {
+          "A": {
+            "A": 60,
+            "B": 5,
+            "C": 29,
+            "D": 10,
+            "E": 2,
+            "FAIL": 0
+          },
+          "B": {
+            "A": 19,
+            "B": 24,
+            "C": 36,
+            "D": 3,
+            "E": 2,
+            "FAIL": 0
+          },
+          "C": {
+            "A": 4,
+            "B": 3,
+            "C": 498,
+            "D": 47,
+            "E": 10,
+            "FAIL": 0
+          },
+          "D": {
+            "A": 3,
+            "B": 0,
+            "C": 45,
+            "D": 165,
+            "E": 2,
+            "FAIL": 0
+          },
+          "E": {
+            "A": 0,
+            "B": 0,
+            "C": 17,
+            "D": 7,
+            "E": 22,
+            "FAIL": 0
+          }
+        }
+      },
+      "n_final_empty": 29,
+      "fail_overlap_base": 29,
+      "first_choice_correct_on_empty": 14,
+      "hypothetical_all_empty_correct": {
+        "accuracy": 0.773938795656466,
+        "macro_f1": 0.6501960009980106,
+        "correct": 784
+      },
+      "evaluation_seconds_sum_attempts": 84.40772142026981,
+      "evaluation_attempts": 1042,
+      "paired_vs_teacher": {
+        "both_correct": 711,
+        "left_only_correct": 44,
+        "right_only_correct": 85,
+        "neither_correct": 173
+      },
+      "training": {
+        "path": "output/lora/gemma3-270m-it_v3_n9000",
+        "seconds": 4043.108569796008,
+        "optimizer_updates": 3375,
+        "epoch_loss": [
+          0.32022577400402064,
+          0.1822191281573226,
+          0.14910028197067893
+        ],
+        "n_clipped": 34,
+        "example_exposures_per_second": 6.678029920270547,
+        "teacher_label_counts": {
+          "A": 720,
+          "B": 246,
+          "C": 5387,
+          "D": 2187,
+          "E": 460
+        },
+        "prefix": {
+          "file": "history_n9000.csv",
+          "n_rows": 9000,
+          "first_complaint_id": "8085676",
+          "first_sequence_no": 1,
+          "first_received_at_utc": "2024-01-01T00:45:14.000Z",
+          "trigger_complaint_id": "10240914",
+          "trigger_sequence_no": 9004,
+          "trigger_received_at_utc": "2024-09-25T19:27:42.000Z",
+          "history_cases_without_label_through_trigger": 4,
+          "teacher_label_counts": {
+            "A": 720,
+            "B": 246,
+            "C": 5387,
+            "D": 2187,
+            "E": 460
+          },
+          "ordered_complaint_ids_sha256": "c57123468ae58225c9f7cc44ad3b2a8156ab0c2c615afc62befa7bbf2865777d",
+          "csv_sha256": "b10a58023735c08bd045cbf65394d22c8ff4ae848b0f28e5784dd94c5205aea5",
+          "csv_size_bytes": 16459558
+        },
+        "adapter_sha256": {
+          "adapter_config.json": "c5d63ac3a47a7d2d08a394a366cb070dc1daa8807c26094fea4de480f0a12adb",
+          "adapter_model.safetensors": "a3535c5700c74779f5314e5f1048d6324e8331d674ea7f8d76571e93868c1b40"
+        }
+      },
+      "paired_vs_base": {
+        "both_correct": 220,
+        "left_only_correct": 535,
+        "right_only_correct": 51,
+        "neither_correct": 207
+      }
+    }
+  },
+  "common_lora_empty_complaint_ids": [
+    "10338981",
+    "10346666",
+    "10354698",
+    "10355123",
+    "10374146",
+    "10383660",
+    "10385839",
+    "10403690",
+    "10412951",
+    "10433604",
+    "10435008",
+    "10456897",
+    "10459087",
+    "10471132",
+    "10476283",
+    "10479846",
+    "10498497",
+    "10549465",
+    "10578632",
+    "10586125",
+    "10587409",
+    "10590416",
+    "10598894",
+    "10611493",
+    "10630798",
+    "10632237",
+    "10632313",
+    "10640999",
+    "10641188"
+  ],
+  "paired_comparisons": {
+    "0_minus_teacher": {
+      "macro_f1": {
+        "difference": -0.5242593946953014,
+        "ci95": [
+          -0.5673874914617235,
+          -0.477630414127004
+        ]
+      },
+      "accuracy": {
+        "difference": -0.5182625863770977,
+        "ci95": [
+          -0.5548124383020732,
+          -0.4787759131293189
+        ]
+      },
+      "both_correct": 217,
+      "left_only_correct": 54,
+      "right_only_correct": 579,
+      "neither_correct": 163
+    },
+    "1000_minus_500": {
+      "macro_f1": {
+        "difference": 0.3352824652849761,
+        "ci95": [
+          0.28721980054500923,
+          0.37831110183276306
+        ]
+      },
+      "accuracy": {
+        "difference": 0.10463968410661395,
+        "ci95": [
+          0.07206317867719647,
+          0.13820335636722603
+        ]
+      },
+      "both_correct": 489,
+      "left_only_correct": 198,
+      "right_only_correct": 92,
+      "neither_correct": 234
+    },
+    "5000_minus_4000": {
+      "macro_f1": {
+        "difference": 0.038729544486770795,
+        "ci95": [
+          0.005416723265038179,
+          0.07529828640300869
+        ]
+      },
+      "accuracy": {
+        "difference": 0.0029615004935834577,
+        "ci95": [
+          -0.014807502467917066,
+          0.02073050345508387
+        ]
+      },
+      "both_correct": 690,
+      "left_only_correct": 46,
+      "right_only_correct": 43,
+      "neither_correct": 234
+    },
+    "6000_minus_5000": {
+      "macro_f1": {
+        "difference": -0.025905746708099198,
+        "ci95": [
+          -0.059204230347421866,
+          0.0052286566566238655
+        ]
+      },
+      "accuracy": {
+        "difference": -0.000987166831194486,
+        "ci95": [
+          -0.01875616979269501,
+          0.016781836130306038
+        ]
+      },
+      "both_correct": 692,
+      "left_only_correct": 43,
+      "right_only_correct": 44,
+      "neither_correct": 234
+    },
+    "7000_minus_6000": {
+      "macro_f1": {
+        "difference": 0.05965741772093458,
+        "ci95": [
+          0.024832957518250407,
+          0.09610666099796784
+        ]
+      },
+      "accuracy": {
+        "difference": 0.01382033563672258,
+        "ci95": [
+          -0.005923000987166807,
+          0.033563672260611965
+        ]
+      },
+      "both_correct": 688,
+      "left_only_correct": 61,
+      "right_only_correct": 47,
+      "neither_correct": 217
+    },
+    "8000_minus_0": {
+      "macro_f1": {
+        "difference": 0.48020956303961554,
+        "ci95": [
+          0.4324807460473452,
+          0.5241959540548021
+        ]
+      },
+      "accuracy": {
+        "difference": 0.48075024679170775,
+        "ci95": [
+          0.4452122408687068,
+          0.5182872655478775
+        ]
+      },
+      "both_correct": 215,
+      "left_only_correct": 543,
+      "right_only_correct": 56,
+      "neither_correct": 199
+    },
+    "8000_minus_7000": {
+      "macro_f1": {
+        "difference": 0.00263733206890715,
+        "ci95": [
+          -0.02622454648716483,
+          0.030715838149477735
+        ]
+      },
+      "accuracy": {
+        "difference": 0.008884501480750262,
+        "ci95": [
+          -0.005923000987166915,
+          0.024679170779861814
+        ]
+      },
+      "both_correct": 723,
+      "left_only_correct": 35,
+      "right_only_correct": 26,
+      "neither_correct": 229
+    },
+    "8000_minus_9000": {
+      "macro_f1": {
+        "difference": 0.011923524279534137,
+        "ci95": [
+          -0.008367128245302771,
+          0.0330877838526041
+        ]
+      },
+      "accuracy": {
+        "difference": 0.0029615004935833467,
+        "ci95": [
+          -0.010858835143139234,
+          0.016781836130306038
+        ]
+      },
+      "both_correct": 732,
+      "left_only_correct": 26,
+      "right_only_correct": 23,
+      "neither_correct": 232
+    },
+    "8000_minus_teacher": {
+      "macro_f1": {
+        "difference": -0.04404983165568577,
+        "ci95": [
+          -0.08386468191143832,
+          -0.006542397439030936
+        ]
+      },
+      "accuracy": {
+        "difference": -0.03751233958538991,
+        "ci95": [
+          -0.06024185587364272,
+          -0.016781836130306038
+        ]
+      },
+      "both_correct": 710,
+      "left_only_correct": 48,
+      "right_only_correct": 86,
+      "neither_correct": 169
+    },
+    "7000_minus_teacher": {
+      "macro_f1": {
+        "difference": -0.04668716372459292,
+        "ci95": [
+          -0.08518619033039948,
+          -0.006459589503951802
+        ]
+      },
+      "accuracy": {
+        "difference": -0.04639684106614017,
+        "ci95": [
+          -0.06910167818361301,
+          -0.02369200394866733
+        ]
+      },
+      "both_correct": 700,
+      "left_only_correct": 49,
+      "right_only_correct": 96,
+      "neither_correct": 168
+    },
+    "9000_minus_teacher": {
+      "macro_f1": {
+        "difference": -0.055973355935219904,
+        "ci95": [
+          -0.09476438962987596,
+          -0.018255925773365624
+        ]
+      },
+      "accuracy": {
+        "difference": -0.040473840078973256,
+        "ci95": [
+          -0.06219151036525172,
+          -0.017769002961500524
+        ]
+      },
+      "both_correct": 711,
+      "left_only_correct": 44,
+      "right_only_correct": 85,
+      "neither_correct": 173
+    }
+  },
+  "source_sha256": {
+    "data/mortgage_complaint.csv": "fa8771fed133082444f7e3f62f1554f1dd523366bbb482fa54a5cf1a6bed00e8",
+    "data/lora/teacher_deepseek-v4.1-flash-1017_v3/manifest.json": "9a0c2172aef7f79b34efc622c4539f27171c676839793025046197f07f63f5ee",
+    "code/prompts/mortgage_v3.toml": "321da8ce69689045c57df3675a3d4867e37e1fab2aaeb3a8c160577f801bdbd0",
+    "output/baseline_v3/teacher_deepseek-v4.1-flash-1017_all/run.sqlite": "f5e1e7b590e36933ab83e2524a6484f3bb7c14e8cba5c593452c3589ba507200",
+    "output/baseline_v3/teacher_deepseek-v4.1-flash-1017_all/predictions.csv": "49044dbfe9b8f818f9a14a4950486a2c7ae81a9ce4fd5d0a994d4e4c33273b0b",
+    "output/baseline_v3/teacher_deepseek-v4.1-flash-1017_all/config.json": "b661eae3789d7ab98cd09cff3b7cf8e8b68e0d4597bf6abc4f445bc07206d790",
+    "output/baseline_v3/student_gemma3-270m-it_validation_cuda_run3/config.json": "3fe8b82d0e3669ff74c3e5f677efd7ce7c925dfbccbcf30bbc2cd32d90ec6115",
+    "output/baseline_v3/student_gemma3-270m-it_validation_cuda_run3/run.sqlite": "f3f2de0679b464053083d3c790edb9b30e3ecb956af44ef7c7e24572782e224c",
+    "output/baseline_v3/student_gemma3-270m-it_validation_cuda_run3/predictions.csv": "0a07efdcf419c646d06f9cd4858544db1ae5d14e8753779e56d9fcab8e29f2d3",
+    "output/baseline_v3/student_gemma3-270m-it_validation_cuda_run3/metrics.json": "e8198ed5460b7497ac74cd81411dfdf9455caec1db24fdfb0d11f67120ced2f6",
+    "output/lora_eval/gemma3-270m-it_v3_n0100_validation/config.json": "35c739a4ad5bbbf621ce37f6291ae0b0915abcbeb18c89d457b0eb540fda5e72",
+    "output/lora_eval/gemma3-270m-it_v3_n0100_validation/run.sqlite": "cb64b11c1b4a290c8cba05963880a88de535112ba91f58fa7cd0977c4695383d",
+    "output/lora_eval/gemma3-270m-it_v3_n0100_validation/predictions.csv": "538e7f4a31b32ff215bf90ac5653b2f372918e250f283b0fb173d9ca333f696e",
+    "output/lora_eval/gemma3-270m-it_v3_n0100_validation/metrics.json": "f01dd28f16e1b4203a272f7deda04a1194bea83cd78e511b37cc3aa3453ff82d",
+    "data/lora/teacher_deepseek-v4.1-flash-1017_v3/history_n0100.csv": "54b9c6d5b7626f5e19accb1baef55f9c4f60c54420e53972a9c3b98ccfffb3bd",
+    "output/lora/gemma3-270m-it_v3_n0100/adapter_config.json": "c5d63ac3a47a7d2d08a394a366cb070dc1daa8807c26094fea4de480f0a12adb",
+    "output/lora/gemma3-270m-it_v3_n0100/training.json": "38e97c2a40c7da65be4ae7499ea7e58b69098ef1f42cf47908598f99f17e8964",
+    "output/lora/gemma3-270m-it_v3_n0100/loss_tokens.jsonl": "3c5e8ecc0cbbee77989e3d9c88ad672586c4d4c9e1595f4f97e1958c0d98a6ec",
+    "output/lora_eval/gemma3-270m-it_v3_n0200_validation/config.json": "4cf0c52ac0d373162473ad04317769506a10145345f5ad7f041f63557284be32",
+    "output/lora_eval/gemma3-270m-it_v3_n0200_validation/run.sqlite": "3b786ac003c9305b48449769335380d9a25da0fa7ec7265e23fc57a190cdeb63",
+    "output/lora_eval/gemma3-270m-it_v3_n0200_validation/predictions.csv": "9625ced6f2c673b80c61fce4a0888205cb91d8ad60ae4e8ebe08e8ae7a9690be",
+    "output/lora_eval/gemma3-270m-it_v3_n0200_validation/metrics.json": "f241f56fd0ed64ad1b7950d3f3d423c367b767beb85bfaadd5cf4bc3d52d1c60",
+    "data/lora/teacher_deepseek-v4.1-flash-1017_v3/history_n0200.csv": "83f717f25bc41666ba760c45279f35e97008310960f822ed29f90b7042337303",
+    "output/lora/gemma3-270m-it_v3_n0200/adapter_config.json": "08a52ac04efe5bf666c511a37723cfd0bb6c19a3b2ea8cfa5fefa6a149607d8b",
+    "output/lora/gemma3-270m-it_v3_n0200/training.json": "f4351b6aca3e2afdc37e1456486f25dee3350ae71580df9154786f8d693136f6",
+    "output/lora/gemma3-270m-it_v3_n0200/loss_tokens.jsonl": "952b53f9eaa633dc3b24edc5f194b82d2f4f9faf081141ba34cba538a10759f3",
+    "output/lora_eval/gemma3-270m-it_v3_n0500_validation/config.json": "f2a81d1e4dfd7930eebde67fb0fe24beb47b11aa056e423680257a9a8de3cc08",
+    "output/lora_eval/gemma3-270m-it_v3_n0500_validation/run.sqlite": "871751902e9e45f87f0acf044693218b60e41c6604d1903cf674b636ab5a9419",
+    "output/lora_eval/gemma3-270m-it_v3_n0500_validation/predictions.csv": "f2e838aeb1d17dd4ae9bf93b5eae412e43975576628534ddecba3a259c2198c7",
+    "output/lora_eval/gemma3-270m-it_v3_n0500_validation/metrics.json": "fdcb8e04ca895b81f9b64be3eddca2e3e4b92546657b82c1eeb9e9f9cb20fd07",
+    "data/lora/teacher_deepseek-v4.1-flash-1017_v3/history_n0500.csv": "18f8cb46a83fba40502ee08dd259fd4de34e1944b0f5d513fc28d3bc9087d8e1",
+    "output/lora/gemma3-270m-it_v3_n0500/adapter_config.json": "08a52ac04efe5bf666c511a37723cfd0bb6c19a3b2ea8cfa5fefa6a149607d8b",
+    "output/lora/gemma3-270m-it_v3_n0500/training.json": "b119c72bd60341805df7b36269642200999fdbcdce8d441370b367aa9a3b10b2",
+    "output/lora/gemma3-270m-it_v3_n0500/loss_tokens.jsonl": "211f0a458d9f5c57f7c8e9e1d5246033c0dc77ed6dcd8f6d04e0817cde600a47",
+    "output/lora_eval/gemma3-270m-it_v3_n1000_validation/config.json": "e682db02c281fb51d7a92ac588b9d58be6216925d826a4ad0a7f50057afd1890",
+    "output/lora_eval/gemma3-270m-it_v3_n1000_validation/run.sqlite": "f9823a4e65d874dabed927506c74f76d76630d1e6083a46cdd0da2ccf07547f2",
+    "output/lora_eval/gemma3-270m-it_v3_n1000_validation/predictions.csv": "aded46391a135ce0db56d27fa28b8a51cd5b375dadd898ec65405c379b7f12c2",
+    "output/lora_eval/gemma3-270m-it_v3_n1000_validation/metrics.json": "eed346cdc73caa25e1b6ec6c33b03650421530328226c10aa1e1123cd24fa0ff",
+    "data/lora/teacher_deepseek-v4.1-flash-1017_v3/history_n1000.csv": "df38c073db6efb0316b8effc009ed01e9be61121102b97ae60b3b761c93d0ea2",
+    "output/lora/gemma3-270m-it_v3_n1000/adapter_config.json": "c5d63ac3a47a7d2d08a394a366cb070dc1daa8807c26094fea4de480f0a12adb",
+    "output/lora/gemma3-270m-it_v3_n1000/training.json": "04e57f0460024e1b5021edadacf931263602c2efcd2336e9c46754296e384f9d",
+    "output/lora/gemma3-270m-it_v3_n1000/loss_tokens.jsonl": "5a2cf190682aad2a8d873181fc404f78639522956edc34a06e5a4e1414a204f5",
+    "output/lora_eval/gemma3-270m-it_v3_n2000_validation/config.json": "0943f67f90ab068542ba0d34564a0bc37b5478aeed40721363b4f4fd25051178",
+    "output/lora_eval/gemma3-270m-it_v3_n2000_validation/run.sqlite": "0c7aca9e54051da245d73af95562291e5db5f92950232e034ae1e213ca17bd8d",
+    "output/lora_eval/gemma3-270m-it_v3_n2000_validation/predictions.csv": "1188f71d097fd978d902b51c0596cd59a33d8c6fa4f04a9d4b6b581ba654e48a",
+    "output/lora_eval/gemma3-270m-it_v3_n2000_validation/metrics.json": "994dc2aefd85cb85842855aefa5264b0fc48249c9b170b8a98adecc3db254a59",
+    "data/lora/teacher_deepseek-v4.1-flash-1017_v3/history_n2000.csv": "81835da73b5842447eb767a5f3741deb7baec1bfb38a4fa033440fff2e688a9c",
+    "output/lora/gemma3-270m-it_v3_n2000/adapter_config.json": "c5d63ac3a47a7d2d08a394a366cb070dc1daa8807c26094fea4de480f0a12adb",
+    "output/lora/gemma3-270m-it_v3_n2000/training.json": "bd81943e6804046f6637517bca3a670f8316873f7e9b61feec486a2e40c20717",
+    "output/lora/gemma3-270m-it_v3_n2000/loss_tokens.jsonl": "1eacec19c14c3c84bd9c396753b9bbc185c9090b3fabdc677579b93bb34447e6",
+    "output/lora_eval/gemma3-270m-it_v3_n3000_validation/config.json": "2dd5298a6886671866e865dd61bcce6c458b3d43c2c65e5f11e37b0e00302f91",
+    "output/lora_eval/gemma3-270m-it_v3_n3000_validation/run.sqlite": "78dd4d06548df1ea9e4546903f320f9f3a55da16198cd0dbb49400de31a4999c",
+    "output/lora_eval/gemma3-270m-it_v3_n3000_validation/predictions.csv": "30308f014924b647ca0a677b302d5abbd223d791c228eb301e863f0a93191551",
+    "output/lora_eval/gemma3-270m-it_v3_n3000_validation/metrics.json": "6c6d7553fe4d865c380f83dd66079bbe5fcdb491f5390b556b1147b62ea90671",
+    "data/lora/teacher_deepseek-v4.1-flash-1017_v3/history_n3000.csv": "48057cc462727690befeeefa9b66d3a7792403c82217cd63e991b0e0cfa82ed8",
+    "output/lora/gemma3-270m-it_v3_n3000/adapter_config.json": "c5d63ac3a47a7d2d08a394a366cb070dc1daa8807c26094fea4de480f0a12adb",
+    "output/lora/gemma3-270m-it_v3_n3000/training.json": "38837f35dc64b840b4b66a7945ea9a3173a465dc7c7d598983bd11b630fbc3cd",
+    "output/lora/gemma3-270m-it_v3_n3000/loss_tokens.jsonl": "3f8ddb5f6e02579437b6c7eee92ffa4d593e71e83e3003525d7f4255a0b931b2",
+    "output/lora_eval/gemma3-270m-it_v3_n4000_validation/config.json": "51e6ac6cb010ce97861d6720cf01251a9171695606c3ef986cc42d268277e9ba",
+    "output/lora_eval/gemma3-270m-it_v3_n4000_validation/run.sqlite": "92163d76fbaf7bae45a8efbcf7c0461a2130b799467f6e7db19b440dbae9481d",
+    "output/lora_eval/gemma3-270m-it_v3_n4000_validation/predictions.csv": "361d8bed0a1d9d55c957b7c914d2944a174f3f1147a0f1daab7a832493a6bbf8",
+    "output/lora_eval/gemma3-270m-it_v3_n4000_validation/metrics.json": "542a4857ef1318101ce074f50222bcf471b246bce63503b703ace006b9278b74",
+    "data/lora/teacher_deepseek-v4.1-flash-1017_v3/history_n4000.csv": "87e8c68c0d0c6812bba26eb0f3379033cb8d3be4269f847251a31baff48a2271",
+    "output/lora/gemma3-270m-it_v3_n4000/adapter_config.json": "08a52ac04efe5bf666c511a37723cfd0bb6c19a3b2ea8cfa5fefa6a149607d8b",
+    "output/lora/gemma3-270m-it_v3_n4000/training.json": "f7e725e1be6122f8a114c1e39b610e2ac2866e61c5bdac33adfb54146bcd6d1a",
+    "output/lora/gemma3-270m-it_v3_n4000/loss_tokens.jsonl": "9cea302aaff41dcb29b3c0255cf85e9f0fa6e110a836dde6d62b42bd98bcac2c",
+    "output/lora_eval/gemma3-270m-it_v3_n5000_validation/config.json": "fb01dffaa06dd5f10cb794543e18a4e87ad5b4f316fda722395604a5c032059d",
+    "output/lora_eval/gemma3-270m-it_v3_n5000_validation/run.sqlite": "dbe39e8979a1278a5de7647130cfc627d352c94c9ebfa852f4f2e659b8dc7b4b",
+    "output/lora_eval/gemma3-270m-it_v3_n5000_validation/predictions.csv": "f5df54b4b6ce9eb6ee0a2e26bb069c79fa52a9558aa9223d087164d385267c03",
+    "output/lora_eval/gemma3-270m-it_v3_n5000_validation/metrics.json": "c533c5a86ae80a9936535c2882ec31de9789c7ff4b5bb7d1f4a49d0396906ec6",
+    "data/lora/teacher_deepseek-v4.1-flash-1017_v3/history_n5000.csv": "f2f432c1db5e3b0c0efd5ab731b57f3dac135f8af63b1b1f1daa3af504049288",
+    "output/lora/gemma3-270m-it_v3_n5000/adapter_config.json": "08a52ac04efe5bf666c511a37723cfd0bb6c19a3b2ea8cfa5fefa6a149607d8b",
+    "output/lora/gemma3-270m-it_v3_n5000/training.json": "544f8d42c4b0a83dd3c168c8674ca6121c8860bce5e0577fc54b39ce5dd0d23e",
+    "output/lora/gemma3-270m-it_v3_n5000/loss_tokens.jsonl": "6bb7b4859274b594b4bbb54ab0923ba384849e9e4195b2dc6c08bfcb0efe4a41",
+    "output/lora_eval/gemma3-270m-it_v3_n6000_validation/config.json": "309b77813c2e7b2eb6d73c2e4dc584833ed788eb191c12f85be9207515ba3def",
+    "output/lora_eval/gemma3-270m-it_v3_n6000_validation/run.sqlite": "b2718503fb64a267bbdb0536f0a2b7e0fa3e31222f1296dd421643d7850e198d",
+    "output/lora_eval/gemma3-270m-it_v3_n6000_validation/predictions.csv": "bc3f664c3455e5b06cf2c1b556bac43888def09b27a2299569febfcdcfa330a3",
+    "output/lora_eval/gemma3-270m-it_v3_n6000_validation/metrics.json": "8065c1697d64726debe9aba44aabab58521f682c46f21b87a59ce534a02efa5d",
+    "data/lora/teacher_deepseek-v4.1-flash-1017_v3/history_n6000.csv": "d6054fe6339a46d7803421ca58bdccc9e3ade35480b6e63aae681585c54dc1e6",
+    "output/lora/gemma3-270m-it_v3_n6000/adapter_config.json": "08a52ac04efe5bf666c511a37723cfd0bb6c19a3b2ea8cfa5fefa6a149607d8b",
+    "output/lora/gemma3-270m-it_v3_n6000/training.json": "83a68bf0e54d9b768ea421f113989370856a00b8647799d521ed74da0b58cffa",
+    "output/lora/gemma3-270m-it_v3_n6000/loss_tokens.jsonl": "38b492a2962926a7cb819633b12a7bab78c2b4ed0f79c72fed4ab6c046c93b67",
+    "output/lora_eval/gemma3-270m-it_v3_n7000_validation/config.json": "234d4221a04d5abfafcc5e37f96cd11950028cb2360822e4c997e1ab88945f72",
+    "output/lora_eval/gemma3-270m-it_v3_n7000_validation/run.sqlite": "f0f984c9df2894713dd304c6f794b652db3c37b831d74ccdf6a16b6572b65f3e",
+    "output/lora_eval/gemma3-270m-it_v3_n7000_validation/predictions.csv": "3d85cb6c92f7d69f92b2a5dac2b782b87b4458e872c77de444872fd72a51eda3",
+    "output/lora_eval/gemma3-270m-it_v3_n7000_validation/metrics.json": "6da51adb7fcc0aa0fad28ce90826c29a40fd4e1b724c982c3dbf0918f4ab4f20",
+    "data/lora/teacher_deepseek-v4.1-flash-1017_v3/history_n7000.csv": "b1e37d1e3add0f419dcfba22ff4789f67a7945868d8a8f5920d8f600581a6f91",
+    "output/lora/gemma3-270m-it_v3_n7000/adapter_config.json": "08a52ac04efe5bf666c511a37723cfd0bb6c19a3b2ea8cfa5fefa6a149607d8b",
+    "output/lora/gemma3-270m-it_v3_n7000/training.json": "f30c098797fd5b33e456ba6e5e6924df61cb4b696bb35492b186f2e442129100",
+    "output/lora/gemma3-270m-it_v3_n7000/loss_tokens.jsonl": "f59cb3051d34adfa7d37b369b2e448a9abc469f27b6689d42d9e6bb46d4a6c49",
+    "output/lora_eval/gemma3-270m-it_v3_n8000_validation/config.json": "6bffa804c17613d18eb4a7510ff68eda16c952757c380362b03c1aa7bf06ac41",
+    "output/lora_eval/gemma3-270m-it_v3_n8000_validation/run.sqlite": "1ff205d13a0ea3d7896f1d6bfc09ccbcd27bdd41045a1ee3e54cfddbd5723ce1",
+    "output/lora_eval/gemma3-270m-it_v3_n8000_validation/predictions.csv": "64fbad8c1bc163db51e063b5834da5f38c0a1646fd87464281dee079b026126e",
+    "output/lora_eval/gemma3-270m-it_v3_n8000_validation/metrics.json": "15ad5a1392ac9f19dbf2cd7992ea8ec7d7d47771dd34d97fc474edf7b71a1262",
+    "data/lora/teacher_deepseek-v4.1-flash-1017_v3/history_n8000.csv": "21472c037e8720522d5f7cb8ec3967083c68eb3f1a02fcc6c0fcecc1b342aa1d",
+    "output/lora/gemma3-270m-it_v3_n8000/adapter_config.json": "08a52ac04efe5bf666c511a37723cfd0bb6c19a3b2ea8cfa5fefa6a149607d8b",
+    "output/lora/gemma3-270m-it_v3_n8000/training.json": "0b858647c4c1d099468199f1219c61d9f21be854ed75d72b290399f92d7c46a3",
+    "output/lora/gemma3-270m-it_v3_n8000/loss_tokens.jsonl": "960d43f6e4008c305a49d65968463a9a2262e213d6064e3c8598b80fbd439ebb",
+    "output/lora_eval/gemma3-270m-it_v3_n9000_validation/config.json": "99685d59fa7e1cfb7ef0b93d7e44352533f7ce0c97f61e8ce47e1c95479a0ec1",
+    "output/lora_eval/gemma3-270m-it_v3_n9000_validation/run.sqlite": "0b848c4f1247bda3dab5480a3e1c20b6b7d5eadf8d3ab276ff687dd258baf3b4",
+    "output/lora_eval/gemma3-270m-it_v3_n9000_validation/predictions.csv": "ffa7a633146f34db538ca03f8a8a914c9c57c935cce0c021dce556b3b5d915a5",
+    "output/lora_eval/gemma3-270m-it_v3_n9000_validation/metrics.json": "8ee289e06c88386746364bbe773fd71a95da39aba97438e26501a8d79d35357c",
+    "data/lora/teacher_deepseek-v4.1-flash-1017_v3/history_n9000.csv": "b10a58023735c08bd045cbf65394d22c8ff4ae848b0f28e5784dd94c5205aea5",
+    "output/lora/gemma3-270m-it_v3_n9000/adapter_config.json": "c5d63ac3a47a7d2d08a394a366cb070dc1daa8807c26094fea4de480f0a12adb",
+    "output/lora/gemma3-270m-it_v3_n9000/training.json": "09508f8188d901e06c28f0126a0119209e73b1e24fdc8642bd2be91fc78ec885",
+    "output/lora/gemma3-270m-it_v3_n9000/loss_tokens.jsonl": "e0bea66b365742a8276cb10f252644d6123ef75541a92629543e40454f754606"
+  }
+}

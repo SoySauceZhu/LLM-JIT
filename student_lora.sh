@@ -3,28 +3,61 @@ set -eu
 
 CDPATH= cd "$(dirname "$0")"
 
-for n in 0200 1000 2000 3000 4000 5000 6000 7000 8000; do
-    train_csv="data/lora/teacher_deepseek-v4.1-flash-1017_v3/history_n${n}.csv"
-    output="output/lora/gemma3-270m-it_v3_n${n}"
+train_csv=data/lora/teacher_deepseek-v4.1-flash-1017_v3/history_n9000.csv
+teacher_run=output/baseline_v3/teacher_deepseek-v4.1-flash-1017_all
 
-    if [ -e "$output" ] || [ -L "$output" ]; then
-        if [ -s "$output/adapter_model.safetensors" ] && [ -s "$output/adapter_config.json" ] \
-            && [ -s "$output/training.json" ] && [ -s "$output/loss_tokens.jsonl" ]; then
-            printf 'Already trained, skipping %s\n' "$output"
-            continue
+if [ ! -s "$train_csv" ]; then
+    printf 'Training CSV is missing or empty: %s\n' "$train_csv" >&2
+    exit 1
+fi
+if [ ! -s "$teacher_run/run.sqlite" ]; then
+    printf 'Teacher ledger is missing or empty: %s/run.sqlite\n' "$teacher_run" >&2
+    exit 1
+fi
+
+run_variant() {
+    rank=$1
+    alpha=$2
+    learning_rate=$3
+    epochs=$4
+    name="gemma3-270m-it_v3_n9000_r${rank}_a${alpha}_lr${learning_rate}_e${epochs}_drop0.05"
+    adapter="output/lora/$name"
+    evaluation="output/lora_eval/${name}_validation"
+
+    if [ -e "$adapter" ] || [ -L "$adapter" ]; then
+        if [ ! -s "$adapter/adapter_model.safetensors" ] || [ ! -s "$adapter/adapter_config.json" ] \
+            || [ ! -s "$adapter/training.json" ] || [ ! -s "$adapter/loss_tokens.jsonl" ]; then
+            printf 'Existing output is missing adapter files or training records: %s\n' "$adapter" >&2
+            exit 1
         fi
-        printf 'Existing output is missing adapter files or training records: %s\n' "$output" >&2
-        exit 1
-    fi
-    if [ ! -s "$train_csv" ]; then
-        printf 'Training CSV is missing or empty: %s\n' "$train_csv" >&2
-        exit 1
+        printf 'Reusing trained adapter %s\n' "$adapter"
+    else
+        printf 'Training %s\n' "$name"
+        uv run --locked --extra lora python code/student_lora.py \
+            --train-csv "$train_csv" --device cuda --dtype float32 \
+            --rank "$rank" --alpha "$alpha" --dropout 0.05 --learning-rate "$learning_rate" \
+            --epochs "$epochs" --batch-size 8 --micro-batch-size 1 --seed 42 \
+            --output "$adapter" --run
     fi
 
-    printf 'Training %s\n' "$train_csv"
-    uv run --locked --extra lora python code/student_lora.py \
-        --train-csv "$train_csv" --device cuda --dtype float32 \
-        --rank 8 --alpha 16 --dropout 0.05 --learning-rate 2e-4 \
-        --epochs 3 --batch-size 8 --micro-batch-size 1 --seed 42 \
-        --output "$output" --run
-done
+    printf 'Validating %s\n' "$name"
+    uv run --locked --extra lora python code/student_baseline.py \
+        --student-model gemma3-270m-it --device cuda --split validation --prompt-version v3 \
+        --adapter "$adapter" --teacher-run "$teacher_run" --output "$evaluation" --run
+}
+
+# Compare ranks 8, 16 and 32 at alpha/rank = 2.
+run_variant 8 16 5e-5 1
+run_variant 16 32 5e-5 1
+run_variant 32 64 5e-5 1
+
+# Compare alpha/rank = 1 and 4 at each of the first two ranks.
+run_variant 8 8 5e-5 1
+run_variant 8 32 5e-5 1
+run_variant 16 16 5e-5 1
+run_variant 16 64 5e-5 1
+
+# Check the learning rate and training length at rank 8 and alpha 16.
+run_variant 8 16 2e-5 1
+run_variant 8 16 1e-4 1
+run_variant 8 16 5e-5 2
