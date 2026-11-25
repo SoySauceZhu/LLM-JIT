@@ -1,0 +1,204 @@
+{
+  "n_expected": 1013,
+  "n_terminal": 1013,
+  "n_pending": 0,
+  "complete": true,
+  "provisional": false,
+  "metric_denominator": "terminal_cases",
+  "teacher_run": "/home/ubuntu/LLM-JIT/output/baseline_v3/teacher_deepseek-v4.1-flash-1017_all",
+  "teacher_model": "deepseek-ai/DeepSeek-V4.1-Flash-1017",
+  "model": "google/gemma-3-270m-it",
+  "model_revision": "ac82b4e820549b854eebf28ce6dedaf9fdfa17b3",
+  "device": "cuda",
+  "dtype": "torch.float32",
+  "pairing_status": "complete",
+  "clipped": 2,
+  "usage": {
+    "attempts": 1042,
+    "known_prompt_tokens": 1115857,
+    "known_completion_tokens": 2026,
+    "attempts_missing_usage": 0,
+    "attempt_seconds": 83.74311049409152,
+    "cost_usd": null,
+    "pricing_status": "unpriced"
+  },
+  "strict_generation": {
+    "n": 1013,
+    "valid_rate": 0.9713721618953604,
+    "accuracy": 0.5330700888450148,
+    "macro_f1": 0.1463005840273698,
+    "per_class": {
+      "A": {
+        "support": 106,
+        "recall": 0.0,
+        "fpr": 0.009922822491730982,
+        "f1": 0.0
+      },
+      "B": {
+        "support": 84,
+        "recall": 0.0,
+        "fpr": 0.0,
+        "f1": 0.0
+      },
+      "C": {
+        "support": 562,
+        "recall": 0.9555160142348754,
+        "fpr": 0.9401330376940134,
+        "f1": 0.7051871306631649
+      },
+      "D": {
+        "support": 215,
+        "recall": 0.013953488372093023,
+        "fpr": 0.012531328320802004,
+        "f1": 0.02631578947368421
+      },
+      "E": {
+        "support": 46,
+        "recall": 0.0,
+        "fpr": 0.001034126163391934,
+        "f1": 0.0
+      }
+    },
+    "correct": 540,
+    "teacher_matches": 573,
+    "teacher_agreement_all_cases": 0.5656465942744324,
+    "predicted_counts": {
+      "C": 961,
+      "D": 13,
+      "FAIL": 29,
+      "A": 9,
+      "E": 1
+    },
+    "confusion_rows_reference_columns_prediction": {
+      "A": {
+        "A": 0,
+        "B": 0,
+        "C": 104,
+        "D": 0,
+        "E": 0,
+        "FAIL": 2
+      },
+      "B": {
+        "A": 0,
+        "B": 0,
+        "C": 80,
+        "D": 2,
+        "E": 0,
+        "FAIL": 2
+      },
+      "C": {
+        "A": 4,
+        "B": 0,
+        "C": 537,
+        "D": 7,
+        "E": 0,
+        "FAIL": 14
+      },
+      "D": {
+        "A": 5,
+        "B": 0,
+        "C": 197,
+        "D": 3,
+        "E": 1,
+        "FAIL": 9
+      },
+      "E": {
+        "A": 0,
+        "B": 0,
+        "C": 43,
+        "D": 1,
+        "E": 0,
+        "FAIL": 2
+      }
+    }
+  },
+  "first_token_choice": {
+    "n": 1013,
+    "valid_rate": 1.0,
+    "accuracy": 0.5389930898321816,
+    "macro_f1": 0.14639376218323585,
+    "per_class": {
+      "A": {
+        "support": 106,
+        "recall": 0.0,
+        "fpr": 0.024255788313120176,
+        "f1": 0.0
+      },
+      "B": {
+        "support": 84,
+        "recall": 0.0,
+        "fpr": 0.0,
+        "f1": 0.0
+      },
+      "C": {
+        "support": 562,
+        "recall": 0.9661921708185054,
+        "fpr": 0.9623059866962306,
+        "f1": 0.7056530214424951
+      },
+      "D": {
+        "support": 215,
+        "recall": 0.013953488372093023,
+        "fpr": 0.012531328320802004,
+        "f1": 0.02631578947368421
+      },
+      "E": {
+        "support": 46,
+        "recall": 0.0,
+        "fpr": 0.001034126163391934,
+        "f1": 0.0
+      }
+    },
+    "correct": 546,
+    "teacher_matches": 580,
+    "teacher_agreement_all_cases": 0.5725567620927937,
+    "predicted_counts": {
+      "C": 977,
+      "D": 13,
+      "A": 22,
+      "E": 1
+    },
+    "confusion_rows_reference_columns_prediction": {
+      "A": {
+        "A": 0,
+        "B": 0,
+        "C": 106,
+        "D": 0,
+        "E": 0,
+        "FAIL": 0
+      },
+      "B": {
+        "A": 1,
+        "B": 0,
+        "C": 81,
+        "D": 2,
+        "E": 0,
+        "FAIL": 0
+      },
+      "C": {
+        "A": 12,
+        "B": 0,
+        "C": 543,
+        "D": 7,
+        "E": 0,
+        "FAIL": 0
+      },
+      "D": {
+        "A": 8,
+        "B": 0,
+        "C": 203,
+        "D": 3,
+        "E": 1,
+        "FAIL": 0
+      },
+      "E": {
+        "A": 1,
+        "B": 0,
+        "C": 44,
+        "D": 1,
+        "E": 0,
+        "FAIL": 0
+      }
+    }
+  }
+}
