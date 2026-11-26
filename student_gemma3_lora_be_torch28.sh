@@ -8,7 +8,15 @@ teacher_run=output/baseline_v3/teacher_deepseek-v4.1-flash-1017_all
 train_csv=data/lora/teacher_deepseek-v4.1-flash-1017_v3/history_n9000.csv
 environment=.cache/venvs/torch28-cu126
 python="$environment/bin/python"
+micro_batch_size=${GEMMA_MICRO_BATCH_SIZE:-4}
+case "$micro_batch_size" in
+    [1-8]) ;;
+    *) printf 'GEMMA_MICRO_BATCH_SIZE must be an integer from 1 to 8.\n' >&2; exit 1 ;;
+esac
 name=gemma3-270m-it_v3_n9000_bf16_mixed_be1.5_torch28
+if [ "$micro_batch_size" -ne 1 ]; then
+    name="${name}_mb${micro_batch_size}"
+fi
 adapter="output/lora/$name"
 evaluation="output/lora_eval/${name}_validation"
 
@@ -50,12 +58,13 @@ if [ -e "$adapter" ] || [ -L "$adapter" ]; then
     fi
     printf '[1/2] Reusing trained adapter %s\n' "$adapter"
 else
-    printf '[1/2] Training Gemma 3 270M IT with B/E class weighting and BF16 AMP\n'
+    printf '[1/2] Training Gemma 3 270M IT with BF16 AMP and micro-batch size %s\n' "$micro_batch_size"
     "$python" code/student_lora.py \
         --student-model gemma3-270m-it --device cuda --dtype bfloat16-mixed \
         --train-csv "$train_csv" --class-weight B=1.5 --class-weight E=1.5 \
         --rank 8 --alpha 16 --dropout 0.05 --learning-rate 2e-4 \
-        --epochs 3 --batch-size 8 --micro-batch-size 1 --seed 42 --output "$adapter" --run
+        --epochs 3 --batch-size 8 --micro-batch-size "$micro_batch_size" \
+        --sort-micro-batches-by-length --seed 42 --output "$adapter" --run
 fi
 
 printf '[2/2] Running October validation\n'

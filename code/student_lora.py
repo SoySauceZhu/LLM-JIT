@@ -180,7 +180,7 @@ def add_lora(base, rank, alpha, dropout, *, student_model=DEFAULT_STUDENT_MODEL,
     return model, [param for _, param in trainable]
 
 
-def train(model, parameters, examples, pad_id, args, *, class_weights=None):
+def train(model, parameters, examples, pad_id, args, *, class_weights=None, sort_micro_batches_by_length=False):
     import torch
 
     model.train()
@@ -205,6 +205,8 @@ def train(model, parameters, examples, pad_id, args, *, class_weights=None):
         loss_sum = 0.0
         for start_index in range(0, len(order), args.batch_size):
             indices = order[start_index:start_index + args.batch_size]
+            if sort_micro_batches_by_length and 1 < args.micro_batch_size < len(indices):
+                indices.sort(key=lambda i: len(examples[i].input_ids))
             target_count = ANSWER_TOKENS * len(indices)
             weights = None
             if class_weights is not None:
@@ -282,6 +284,8 @@ def main():
     parser.add_argument("--epochs", type=int, default=3)
     parser.add_argument("--batch-size", type=int, default=8, help="Effective batch size per optimizer update")
     parser.add_argument("--micro-batch-size", type=int, default=1)
+    parser.add_argument("--sort-micro-batches-by-length", action="store_true",
+                        help="Group similar lengths within each effective batch to reduce padding")
     parser.add_argument("--seed", type=int, default=42)
     action = parser.add_mutually_exclusive_group(required=True)
     action.add_argument("--audit-only", action="store_true", help="Check every target using the tokenizer only")
@@ -350,11 +354,13 @@ def main():
         "precision": args.dtype, "base_dtype": base_dtype, "adapter_dtype": adapter_dtype, "seed": args.seed,
         "gradient_checkpointing": args.gradient_checkpointing,
         "epochs": args.epochs, "batch_size": args.batch_size, "micro_batch_size": args.micro_batch_size,
+        "sort_micro_batches_by_length": args.sort_micro_batches_by_length,
         "optimizer": "AdamW", "learning_rate": args.learning_rate, "weight_decay": 0.0,
         "trainable_parameters": trainable_count,
         "packages": {package: version(package) for package in ("peft", "torch", "transformers", "tokenizers")},
     }
-    summary.update(train(model, parameters, examples, tokenizer.pad_token_id, args, class_weights=letter_weights))
+    summary.update(train(model, parameters, examples, tokenizer.pad_token_id, args, class_weights=letter_weights,
+                         sort_micro_batches_by_length=args.sort_micro_batches_by_length))
     save_run(args.output, model, examples, summary, student_model=args.student_model)
     print(f"Saved adapter to {args.output}", flush=True)
 
