@@ -1,0 +1,83 @@
+{
+  "student_model": "Qwen/Qwen3-0.6B",
+  "revision": "c1899de289a04d12100db370d81485cdf75e47ca",
+  "prompt": "v3",
+  "chat_template_kwargs": {
+    "enable_thinking": false
+  },
+  "chat_template_sha256": "a55ee1b1660128b7098723e0abcd92caa0788061051c62d51cbe87d9cf1974d8",
+  "n_training_examples": 6000,
+  "n_invalid_answers_skipped": 0,
+  "n_clipped": 25,
+  "train_csv": "data/lora/teacher_deepseek-v4.1-flash-1017_v3/history_n6000.csv",
+  "train_csv_sha256": "d6054fe6339a46d7803421ca58bdccc9e3ade35480b6e63aae681585c54dc1e6",
+  "ordered_complaint_ids_sha256": "acd2c8c7d4d58cec22adff789c985f6f1a6b4415bf68d62444c5657538e06494",
+  "teacher_label_counts": {
+    "A": 469,
+    "B": 151,
+    "C": 3595,
+    "D": 1480,
+    "E": 305
+  },
+  "clipping": {
+    "tokenizer": "HuggingFaceTB/SmolLM2-135M-Instruct",
+    "revision": "12fd25f77366fa6b3b4b768ec3050bf629380bac",
+    "head": 2000,
+    "tail": 1000
+  },
+  "loss": {
+    "type": "completion_only_causal_lm_cross_entropy",
+    "ignore_index": -100,
+    "end_of_turn_id": 151645,
+    "supervised_tokens_per_example": 2
+  },
+  "device": "cuda",
+  "gpu": "NVIDIA L40",
+  "precision": "float16-mixed",
+  "base_dtype": "float16",
+  "adapter_dtype": "torch.float32",
+  "seed": 42,
+  "gradient_checkpointing": false,
+  "epochs": 3,
+  "batch_size": 8,
+  "micro_batch_size": 2,
+  "sort_micro_batches_by_length": true,
+  "optimizer": "AdamW",
+  "learning_rate": 0.0002,
+  "weight_decay": 0.0,
+  "trainable_parameters": 1146880,
+  "packages": {
+    "peft": "0.18.1",
+    "torch": "2.8.0+cu126",
+    "transformers": "5.5.4",
+    "tokenizers": "0.22.2"
+  },
+  "epoch_metrics": [
+    {
+      "epoch": 1,
+      "completion_loss": 0.22776175685040653,
+      "optimizer_updates": 747,
+      "skipped_nonfinite_updates": 3
+    },
+    {
+      "epoch": 2,
+      "completion_loss": 0.13571959084908788,
+      "optimizer_updates": 1497,
+      "skipped_nonfinite_updates": 3
+    },
+    {
+      "epoch": 3,
+      "completion_loss": 0.09970634515684408,
+      "optimizer_updates": 2247,
+      "skipped_nonfinite_updates": 3
+    }
+  ],
+  "optimizer_updates": 2247,
+  "skipped_nonfinite_updates": 3,
+  "optimizer_eps": 1e-08,
+  "training_seconds": 1509.3063656089362,
+  "adapter_files_sha256": {
+    "adapter_config.json": "b5c509687e619f7f39ad0d81aa3869c20bd44ce16246b15673b8c5acef77f588",
+    "adapter_model.safetensors": "f93f12fcc7e2ddc8ba609519225bca4ad7e9f986fd73985c11a5203ec36aa53f"
+  }
+}
