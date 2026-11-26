@@ -8,7 +8,7 @@ from collections import Counter
 from contextlib import closing
 from pathlib import Path
 
-from evaluation import score
+from evaluation import score, teacher_agreement_by_class
 from mortgage_data import COHORT_SPLIT_COUNTS, REVISION, TOKENIZER, default_output, load_experiment, prepare_cases, select_rows
 from mortgage_prompt import DEFAULT_VERSION, LABELS, ROOT, SUPPORTED_VERSIONS, build_messages, load_prompt, parse_label
 from run_store import (
@@ -21,6 +21,9 @@ from student_diagnostics import DIAGNOSTICS_VERSION, TOP_K, generation_diagnosti
 DEFAULT_STUDENT_MODEL = "gemma3-270m-it"
 STUDENT_MODELS = {
     "smollm2-135m": {"model": TOKENIZER, "revision": REVISION, "chat_template_kwargs": {}},
+    "qwen3-0.6b": {"model": "Qwen/Qwen3-0.6B",
+                   "revision": "c1899de289a04d12100db370d81485cdf75e47ca",
+                   "chat_template_kwargs": {"enable_thinking": False}, "stop_tokens": ["<|im_end|>"]},
     "qwen3.5-0.8b": {"model": "Qwen/Qwen3.5-0.8B",
                      "revision": "2fc06364715b967f1860aea9cf38778875588b17",
                      "chat_template_kwargs": {"enable_thinking": False}},
@@ -28,6 +31,7 @@ STUDENT_MODELS = {
                        "revision": "ac82b4e820549b854eebf28ce6dedaf9fdfa17b3",
                        "chat_template_kwargs": {}, "stop_tokens": ["<end_of_turn>"]},
 }
+LORA_STUDENT_MODELS = (DEFAULT_STUDENT_MODEL, "qwen3-0.6b")
 
 
 def student_config(cases, split, prompt, student_model=DEFAULT_STUDENT_MODEL, device="cpu", *,
@@ -286,6 +290,8 @@ def export_results(db, output, teacher_run, *, require_teacher=False, teacher_mo
                "usage": usage_metrics(db),
                "strict_generation": score(terminal, "student_label", paired=paired),
                "first_token_choice": score(terminal, "first_token_choice", paired=paired)}
+    if paired:
+        metrics["teacher_agreement_by_class"] = teacher_agreement_by_class(terminal, "student_label")
     json_files = {"config.json": config, "metrics.json": metrics}
     if config.get("diagnostics"):
         diagnostic_attempts = [
@@ -319,7 +325,7 @@ def main():
     parser.add_argument("--split", choices=COHORT_SPLIT_COUNTS, default="validation")
     parser.add_argument("--prompt-version", choices=SUPPORTED_VERSIONS, default=DEFAULT_VERSION)
     parser.add_argument("--output", type=Path)
-    parser.add_argument("--adapter", type=Path, help="Load a saved Gemma 3 LoRA for generation")
+    parser.add_argument("--adapter", type=Path, help="Load a saved LoRA for the selected Student")
     parser.add_argument("--diagnostics", action="store_true",
                         help="Record generated token IDs, first-step scores and inference runtime per attempt")
     parser.add_argument("--attn-implementation", choices=("auto", "eager", "sdpa"), default="auto",
@@ -331,8 +337,8 @@ def main():
     action.add_argument("--run", action="store_true")
     action.add_argument("--export-only", action="store_true")
     args = parser.parse_args()
-    if args.adapter is not None and (args.student_model != "gemma3-270m-it" or args.output is None):
-        parser.error("--adapter requires --student-model gemma3-270m-it and a separate --output")
+    if args.adapter is not None and (args.student_model not in LORA_STUDENT_MODELS or args.output is None):
+        parser.error("--adapter requires a LoRA-supported Student and a separate --output")
     if args.export_only and args.adapter is not None:
         parser.error("--export-only uses the adapter identity already stored in the ledger")
     selected_teacher = args.teacher_model or (None if args.teacher_run else DEFAULT_TEACHER_MODEL)

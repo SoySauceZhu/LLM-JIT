@@ -1,4 +1,4 @@
-"""Train a completion-only Gemma 3 LoRA from a Teacher-labeled history CSV."""
+"""Train a completion-only Student LoRA from a Teacher-labeled history CSV."""
 
 import argparse
 import csv
@@ -15,10 +15,11 @@ from tempfile import TemporaryDirectory
 from mortgage_data import HEAD, REVISION, TAIL, TOKENIZER, load_cohort, prepare_cases, sha256
 from mortgage_prompt import build_messages, load_prompt, parse_label
 from run_store import file_sha256
-from student_baseline import STUDENT_MODELS, adapter_identity, load_student, student_pretrained_kwargs
+from student_baseline import (
+    DEFAULT_STUDENT_MODEL, LORA_STUDENT_MODELS, STUDENT_MODELS,
+    adapter_identity, load_student, student_pretrained_kwargs,
+)
 
-STUDENT = "gemma3-270m-it"
-END_OF_TURN = "<end_of_turn>"
 IGNORE = -100
 ANSWER_TOKENS = 2  # One category letter and the end-of-turn token.
 LOSS_WINDOW = ANSWER_TOKENS + 1  # Include the position that predicts the letter.
@@ -66,12 +67,13 @@ def read_training_rows(path):
     return rows, skipped
 
 
-def encode_answer(tokenizer, prompt, case, label, stop_id, context_window):
+def encode_answer(tokenizer, prompt, case, label, stop_id, context_window, *, chat_template_kwargs=None):
     """Check the training boundary against the actual generation prefix."""
     messages = build_messages(case["text"], prompt)
-    prefix = tokenizer.apply_chat_template(messages, add_generation_prompt=True)["input_ids"]
+    kwargs = chat_template_kwargs or {}
+    prefix = tokenizer.apply_chat_template(messages, add_generation_prompt=True, **kwargs)["input_ids"]
     completed = [*messages, {"role": "assistant", "content": label}]
-    tokens = tokenizer.apply_chat_template(completed, add_generation_prompt=False)["input_ids"]
+    tokens = tokenizer.apply_chat_template(completed, add_generation_prompt=False, **kwargs)["input_ids"]
     answer = tokens[len(prefix):]
     cid = case["complaint_id"]
     if not prefix or tokens[:len(prefix)] != prefix:
@@ -82,21 +84,24 @@ def encode_answer(tokenizer, prompt, case, label, stop_id, context_window):
 
     if (len(answer) < ANSWER_TOKENS or decode(answer[:1]) != label or answer[1] != stop_id
         or decode(answer[ANSWER_TOKENS:]).strip()):
-        raise ValueError(f"Complaint {cid}: expected {label!r} and {END_OF_TURN} as the only answer tokens")
+        raise ValueError(f"Complaint {cid}: expected {label!r} and {decode([stop_id])} as the only answer tokens")
     # The template's trailing whitespace follows the stop token and has no training target.
     ids = tokens[:len(prefix) + ANSWER_TOKENS]
     if len(ids) > context_window:
-        raise ValueError(f"Complaint {cid}: prepared chat exceeds the Gemma context window")
+        raise ValueError(f"Complaint {cid}: prepared chat exceeds the Student context window")
     return Example(cid, label, ids)
 
 
-def prepare_examples(rows, tokenizer, context_window):
-    if END_OF_TURN not in tokenizer.get_vocab() or tokenizer.pad_token_id is None:
-        raise ValueError("Gemma tokenizer must provide its native turn terminator and pad token")
-    stop_id = tokenizer.convert_tokens_to_ids(END_OF_TURN)
+def prepare_examples(rows, tokenizer, context_window, student_model=DEFAULT_STUDENT_MODEL):
+    profile = STUDENT_MODELS[student_model]
+    end_of_turn, = profile["stop_tokens"]
+    if end_of_turn not in tokenizer.get_vocab() or tokenizer.pad_token_id is None:
+        raise ValueError(f"{student_model} tokenizer must provide {end_of_turn} and a pad token")
+    stop_id = tokenizer.convert_tokens_to_ids(end_of_turn)
     prompt = load_prompt("v3")
     cases = prepare_cases([source for source, _ in rows])
-    examples = [encode_answer(tokenizer, prompt, case, label, stop_id, context_window)
+    examples = [encode_answer(tokenizer, prompt, case, label, stop_id, context_window,
+                              chat_template_kwargs=profile["chat_template_kwargs"])
                 for case, (_, label) in zip(cases, rows, strict=True)]
     return examples, stop_id, sum(case["clipped"] for case in cases)
 
@@ -123,19 +128,19 @@ def collate(examples, pad_id, device):
 
 def completion_loss(model, batch, tokens_per_update):
     # Omit the LM head at other positions. The full prompt still enters the causal decoder.
-    # Labels are unshifted and aligned to this window; Gemma performs the only causal shift.
+    # Labels are unshifted and aligned to this window. The causal LM shifts them internally.
     labels = batch["labels"][:, -LOSS_WINDOW:]
     return model(**{**batch, "labels": labels}, use_cache=False, logits_to_keep=LOSS_WINDOW,
                  num_items_in_batch=tokens_per_update).loss
 
 
-def add_lora(base, rank, alpha, dropout):
+def add_lora(base, rank, alpha, dropout, *, student_model=DEFAULT_STUDENT_MODEL):
     from peft import LoraConfig, TaskType, get_peft_model
 
     base.requires_grad_(False)
     config = LoraConfig(task_type=TaskType.CAUSAL_LM, r=rank, lora_alpha=alpha,
                         lora_dropout=dropout, target_modules=["q_proj", "v_proj"], bias="none")
-    model = get_peft_model(base, config, revision=STUDENT_MODELS[STUDENT]["revision"])
+    model = get_peft_model(base, config, revision=STUDENT_MODELS[student_model]["revision"])
     trainable = [(name, param) for name, param in model.named_parameters() if param.requires_grad]
     if not trainable or any(not {"lora_A", "lora_B"}.intersection(name.split("."))
                             for name, _ in trainable):
@@ -183,12 +188,12 @@ def train(model, parameters, examples, pad_id, args):
     return {"epoch_metrics": epochs, "optimizer_updates": step, "training_seconds": time.perf_counter() - start}
 
 
-def save_run(output, model, examples, summary):
+def save_run(output, model, examples, summary, *, student_model=DEFAULT_STUDENT_MODEL):
     output.parent.mkdir(parents=True, exist_ok=True)
     with TemporaryDirectory(dir=output.parent) as temp:
         stage = Path(temp) / "adapter"
         model.save_pretrained(stage, safe_serialization=True, save_embedding_layers=False)
-        summary["adapter_files_sha256"] = adapter_identity(stage, STUDENT)
+        summary["adapter_files_sha256"] = adapter_identity(stage, student_model)
         (stage / "training.json").write_text(json.dumps(summary, indent=2) + "\n", encoding="utf-8")
         with (stage / "loss_tokens.jsonl").open("w", encoding="utf-8") as file:
             for example in examples:
@@ -198,6 +203,7 @@ def save_run(output, model, examples, summary):
 
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument("--student-model", choices=LORA_STUDENT_MODELS, default=DEFAULT_STUDENT_MODEL)
     parser.add_argument("--train-csv", type=Path, required=True)
     parser.add_argument("--output", type=Path, help="New directory for the adapter and training records")
     parser.add_argument("--device", choices=("cuda", "cpu", "mps"), default="cuda")
@@ -225,12 +231,12 @@ def main():
 
     from transformers import AutoConfig, AutoTokenizer
 
-    profile = STUDENT_MODELS[STUDENT]
-    kwargs = student_pretrained_kwargs(STUDENT)
+    profile = STUDENT_MODELS[args.student_model]
+    kwargs = student_pretrained_kwargs(args.student_model)
     rows, skipped = read_training_rows(args.train_csv)
     tokenizer = AutoTokenizer.from_pretrained(profile["model"], **kwargs)
     context_window = AutoConfig.from_pretrained(profile["model"], **kwargs).max_position_embeddings
-    examples, stop_id, clipped = prepare_examples(rows, tokenizer, context_window)
+    examples, stop_id, clipped = prepare_examples(rows, tokenizer, context_window, args.student_model)
     targets = {example.teacher_label: example.input_ids[-ANSWER_TOKENS:] for example in examples}
     print(f"examples={len(examples)} skipped_invalid={skipped} clipped={clipped} "
           f"loss_tokens={len(examples) * ANSWER_TOKENS} targets={dict(sorted(targets.items()))}", flush=True)
@@ -240,14 +246,15 @@ def main():
     import torch
 
     torch.manual_seed(args.seed)
-    base, _, settings, _ = load_student(STUDENT, args.device, dtype=args.dtype)
+    base, _, settings, _ = load_student(args.student_model, args.device, dtype=args.dtype)
     if stop_id not in settings.eos_token_id:
         raise ValueError("The supervised end-of-turn token is not a stop token for generation")
-    model, parameters = add_lora(base, args.rank, args.alpha, args.dropout)
+    model, parameters = add_lora(base, args.rank, args.alpha, args.dropout, student_model=args.student_model)
     trainable_count = sum(p.numel() for p in parameters)
     print(f"device={args.device} base_dtype={args.dtype} trainable_lora_parameters={trainable_count:,}", flush=True)
     summary = {
         "student_model": profile["model"], "revision": profile["revision"], "prompt": "v3",
+        "chat_template_kwargs": profile["chat_template_kwargs"],
         "chat_template_sha256": sha256(tokenizer.chat_template),
         "n_training_examples": len(examples), "n_invalid_answers_skipped": skipped, "n_clipped": clipped,
         "train_csv": str(args.train_csv), "train_csv_sha256": file_sha256(args.train_csv),
@@ -264,7 +271,7 @@ def main():
         "packages": {package: version(package) for package in ("peft", "torch", "transformers", "tokenizers")},
     }
     summary.update(train(model, parameters, examples, tokenizer.pad_token_id, args))
-    save_run(args.output, model, examples, summary)
+    save_run(args.output, model, examples, summary, student_model=args.student_model)
     print(f"Saved adapter to {args.output}", flush=True)
 
 

@@ -2,7 +2,7 @@
 
 [System and experiment design](https://docs.google.com/document/d/1LyIxZPZP4Ax1GHQ-LLyzqF2JipfCaxy5SB8kU0B53ug/edit?usp=sharing) · [Local experiment design](Experiment%20Design.md)
 
-The default pairing is **DeepSeek V4.1 Flash 1017 Teacher → Gemma 3 270M IT Student**, using the frozen v3 prompt. Gemma 4 31B IT remains an optional Teacher baseline; SmolLM2-135M and Qwen3.5-0.8B remain optional Students. Teacher collection and unadapted Student baselines have separate entry points from LoRA training on the history prefixes.
+The default pairing is **DeepSeek V4.1 Flash 1017 Teacher → Gemma 3 270M IT Student**, using the frozen v3 prompt. Qwen3-0.6B is also available for LoRA training. Gemma 4 31B IT remains an optional Teacher baseline, and SmolLM2-135M and Qwen3.5-0.8B remain available for Student baseline inference.
 
 ## Environment
 
@@ -115,7 +115,7 @@ uv run --locked python code/teacher_baseline.py \
 
 ## Student baselines and Teacher pairing
 
-Student defaults to `--student-model gemma3-270m-it` and the complete `validation` partition. SmolLM2 and Qwen remain selectable with `--student-model smollm2-135m` or `--student-model qwen3.5-0.8b`. `--split history` and `--split test` select their respective complete partitions. Run final test scoring only after model selection is frozen.
+Student defaults to `--student-model gemma3-270m-it` and the complete `validation` partition. The other Student options are `smollm2-135m`, `qwen3-0.6b` and `qwen3.5-0.8b`. `--split history` and `--split test` select their respective complete partitions. Run final test scoring only after model selection is frozen.
 
 ```bash
 # Preview; no model download or inference.
@@ -175,12 +175,13 @@ uv run --locked python code/student_baseline.py \
 | Student | Model | Pinned revision |
 |---|---|---|
 | `gemma3-270m-it` | `google/gemma-3-270m-it` | `ac82b4e820549b854eebf28ce6dedaf9fdfa17b3` |
+| `qwen3-0.6b` | `Qwen/Qwen3-0.6B` | `c1899de289a04d12100db370d81485cdf75e47ca` |
 | `smollm2-135m` | `HuggingFaceTB/SmolLM2-135M-Instruct` | `12fd25f77366fa6b3b4b768ec3050bf629380bac` |
 | `qwen3.5-0.8b` | `Qwen/Qwen3.5-0.8B` | `2fc06364715b967f1860aea9cf38778875588b17` |
 
 Each Student uses its native tokenizer/chat template while narrative clipping stays fixed to SmolLM2. Gemma's template folds the system instruction into the first user turn and generation also stops at native `<end_of_turn>`. Qwen uses `enable_thinking=False`, the text-only backbone, and both tokenizer/model EOS IDs. Only the terminal stop token is removed before strict parsing. Qwen/Gemma caches use the git-ignored `.cache/huggingface/`; SmolLM2 uses the default Hugging Face cache.
 
-## Gemma 3 LoRA SFT on NVIDIA CUDA
+## Student LoRA SFT on NVIDIA CUDA
 
 From the repo root on the NVIDIA machine, audit one history prefix with the pinned tokenizer, then train a fresh adapter in a new directory.
 
@@ -193,7 +194,7 @@ uv run --locked --extra lora python code/student_lora.py \
   --train-csv "$TRAIN_CSV" --device cuda --output "$ADAPTER_DIR" --run
 ```
 
-The trainer uses the frozen v3 chat and shared narrative clipping. It accepts only complaint IDs and text from the frozen history cohort and skips rows without a valid A–E `teacher_label`. The only unmasked targets are the final assistant letter and Gemma's `<end_of_turn>`. The native causal LM shifts labels internally. Each optimizer update gives all its answer tokens equal weight, including when the final effective batch is partial.
+The trainer uses the frozen v3 chat and shared narrative clipping. It accepts only complaint IDs and text from the frozen history cohort and skips rows without a valid A–E `teacher_label`. The only unmasked targets are the final assistant letter and the native turn terminator (`<end_of_turn>` for Gemma and `<|im_end|>` for Qwen3). Qwen3 training and inference both use `enable_thinking=False`. The native causal LM shifts labels internally. Each optimizer update gives all its answer tokens equal weight, including when the final effective batch is partial.
 
 Defaults are FP32, rank 8, alpha 16, dropout 0.05 on `q_proj` and `v_proj`, AdamW at `2e-4`, three epochs, effective batch 8, micro-batch 1 and seed 42. Use `--dtype bfloat16` on a CUDA GPU with native BF16 support. The output contains PEFT adapter weights, `training.json` with runtime and optimizer metrics, and `loss_tokens.jsonl` with each sample's supervised token IDs and zero-based target start.
 
@@ -204,6 +205,30 @@ uv run --locked --extra lora python code/student_baseline.py \
   --device cuda --split validation --prompt-version v3 --adapter "$ADAPTER_DIR" \
   --output output/lora_eval/gemma3-270m-it_v3_n0100_validation --run
 ```
+
+### Qwen3-0.6B N9000 comparison
+
+For a smoke run, use the 100-row prefix above with `--student-model qwen3-0.6b` and a separate adapter directory.
+
+Run Qwen3 with and without LoRA on the complete October validation partition. The training command uses the same N9000 prefix, rank 8, alpha 16, learning rate `2e-4`, three epochs and FP32 defaults as the original Gemma 3 N9000 run.
+
+```bash
+TEACHER_RUN=output/baseline_v3/teacher_deepseek-v4.1-flash-1017_all
+TRAIN_CSV=data/lora/teacher_deepseek-v4.1-flash-1017_v3/history_n9000.csv
+ADAPTER_DIR=output/lora/qwen3-0.6b_v3_n9000
+
+uv run --locked --extra lora python code/student_baseline.py \
+  --student-model qwen3-0.6b --device cuda --split validation --prompt-version v3 \
+  --teacher-run "$TEACHER_RUN" --output output/baseline_v3/student_qwen3-0.6b_validation_cuda --run
+uv run --locked --extra lora python code/student_lora.py \
+  --student-model qwen3-0.6b --device cuda --train-csv "$TRAIN_CSV" --output "$ADAPTER_DIR" --run
+uv run --locked --extra lora python code/student_baseline.py \
+  --student-model qwen3-0.6b --device cuda --split validation --prompt-version v3 \
+  --teacher-run "$TEACHER_RUN" --adapter "$ADAPTER_DIR" \
+  --output output/lora_eval/qwen3-0.6b_v3_n9000_validation --run
+```
+
+Use `strict_generation.teacher_agreement_all_cases` to compare the two Students on the full cohort. `teacher_agreement_by_class` uses each valid Teacher label as its denominator and counts Student failures as disagreements. Each run also records accuracy and macro-F1 against the CFPB reference labels.
 
 ## Code and checks
 

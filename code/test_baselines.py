@@ -183,8 +183,9 @@ class TestStudentCUDA(unittest.TestCase):
             with self.subTest(model=name):
                 tokenizer = Mock(eos_token_id=1, pad_token_id=0)
                 tokenizer.encode.side_effect = lambda letter, **_: [ord(letter)]
-                tokenizer.get_vocab.return_value = {"<end_of_turn>": 106}
-                tokenizer.convert_tokens_to_ids.return_value = 106
+                stops = {"<end_of_turn>": 106, "<|im_end|>": 151645}
+                tokenizer.get_vocab.return_value = stops
+                tokenizer.convert_tokens_to_ids.side_effect = stops.__getitem__
                 model = Mock()
                 model.to.return_value = model
                 model.eval.return_value = model
@@ -192,13 +193,14 @@ class TestStudentCUDA(unittest.TestCase):
                 with patch("torch.cuda.is_available", return_value=True), \
                         patch("transformers.AutoTokenizer.from_pretrained", return_value=tokenizer), \
                         patch("transformers.AutoModelForCausalLM.from_pretrained", return_value=model) as weights:
-                    loaded, _, _, _ = load_student(name, "cuda")
+                    loaded, _, settings, _ = load_student(name, "cuda")
                 self.assertIs(loaded, model)
                 self.assertEqual(weights.call_args.args, (profile["model"],))
                 self.assertIs(weights.call_args.kwargs["dtype"], torch.float32)
                 self.assertEqual(weights.call_args.kwargs["revision"], profile["revision"])
                 model.to.assert_called_once_with("cuda")
                 model.eval.assert_called_once_with()
+                self.assertEqual(settings.eos_token_id, [1, *(stops[token] for token in profile.get("stop_tokens", ()))])
                 config = student_config(fixture_cases(), "validation", load_prompt("v3"), name, "cuda")
                 self.assertEqual(config["device"], "cuda")
                 self.assertEqual(config["dtype"], "torch.float32")
@@ -387,6 +389,7 @@ class TestStudentAndPairing(unittest.TestCase):
         metrics = export_student(self.db, self.output, self.teacher)
         self.assertTrue(metrics["provisional"])
         self.assertIsNone(metrics["strict_generation"]["teacher_agreement_all_cases"])
+        self.assertNotIn("teacher_agreement_by_class", metrics)
         self.assertEqual(metrics["n_pending"], 4)
 
     def test_all_cohort_teacher_pairs_selected_partition_despite_other_pending_cases(self):
@@ -481,18 +484,18 @@ class TestStudentAndPairing(unittest.TestCase):
             predict_once(model, tokenizer, settings, list(range(5)), [])
 
     def test_qwen_profile_keeps_shared_clipping_and_teacher_pairing(self):
-        qwen = student_config(self.cases, "validation", load_prompt("v3"), "qwen3.5-0.8b")
-        self.assertEqual(qwen["model"], "Qwen/Qwen3.5-0.8B")
-        self.assertEqual(qwen["chat_template_kwargs"], {"enable_thinking": False})
-        self.assertNotEqual(qwen["model_revision"], qwen["revision"])
-        self.assertEqual(qwen["cases"], self.config["cases"])
-        self.assertEqual(qwen["tokenizer"], self.config["tokenizer"])
         self.teacher_collect()
-        self.assertEqual(load_teacher_labels(self.teacher, qwen)[1], "complete")
-        self.assertNotEqual(student_output("smollm2-135m", "validation", "v3"),
-                            student_output("qwen3.5-0.8b", "validation", "v3"))
-        with self.assertRaisesRegex(ValueError, "configuration changed"):
-            initialize(self.db, qwen)
+        for name, model in (("qwen3-0.6b", "Qwen/Qwen3-0.6B"), ("qwen3.5-0.8b", "Qwen/Qwen3.5-0.8B")):
+            with self.subTest(model=name):
+                qwen = student_config(self.cases, "validation", load_prompt("v3"), name)
+                self.assertEqual(qwen["model"], model)
+                self.assertEqual(qwen["chat_template_kwargs"], {"enable_thinking": False})
+                self.assertNotEqual(qwen["model_revision"], qwen["revision"])
+                self.assertEqual(qwen["cases"], self.config["cases"])
+                self.assertEqual(qwen["tokenizer"], self.config["tokenizer"])
+                self.assertEqual(load_teacher_labels(self.teacher, qwen)[1], "complete")
+                with self.assertRaisesRegex(ValueError, "configuration changed"):
+                    initialize(self.db, qwen)
 
     def test_qwen_template_options_and_multiple_end_tokens(self):
         import torch
@@ -525,7 +528,7 @@ class TestStudentAndPairing(unittest.TestCase):
         self.teacher_collect()
         self.assertEqual(load_teacher_labels(self.teacher, gemma)[1], "complete")
         paths = {student_output(name, "validation", "v3") for name in STUDENT_MODELS}
-        self.assertEqual(len(paths), 3)
+        self.assertEqual(len(paths), len(STUDENT_MODELS))
         with self.assertRaisesRegex(ValueError, "configuration changed"):
             initialize(self.db, gemma)
 
@@ -586,9 +589,11 @@ class TestStudentAndPairing(unittest.TestCase):
             initialize_teacher(db, self.cases, split="validation")
             collect(db, self.teacher / "run.sqlite", None, self.cases, 1,
                     predict=lambda _, text: reply("invalid" if text == "A" else "A"))
-        collect_student(self.db, self.cases, lambda _: generated("A"))
+        collect_student(self.db, self.cases, lambda case: generated("" if case["text"] == "B" else "A"))
         metrics = export_student(self.db, self.output, self.teacher)
-        self.assertEqual(metrics["strict_generation"]["teacher_agreement_all_cases"], 4 / 5)
+        self.assertEqual(metrics["strict_generation"]["teacher_agreement_all_cases"], 3 / 5)
+        self.assertEqual(metrics["teacher_agreement_by_class"]["A"], {"support": 4, "matches": 3, "agreement": 3 / 4})
+        self.assertIsNone(metrics["teacher_agreement_by_class"]["B"]["agreement"])
 
 
 class TestTeacherEntrypoint(unittest.TestCase):

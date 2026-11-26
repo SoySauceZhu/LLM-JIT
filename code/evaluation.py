@@ -40,3 +40,12 @@ def score(rows, field, *, paired=False):
         "predicted_counts": dict(Counter(row[field] or "FAIL" for row in rows)),
         "confusion_rows_reference_columns_prediction": matrix,
     }
+
+
+def teacher_agreement_by_class(rows, field):
+    """Group matches by the Teacher's valid label, including Student failures in support."""
+    support = Counter(row["teacher_label"] for row in rows)
+    matches = Counter(row["teacher_label"] for row in rows if row[field] == row["teacher_label"])
+    return {label: {"support": support[label], "matches": matches[label],
+                    "agreement": matches[label] / support[label] if support[label] else None}
+            for label in LABELS}
