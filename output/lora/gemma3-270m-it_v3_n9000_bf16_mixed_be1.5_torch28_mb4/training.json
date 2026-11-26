@@ -1,0 +1,93 @@
+{
+  "student_model": "google/gemma-3-270m-it",
+  "revision": "ac82b4e820549b854eebf28ce6dedaf9fdfa17b3",
+  "prompt": "v3",
+  "chat_template_kwargs": {},
+  "chat_template_sha256": "7de1c58e208eda46e9c7f86397df37ec49883aeece39fb961e0a6b24088dd3c4",
+  "n_training_examples": 9000,
+  "n_invalid_answers_skipped": 0,
+  "n_clipped": 34,
+  "train_csv": "data/lora/teacher_deepseek-v4.1-flash-1017_v3/history_n9000.csv",
+  "train_csv_sha256": "b10a58023735c08bd045cbf65394d22c8ff4ae848b0f28e5784dd94c5205aea5",
+  "ordered_complaint_ids_sha256": "c57123468ae58225c9f7cc44ad3b2a8156ab0c2c615afc62befa7bbf2865777d",
+  "teacher_label_counts": {
+    "A": 720,
+    "B": 246,
+    "C": 5387,
+    "D": 2187,
+    "E": 460
+  },
+  "clipping": {
+    "tokenizer": "HuggingFaceTB/SmolLM2-135M-Instruct",
+    "revision": "12fd25f77366fa6b3b4b768ec3050bf629380bac",
+    "head": 2000,
+    "tail": 1000
+  },
+  "loss": {
+    "type": "completion_only_causal_lm_cross_entropy",
+    "ignore_index": -100,
+    "end_of_turn_id": 106,
+    "supervised_tokens_per_example": 2,
+    "class_weights": {
+      "B": 1.5,
+      "E": 1.5
+    },
+    "normalized_letter_weights": {
+      "A": 0.9622580990056666,
+      "B": 1.4433871485085001,
+      "C": 0.9622580990056666,
+      "D": 0.9622580990056666,
+      "E": 1.4433871485085001
+    },
+    "end_of_turn_weight": 1.0
+  },
+  "device": "cuda",
+  "gpu": "NVIDIA L40",
+  "precision": "bfloat16-mixed",
+  "base_dtype": "bfloat16",
+  "adapter_dtype": "torch.float32",
+  "seed": 42,
+  "gradient_checkpointing": false,
+  "epochs": 3,
+  "batch_size": 8,
+  "micro_batch_size": 4,
+  "sort_micro_batches_by_length": true,
+  "optimizer": "AdamW",
+  "learning_rate": 0.0002,
+  "weight_decay": 0.0,
+  "trainable_parameters": 368640,
+  "packages": {
+    "peft": "0.18.1",
+    "torch": "2.8.0+cu126",
+    "transformers": "5.5.4",
+    "tokenizers": "0.22.2"
+  },
+  "epoch_metrics": [
+    {
+      "epoch": 1,
+      "completion_loss": 0.35488537003389664,
+      "optimizer_updates": 1125,
+      "skipped_nonfinite_updates": 0
+    },
+    {
+      "epoch": 2,
+      "completion_loss": 0.19814740723330113,
+      "optimizer_updates": 2250,
+      "skipped_nonfinite_updates": 0
+    },
+    {
+      "epoch": 3,
+      "completion_loss": 0.16198366096082867,
+      "optimizer_updates": 3375,
+      "skipped_nonfinite_updates": 0
+    }
+  ],
+  "optimizer_updates": 3375,
+  "skipped_nonfinite_updates": 0,
+  "optimizer_eps": 1e-08,
+  "training_seconds": 1170.2510148029542,
+  "adapter_files_sha256": {
+    "adapter_config.json": "08a52ac04efe5bf666c511a37723cfd0bb6c19a3b2ea8cfa5fefa6a149607d8b",
+    "adapter_model.safetensors": "9ca1e1bfd04bb5d90b48e47e76965f6726df31de7dccefcc843493a0ea6c5769"
+  }
+}
