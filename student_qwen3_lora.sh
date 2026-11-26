@@ -41,7 +41,7 @@ if [ -d "$adapter" ]; then
 else
     printf '[2/3] Training Qwen3-0.6B LoRA on 9000 history samples\n'
     uv run --locked --extra lora python code/student_lora.py \
-        --student-model qwen3-0.6b --device cuda --dtype float32 --train-csv "$train_csv" \
+        --student-model qwen3-0.6b --device cuda --dtype float32 --gradient-checkpointing --train-csv "$train_csv" \
         --rank 8 --alpha 16 --dropout 0.05 --learning-rate 2e-4 \
         --epochs 3 --batch-size 8 --micro-batch-size 1 --seed 42 --output "$adapter" --run
 fi

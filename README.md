@@ -198,6 +198,9 @@ The trainer uses the frozen v3 chat and shared narrative clipping. It accepts on
 
 Defaults are FP32, rank 8, alpha 16, dropout 0.05 on `q_proj` and `v_proj`, AdamW at `2e-4`, three epochs, effective batch 8, micro-batch 1 and seed 42. Use `--dtype bfloat16` on a CUDA GPU with native BF16 support. The output contains PEFT adapter weights, `training.json` with runtime and optimizer metrics, and `loss_tokens.jsonl` with each sample's supervised token IDs and zero-based target start.
 
+- `--dtype float16-mixed` stores the frozen base in FP16 and uses FP16 autocast, dynamic loss scaling, and FP32 LoRA parameters and AdamW moments. Scaling is updated after each effective batch and skipped updates are recorded in `training.json`.
+- `--dtype float16` uses FP16 base weights, LoRA parameters, gradients, and AdamW moments. AdamW uses `eps=1e-4`, which is representable in FP16. Both modes use the model's native causal LM loss, which computes cross-entropy in FP32.
+
 Evaluate the saved adapter with the same autoregressive generation and strict label parsing as the baseline. Use a fresh output directory for each adapter.
 
 ```bash
@@ -212,6 +215,8 @@ For a smoke run, use the 100-row prefix above with `--student-model qwen3-0.6b` 
 
 Run Qwen3 with and without LoRA on the complete October validation partition. The training command uses the same N9000 prefix, rank 8, alpha 16, learning rate `2e-4`, three epochs and FP32 defaults as the original Gemma 3 N9000 run.
 
+Run all three steps with `sh student_qwen3_lora.sh`, or run them individually below. Qwen3 training uses gradient checkpointing, which saves GPU memory by recomputing decoder activations during backpropagation.
+
 ```bash
 TEACHER_RUN=output/baseline_v3/teacher_deepseek-v4.1-flash-1017_all
 TRAIN_CSV=data/lora/teacher_deepseek-v4.1-flash-1017_v3/history_n9000.csv
@@ -221,7 +226,8 @@ uv run --locked --extra lora python code/student_baseline.py \
   --student-model qwen3-0.6b --device cuda --split validation --prompt-version v3 \
   --teacher-run "$TEACHER_RUN" --output output/baseline_v3/student_qwen3-0.6b_validation_cuda --run
 uv run --locked --extra lora python code/student_lora.py \
-  --student-model qwen3-0.6b --device cuda --train-csv "$TRAIN_CSV" --output "$ADAPTER_DIR" --run
+  --student-model qwen3-0.6b --device cuda --gradient-checkpointing \
+  --train-csv "$TRAIN_CSV" --output "$ADAPTER_DIR" --run
 uv run --locked --extra lora python code/student_baseline.py \
   --student-model qwen3-0.6b --device cuda --split validation --prompt-version v3 \
   --teacher-run "$TEACHER_RUN" --adapter "$ADAPTER_DIR" \
@@ -229,6 +235,8 @@ uv run --locked --extra lora python code/student_baseline.py \
 ```
 
 Use `strict_generation.teacher_agreement_all_cases` to compare the two Students on the full cohort. `teacher_agreement_by_class` uses each valid Teacher label as its denominator and counts Student failures as disagreements. Each run also records accuracy and macro-F1 against the CFPB reference labels.
+
+Run mixed-precision Qwen3 N9000 training and adapter validation with `sh student_qwen3_lora_fp16_mixed.sh`. Training runs with gradient checkpointing disabled and saves the adapter under `output/lora/qwen3-0.6b_v3_n9000_fp16_mixed`. FP32 validation writes its metrics to `output/lora_eval/qwen3-0.6b_v3_n9000_fp16_mixed_validation/metrics.json`.
 
 ## Code and checks
 

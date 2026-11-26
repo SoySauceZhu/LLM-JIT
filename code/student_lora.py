@@ -134,13 +134,14 @@ def completion_loss(model, batch, tokens_per_update):
                  num_items_in_batch=tokens_per_update).loss
 
 
-def add_lora(base, rank, alpha, dropout, *, student_model=DEFAULT_STUDENT_MODEL):
+def add_lora(base, rank, alpha, dropout, *, student_model=DEFAULT_STUDENT_MODEL, autocast_adapter_dtype=True):
     from peft import LoraConfig, TaskType, get_peft_model
 
     base.requires_grad_(False)
     config = LoraConfig(task_type=TaskType.CAUSAL_LM, r=rank, lora_alpha=alpha,
                         lora_dropout=dropout, target_modules=["q_proj", "v_proj"], bias="none")
-    model = get_peft_model(base, config, revision=STUDENT_MODELS[student_model]["revision"])
+    model = get_peft_model(base, config, revision=STUDENT_MODELS[student_model]["revision"],
+                           autocast_adapter_dtype=autocast_adapter_dtype)
     trainable = [(name, param) for name, param in model.named_parameters() if param.requires_grad]
     if not trainable or any(not {"lora_A", "lora_B"}.intersection(name.split("."))
                             for name, _ in trainable):
@@ -152,7 +153,14 @@ def train(model, parameters, examples, pad_id, args):
     import torch
 
     model.train()
-    optimizer = torch.optim.AdamW(parameters, lr=args.learning_rate, weight_decay=0.0)
+    if args.gradient_checkpointing:
+        model.gradient_checkpointing_enable(gradient_checkpointing_kwargs={"use_reentrant": False})
+    mixed_precision = args.dtype == "float16-mixed"
+    # AdamW's default epsilon rounds to zero when its moments are stored in FP16.
+    optimizer_eps = 1e-4 if args.dtype == "float16" else 1e-8
+    optimizer = torch.optim.AdamW(parameters, lr=args.learning_rate, weight_decay=0.0, eps=optimizer_eps)
+    scaler = torch.amp.GradScaler(args.device, enabled=mixed_precision)
+    scale = scaler.get_scale()
     rng = random.Random(args.seed)
     order = list(range(len(examples)))
     epochs = []
@@ -160,6 +168,7 @@ def train(model, parameters, examples, pad_id, args):
         torch.cuda.synchronize()
     start = time.perf_counter()
     step = 0
+    skipped_updates = 0
     for epoch in range(1, args.epochs + 1):
         rng.shuffle(order)
         loss_sum = 0.0
@@ -171,21 +180,37 @@ def train(model, parameters, examples, pad_id, args):
             for offset in range(0, len(indices), args.micro_batch_size):
                 sample = [examples[i] for i in indices[offset:offset + args.micro_batch_size]]
                 batch = collate(sample, pad_id, args.device)
-                loss = completion_loss(model, batch, target_count)
-                loss.backward()
+                with torch.autocast(args.device, dtype=torch.float16, enabled=mixed_precision):
+                    loss = completion_loss(model, batch, target_count)
+                scaler.scale(loss).backward()
                 step_loss += loss.detach()
             mean_loss = step_loss.item()
             if not math.isfinite(mean_loss):
                 raise RuntimeError(f"Non-finite completion loss at optimizer update {step + 1}")
-            optimizer.step()
+            scaler.step(optimizer)
+            scaler.update()
+            new_scale = scaler.get_scale()
+            if new_scale < scale:
+                skipped_updates += 1
+            else:
+                step += 1
+            if new_scale == 0:
+                raise RuntimeError("FP16 gradient scale reached zero")
+            scale = new_scale
             loss_sum += mean_loss * target_count
-            step += 1
         mean = loss_sum / (ANSWER_TOKENS * len(examples))
-        epochs.append({"epoch": epoch, "completion_loss": mean, "optimizer_updates": step})
-        print(f"epoch={epoch}/{args.epochs} optimizer_updates={step} completion_loss={mean:.6f}", flush=True)
+        epochs.append({"epoch": epoch, "completion_loss": mean, "optimizer_updates": step,
+                       "skipped_nonfinite_updates": skipped_updates})
+        print(f"epoch={epoch}/{args.epochs} optimizer_updates={step} completion_loss={mean:.6f} "
+              f"skipped_nonfinite_updates={skipped_updates}", flush=True)
+    if step == 0:
+        raise RuntimeError("Training finished without an optimizer update")
+    if not torch.stack([param.detach().isfinite().all() for param in parameters]).all().item():
+        raise RuntimeError("Training produced non-finite LoRA parameters")
     if args.device == "cuda":
         torch.cuda.synchronize()
-    return {"epoch_metrics": epochs, "optimizer_updates": step, "training_seconds": time.perf_counter() - start}
+    return {"epoch_metrics": epochs, "optimizer_updates": step, "skipped_nonfinite_updates": skipped_updates,
+            "optimizer_eps": optimizer_eps, "training_seconds": time.perf_counter() - start}
 
 
 def save_run(output, model, examples, summary, *, student_model=DEFAULT_STUDENT_MODEL):
@@ -207,7 +232,11 @@ def main():
     parser.add_argument("--train-csv", type=Path, required=True)
     parser.add_argument("--output", type=Path, help="New directory for the adapter and training records")
     parser.add_argument("--device", choices=("cuda", "cpu", "mps"), default="cuda")
-    parser.add_argument("--dtype", choices=("float32", "bfloat16"), default="float32")
+    parser.add_argument("--dtype", choices=("float32", "bfloat16", "float16-mixed", "float16"), default="float32",
+                        help="float16-mixed uses FP16 base weights with FP32 LoRA updates and AMP; "
+                             "float16 also stores LoRA weights and AdamW moments in FP16")
+    parser.add_argument("--gradient-checkpointing", action="store_true",
+                        help="Recompute decoder activations during backward to reduce memory use")
     parser.add_argument("--rank", type=int, default=8)
     parser.add_argument("--alpha", type=int, default=16)
     parser.add_argument("--dropout", type=float, default=0.05)
@@ -246,12 +275,17 @@ def main():
     import torch
 
     torch.manual_seed(args.seed)
-    base, _, settings, _ = load_student(args.student_model, args.device, dtype=args.dtype)
+    base_dtype = "float16" if args.dtype == "float16-mixed" else args.dtype
+    base, _, settings, _ = load_student(args.student_model, args.device, dtype=base_dtype)
     if stop_id not in settings.eos_token_id:
         raise ValueError("The supervised end-of-turn token is not a stop token for generation")
-    model, parameters = add_lora(base, args.rank, args.alpha, args.dropout, student_model=args.student_model)
+    model, parameters = add_lora(base, args.rank, args.alpha, args.dropout, student_model=args.student_model,
+                                 autocast_adapter_dtype=args.dtype != "float16")
     trainable_count = sum(p.numel() for p in parameters)
-    print(f"device={args.device} base_dtype={args.dtype} trainable_lora_parameters={trainable_count:,}", flush=True)
+    adapter_dtype = str(parameters[0].dtype)
+    print(f"device={args.device} precision={args.dtype} base_dtype={base_dtype} adapter_dtype={adapter_dtype} "
+          f"gradient_checkpointing={args.gradient_checkpointing} "
+          f"trainable_lora_parameters={trainable_count:,}", flush=True)
     summary = {
         "student_model": profile["model"], "revision": profile["revision"], "prompt": "v3",
         "chat_template_kwargs": profile["chat_template_kwargs"],
@@ -264,7 +298,8 @@ def main():
         "loss": {"type": "completion_only_causal_lm_cross_entropy", "ignore_index": IGNORE,
                  "end_of_turn_id": stop_id, "supervised_tokens_per_example": ANSWER_TOKENS},
         "device": args.device, "gpu": torch.cuda.get_device_name() if args.device == "cuda" else None,
-        "base_dtype": args.dtype, "adapter_dtype": str(parameters[0].dtype), "seed": args.seed,
+        "precision": args.dtype, "base_dtype": base_dtype, "adapter_dtype": adapter_dtype, "seed": args.seed,
+        "gradient_checkpointing": args.gradient_checkpointing,
         "epochs": args.epochs, "batch_size": args.batch_size, "micro_batch_size": args.micro_batch_size,
         "optimizer": "AdamW", "learning_rate": args.learning_rate, "weight_decay": 0.0,
         "trainable_parameters": trainable_count,

@@ -2,6 +2,7 @@
 
 import csv
 import unittest
+from argparse import Namespace
 from copy import deepcopy
 from importlib.util import find_spec
 from pathlib import Path
@@ -16,6 +17,7 @@ from mortgage_prompt import load_prompt
 from student_baseline import STUDENT_MODELS, adapter_identity, load_student
 from student_lora import (
     Example, add_lora, collate, completion_loss, encode_answer, prepare_examples, read_training_rows, save_run,
+    train,
 )
 
 
@@ -131,6 +133,56 @@ class StudentLoRATest(unittest.TestCase):
                 changed.append(name)
         self.assertTrue(changed)
         self.assertTrue(all(".lora_" in name for name in changed))
+
+    @unittest.skipUnless(find_spec("peft"), "requires the lora extra")
+    def test_qwen_gradient_checkpointing_preserves_lora_updates(self):
+        model, parameters = add_lora(tiny_qwen(), rank=2, alpha=4, dropout=0.1, student_model="qwen3-0.6b")
+        checkpointed = deepcopy(model)
+        checkpointed_parameters = [param for param in checkpointed.parameters() if param.requires_grad]
+        before = [param.detach().clone() for param in parameters]
+        examples = [Example("1", "A", [2, 3, 4, 10, 7]), Example("2", "D", [2, 4, 14, 7])]
+        args = Namespace(device="cpu", dtype="float32", learning_rate=2e-4, seed=42, batch_size=2, micro_batch_size=1,
+                         epochs=1, gradient_checkpointing=False)
+        with torch.random.fork_rng(devices=[]):
+            torch.manual_seed(args.seed)
+            regular = train(model, parameters, examples, 0, args)
+            args.gradient_checkpointing = True
+            torch.manual_seed(args.seed)
+            recomputed = train(checkpointed, checkpointed_parameters, examples, 0, args)
+
+        self.assertTrue(checkpointed.is_gradient_checkpointing)
+        self.assertEqual(recomputed["optimizer_updates"], 1)
+        self.assertEqual(recomputed["epoch_metrics"], regular["epoch_metrics"])
+        self.assertTrue(any(not torch.equal(param, original) for param, original in zip(parameters, before)))
+        for regular_param, checkpointed_param in zip(model.parameters(), checkpointed.parameters(), strict=True):
+            torch.testing.assert_close(checkpointed_param, regular_param)
+            if not checkpointed_param.requires_grad:
+                self.assertIsNone(checkpointed_param.grad)
+
+    @unittest.skipUnless(find_spec("peft"), "requires the lora extra")
+    def test_qwen_fp16_modes_keep_expected_parameter_dtypes(self):
+        examples = [Example(str(index), "D", [2, 4, index, 14, 7]) for index in range(3, 10)]
+        for dtype, adapter_dtype in (("float16-mixed", torch.float32), ("float16", torch.float16)):
+            with self.subTest(dtype=dtype), torch.random.fork_rng(devices=[]):
+                torch.manual_seed(42)
+                model, params = add_lora(tiny_qwen().half(), rank=2, alpha=4, dropout=0.05,
+                                         student_model="qwen3-0.6b", autocast_adapter_dtype=dtype != "float16")
+                before = {name: param.detach().clone() for name, param in model.named_parameters()}
+                args = Namespace(device="cpu", dtype=dtype, learning_rate=2e-4, seed=42, batch_size=2,
+                                 micro_batch_size=1, epochs=2, gradient_checkpointing=True)
+                stats = train(model, params, examples, 0, args)
+                self.assertGreater(stats["optimizer_updates"], 0)
+                self.assertEqual(stats["optimizer_updates"] + stats["skipped_nonfinite_updates"], 8)
+                for name, param in model.named_parameters():
+                    if param.requires_grad:
+                        self.assertEqual(param.dtype, adapter_dtype)
+                        self.assertEqual(param.grad.dtype, adapter_dtype)
+                    else:
+                        self.assertEqual(param.dtype, torch.float16)
+                        self.assertIsNone(param.grad)
+                        torch.testing.assert_close(param, before[name], rtol=0, atol=0)
+                self.assertTrue(any(not torch.equal(param, before[name])
+                                    for name, param in model.named_parameters() if param.requires_grad))
 
     @unittest.skipUnless(find_spec("peft"), "requires the lora extra")
     def test_qwen_adapter_round_trip_uses_the_selected_base_model(self):
