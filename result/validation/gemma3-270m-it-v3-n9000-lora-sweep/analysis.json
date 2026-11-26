@@ -1,0 +1,3657 @@
+{
+  "evaluation": {
+    "split": "validation",
+    "n": 1013,
+    "teacher_tolerance_macro_f1": 0.02,
+    "quality_threshold": 0.6633296894798818,
+    "model": "deepseek-ai/DeepSeek-V4.1-Flash-1017",
+    "teacher_path": "output/baseline_v3/teacher_deepseek-v4.1-flash-1017_all",
+    "sweep_order": [
+      "r8_a16_lr5e-5",
+      "r16_a32_lr5e-5",
+      "r32_a64_lr5e-5",
+      "r8_a8_lr5e-5",
+      "r8_a32_lr5e-5",
+      "r16_a16_lr5e-5",
+      "r16_a64_lr5e-5",
+      "r8_a16_lr2e-5",
+      "r8_a16_lr1e-4",
+      "r32_a32_lr5e-5"
+    ],
+    "best_macro_f1": "r8_a16_lr1e-4",
+    "qualified_configs": [],
+    "paired_bootstrap": {
+      "replicates": 2000,
+      "seed": 42,
+      "conditional_on_trained_runs": true
+    }
+  },
+  "teacher": {
+    "n": 1013,
+    "valid_rate": 0.9990128331688055,
+    "accuracy": 0.7857847976307996,
+    "macro_f1": 0.6833296894798818,
+    "per_class": {
+      "A": {
+        "support": 106,
+        "recall": 0.5660377358490566,
+        "fpr": 0.027563395810363836,
+        "f1": 0.6282722513089005,
+        "correct": 60,
+        "predicted": 85,
+        "final_failures": 0,
+        "precision": 0.7058823529411765
+      },
+      "B": {
+        "support": 84,
+        "recall": 0.4166666666666667,
+        "fpr": 0.008611410118406888,
+        "f1": 0.5511811023622047,
+        "correct": 35,
+        "predicted": 43,
+        "final_failures": 0,
+        "precision": 0.813953488372093
+      },
+      "C": {
+        "support": 562,
+        "recall": 0.8932384341637011,
+        "fpr": 0.21286031042128603,
+        "f1": 0.8655172413793103,
+        "correct": 502,
+        "predicted": 598,
+        "final_failures": 0,
+        "precision": 0.8394648829431438
+      },
+      "D": {
+        "support": 215,
+        "recall": 0.7813953488372093,
+        "fpr": 0.08020050125313283,
+        "f1": 0.7516778523489933,
+        "correct": 168,
+        "predicted": 232,
+        "final_failures": 1,
+        "precision": 0.7241379310344828
+      },
+      "E": {
+        "support": 46,
+        "recall": 0.6739130434782609,
+        "fpr": 0.023784901758014478,
+        "f1": 0.62,
+        "correct": 31,
+        "predicted": 54,
+        "final_failures": 0,
+        "precision": 0.5740740740740741
+      }
+    },
+    "correct": 796,
+    "teacher_matches": null,
+    "teacher_agreement_all_cases": null,
+    "predicted_counts": {
+      "D": 232,
+      "C": 598,
+      "E": 54,
+      "B": 43,
+      "A": 85,
+      "FAIL": 1
+    },
+    "confusion_rows_reference_columns_prediction": {
+      "A": {
+        "A": 60,
+        "B": 5,
+        "C": 21,
+        "D": 16,
+        "E": 4,
+        "FAIL": 0
+      },
+      "B": {
+        "A": 19,
+        "B": 35,
+        "C": 26,
+        "D": 2,
+        "E": 2,
+        "FAIL": 0
+      },
+      "C": {
+        "A": 4,
+        "B": 3,
+        "C": 502,
+        "D": 42,
+        "E": 11,
+        "FAIL": 0
+      },
+      "D": {
+        "A": 2,
+        "B": 0,
+        "C": 38,
+        "D": 168,
+        "E": 6,
+        "FAIL": 1
+      },
+      "E": {
+        "A": 0,
+        "B": 0,
+        "C": 11,
+        "D": 4,
+        "E": 31,
+        "FAIL": 0
+      }
+    }
+  },
+  "common_training": {
+    "student_model": "google/gemma-3-270m-it",
+    "revision": "ac82b4e820549b854eebf28ce6dedaf9fdfa17b3",
+    "prompt": "v3",
+    "chat_template_sha256": "7de1c58e208eda46e9c7f86397df37ec49883aeece39fb961e0a6b24088dd3c4",
+    "clipping": {
+      "tokenizer": "HuggingFaceTB/SmolLM2-135M-Instruct",
+      "revision": "12fd25f77366fa6b3b4b768ec3050bf629380bac",
+      "head": 2000,
+      "tail": 1000
+    },
+    "loss": {
+      "type": "completion_only_causal_lm_cross_entropy",
+      "ignore_index": -100,
+      "end_of_turn_id": 106,
+      "supervised_tokens_per_example": 2
+    },
+    "device": "cuda",
+    "gpu": "Quadro RTX 6000",
+    "base_dtype": "float32",
+    "adapter_dtype": "torch.float32",
+    "seed": 42,
+    "epochs": 3,
+    "batch_size": 8,
+    "micro_batch_size": 1,
+    "optimizer": "AdamW",
+    "weight_decay": 0.0,
+    "packages": {
+      "peft": "0.18.1",
+      "torch": "2.10.0+cu126",
+      "transformers": "5.5.4",
+      "tokenizers": "0.22.2"
+    }
+  },
+  "runs": {
+    "r8_a16_lr5e-5": {
+      "rank": 8,
+      "alpha": 16,
+      "alpha_over_rank": 2.0,
+      "learning_rate": "5e-5",
+      "training_n": 9000,
+      "train_path": "output/lora/gemma3-270m-it_v3_n9000_r8_a16_lr5e-5_e3_drop0.05",
+      "evaluation_path": "output/lora_eval/gemma3-270m-it_v3_n9000_r8_a16_lr5e-5_e3_drop0.05_validation",
+      "training_seconds": 4161.395915997011,
+      "optimizer_updates": 3375,
+      "trainable_parameters": 368640,
+      "epoch_loss": [
+        0.437438597186572,
+        0.22844680802731052,
+        0.1948592666182667
+      ],
+      "attempt_seconds": 87.55225493236503,
+      "n_attempts": 1042,
+      "strict_generation": {
+        "n": 1013,
+        "valid_rate": 0.9713721618953604,
+        "accuracy": 0.7413622902270484,
+        "macro_f1": 0.6281428317089957,
+        "per_class": {
+          "A": {
+            "support": 106,
+            "recall": 0.6132075471698113,
+            "fpr": 0.03638368246968027,
+            "f1": 0.6372549019607843,
+            "correct": 65,
+            "predicted": 98,
+            "final_failures": 2,
+            "precision": 0.6632653061224489
+          },
+          "B": {
+            "support": 84,
+            "recall": 0.27380952380952384,
+            "fpr": 0.006458557588805167,
+            "f1": 0.40707964601769914,
+            "correct": 23,
+            "predicted": 29,
+            "final_failures": 2,
+            "precision": 0.7931034482758621
+          },
+          "C": {
+            "support": 562,
+            "recall": 0.8469750889679716,
+            "fpr": 0.23725055432372505,
+            "f1": 0.8314410480349345,
+            "correct": 476,
+            "predicted": 583,
+            "final_failures": 14,
+            "precision": 0.8164665523156089
+          },
+          "D": {
+            "support": 215,
+            "recall": 0.772093023255814,
+            "fpr": 0.09523809523809523,
+            "f1": 0.7264770240700219,
+            "correct": 166,
+            "predicted": 242,
+            "final_failures": 9,
+            "precision": 0.6859504132231405
+          },
+          "E": {
+            "support": 46,
+            "recall": 0.45652173913043476,
+            "fpr": 0.011375387797311272,
+            "f1": 0.5384615384615384,
+            "correct": 21,
+            "predicted": 32,
+            "final_failures": 2,
+            "precision": 0.65625
+          }
+        },
+        "correct": 751,
+        "teacher_matches": 836,
+        "teacher_agreement_all_cases": 0.8252714708785784,
+        "predicted_counts": {
+          "C": 583,
+          "D": 242,
+          "E": 32,
+          "B": 29,
+          "A": 98,
+          "FAIL": 29
+        },
+        "confusion_rows_reference_columns_prediction": {
+          "A": {
+            "A": 65,
+            "B": 3,
+            "C": 23,
+            "D": 12,
+            "E": 1,
+            "FAIL": 2
+          },
+          "B": {
+            "A": 25,
+            "B": 23,
+            "C": 30,
+            "D": 3,
+            "E": 1,
+            "FAIL": 2
+          },
+          "C": {
+            "A": 5,
+            "B": 3,
+            "C": 476,
+            "D": 56,
+            "E": 8,
+            "FAIL": 14
+          },
+          "D": {
+            "A": 2,
+            "B": 0,
+            "C": 37,
+            "D": 166,
+            "E": 1,
+            "FAIL": 9
+          },
+          "E": {
+            "A": 1,
+            "B": 0,
+            "C": 17,
+            "D": 5,
+            "E": 21,
+            "FAIL": 2
+          }
+        }
+      },
+      "first_token_choice": {
+        "n": 1013,
+        "valid_rate": 1.0,
+        "accuracy": 0.7551826258637709,
+        "macro_f1": 0.6288052183541383,
+        "per_class": {
+          "A": {
+            "support": 106,
+            "recall": 0.6132075471698113,
+            "fpr": 0.03638368246968027,
+            "f1": 0.6372549019607843,
+            "correct": 65,
+            "predicted": 98,
+            "final_failures": 0,
+            "precision": 0.6632653061224489
+          },
+          "B": {
+            "support": 84,
+            "recall": 0.27380952380952384,
+            "fpr": 0.006458557588805167,
+            "f1": 0.40707964601769914,
+            "correct": 23,
+            "predicted": 29,
+            "final_failures": 0,
+            "precision": 0.7931034482758621
+          },
+          "C": {
+            "support": 562,
+            "recall": 0.8718861209964412,
+            "fpr": 0.270509977827051,
+            "f1": 0.8347529812606473,
+            "correct": 490,
+            "predicted": 612,
+            "final_failures": 0,
+            "precision": 0.8006535947712419
+          },
+          "D": {
+            "support": 215,
+            "recall": 0.772093023255814,
+            "fpr": 0.09523809523809523,
+            "f1": 0.7264770240700219,
+            "correct": 166,
+            "predicted": 242,
+            "final_failures": 0,
+            "precision": 0.6859504132231405
+          },
+          "E": {
+            "support": 46,
+            "recall": 0.45652173913043476,
+            "fpr": 0.011375387797311272,
+            "f1": 0.5384615384615384,
+            "correct": 21,
+            "predicted": 32,
+            "final_failures": 0,
+            "precision": 0.65625
+          }
+        },
+        "correct": 765,
+        "teacher_matches": 852,
+        "teacher_agreement_all_cases": 0.84106614017769,
+        "predicted_counts": {
+          "C": 612,
+          "D": 242,
+          "E": 32,
+          "B": 29,
+          "A": 98
+        },
+        "confusion_rows_reference_columns_prediction": {
+          "A": {
+            "A": 65,
+            "B": 3,
+            "C": 25,
+            "D": 12,
+            "E": 1,
+            "FAIL": 0
+          },
+          "B": {
+            "A": 25,
+            "B": 23,
+            "C": 32,
+            "D": 3,
+            "E": 1,
+            "FAIL": 0
+          },
+          "C": {
+            "A": 5,
+            "B": 3,
+            "C": 490,
+            "D": 56,
+            "E": 8,
+            "FAIL": 0
+          },
+          "D": {
+            "A": 2,
+            "B": 0,
+            "C": 46,
+            "D": 166,
+            "E": 1,
+            "FAIL": 0
+          },
+          "E": {
+            "A": 1,
+            "B": 0,
+            "C": 19,
+            "D": 5,
+            "E": 21,
+            "FAIL": 0
+          }
+        }
+      },
+      "first_choice_correct_on_empty": 14,
+      "hypothetical_all_empty_correct": {
+        "accuracy": 0.769990128331688,
+        "macro_f1": 0.6513795042397315,
+        "correct": 780
+      },
+      "paired_vs_teacher": {
+        "both_correct": 699,
+        "left_only_correct": 52,
+        "right_only_correct": 97,
+        "neither_correct": 165
+      }
+    },
+    "r16_a32_lr5e-5": {
+      "rank": 16,
+      "alpha": 32,
+      "alpha_over_rank": 2.0,
+      "learning_rate": "5e-5",
+      "training_n": 9000,
+      "train_path": "output/lora/gemma3-270m-it_v3_n9000_r16_a32_lr5e-5_e3_drop0.05",
+      "evaluation_path": "output/lora_eval/gemma3-270m-it_v3_n9000_r16_a32_lr5e-5_e3_drop0.05_validation",
+      "training_seconds": 4213.989402220002,
+      "optimizer_updates": 3375,
+      "trainable_parameters": 737280,
+      "epoch_loss": [
+        0.38589420821269355,
+        0.2055585691281077,
+        0.17544405191081267
+      ],
+      "attempt_seconds": 84.02239273724263,
+      "n_attempts": 1042,
+      "strict_generation": {
+        "n": 1013,
+        "valid_rate": 0.9713721618953604,
+        "accuracy": 0.7462981243830207,
+        "macro_f1": 0.6415286960222666,
+        "per_class": {
+          "A": {
+            "support": 106,
+            "recall": 0.6037735849056604,
+            "fpr": 0.03638368246968027,
+            "f1": 0.6305418719211823,
+            "correct": 64,
+            "predicted": 97,
+            "final_failures": 2,
+            "precision": 0.6597938144329897
+          },
+          "B": {
+            "support": 84,
+            "recall": 0.32142857142857145,
+            "fpr": 0.007534983853606028,
+            "f1": 0.4576271186440678,
+            "correct": 27,
+            "predicted": 34,
+            "final_failures": 2,
+            "precision": 0.7941176470588235
+          },
+          "C": {
+            "support": 562,
+            "recall": 0.8523131672597865,
+            "fpr": 0.2328159645232816,
+            "f1": 0.8359511343804538,
+            "correct": 479,
+            "predicted": 584,
+            "final_failures": 14,
+            "precision": 0.8202054794520548
+          },
+          "D": {
+            "support": 215,
+            "recall": 0.7581395348837209,
+            "fpr": 0.08646616541353383,
+            "f1": 0.7293064876957495,
+            "correct": 163,
+            "predicted": 232,
+            "final_failures": 9,
+            "precision": 0.7025862068965517
+          },
+          "E": {
+            "support": 46,
+            "recall": 0.5,
+            "fpr": 0.014477766287487074,
+            "f1": 0.5542168674698795,
+            "correct": 23,
+            "predicted": 37,
+            "final_failures": 2,
+            "precision": 0.6216216216216216
+          }
+        },
+        "correct": 756,
+        "teacher_matches": 842,
+        "teacher_agreement_all_cases": 0.8311944718657454,
+        "predicted_counts": {
+          "C": 584,
+          "D": 232,
+          "E": 37,
+          "B": 34,
+          "A": 97,
+          "FAIL": 29
+        },
+        "confusion_rows_reference_columns_prediction": {
+          "A": {
+            "A": 64,
+            "B": 3,
+            "C": 23,
+            "D": 11,
+            "E": 3,
+            "FAIL": 2
+          },
+          "B": {
+            "A": 24,
+            "B": 27,
+            "C": 27,
+            "D": 3,
+            "E": 1,
+            "FAIL": 2
+          },
+          "C": {
+            "A": 6,
+            "B": 4,
+            "C": 479,
+            "D": 50,
+            "E": 9,
+            "FAIL": 14
+          },
+          "D": {
+            "A": 3,
+            "B": 0,
+            "C": 39,
+            "D": 163,
+            "E": 1,
+            "FAIL": 9
+          },
+          "E": {
+            "A": 0,
+            "B": 0,
+            "C": 16,
+            "D": 5,
+            "E": 23,
+            "FAIL": 2
+          }
+        }
+      },
+      "first_token_choice": {
+        "n": 1013,
+        "valid_rate": 1.0,
+        "accuracy": 0.7601184600197434,
+        "macro_f1": 0.6421682563802185,
+        "per_class": {
+          "A": {
+            "support": 106,
+            "recall": 0.6037735849056604,
+            "fpr": 0.03638368246968027,
+            "f1": 0.6305418719211823,
+            "correct": 64,
+            "predicted": 97,
+            "final_failures": 0,
+            "precision": 0.6597938144329897
+          },
+          "B": {
+            "support": 84,
+            "recall": 0.32142857142857145,
+            "fpr": 0.007534983853606028,
+            "f1": 0.4576271186440678,
+            "correct": 27,
+            "predicted": 34,
+            "final_failures": 0,
+            "precision": 0.7941176470588235
+          },
+          "C": {
+            "support": 562,
+            "recall": 0.8772241992882562,
+            "fpr": 0.2660753880266075,
+            "f1": 0.8391489361702128,
+            "correct": 493,
+            "predicted": 613,
+            "final_failures": 0,
+            "precision": 0.8042414355628059
+          },
+          "D": {
+            "support": 215,
+            "recall": 0.7581395348837209,
+            "fpr": 0.08646616541353383,
+            "f1": 0.7293064876957495,
+            "correct": 163,
+            "predicted": 232,
+            "final_failures": 0,
+            "precision": 0.7025862068965517
+          },
+          "E": {
+            "support": 46,
+            "recall": 0.5,
+            "fpr": 0.014477766287487074,
+            "f1": 0.5542168674698795,
+            "correct": 23,
+            "predicted": 37,
+            "final_failures": 0,
+            "precision": 0.6216216216216216
+          }
+        },
+        "correct": 770,
+        "teacher_matches": 858,
+        "teacher_agreement_all_cases": 0.8469891411648569,
+        "predicted_counts": {
+          "C": 613,
+          "D": 232,
+          "E": 37,
+          "B": 34,
+          "A": 97
+        },
+        "confusion_rows_reference_columns_prediction": {
+          "A": {
+            "A": 64,
+            "B": 3,
+            "C": 25,
+            "D": 11,
+            "E": 3,
+            "FAIL": 0
+          },
+          "B": {
+            "A": 24,
+            "B": 27,
+            "C": 29,
+            "D": 3,
+            "E": 1,
+            "FAIL": 0
+          },
+          "C": {
+            "A": 6,
+            "B": 4,
+            "C": 493,
+            "D": 50,
+            "E": 9,
+            "FAIL": 0
+          },
+          "D": {
+            "A": 3,
+            "B": 0,
+            "C": 48,
+            "D": 163,
+            "E": 1,
+            "FAIL": 0
+          },
+          "E": {
+            "A": 0,
+            "B": 0,
+            "C": 18,
+            "D": 5,
+            "E": 23,
+            "FAIL": 0
+          }
+        }
+      },
+      "first_choice_correct_on_empty": 14,
+      "hypothetical_all_empty_correct": {
+        "accuracy": 0.7749259624876604,
+        "macro_f1": 0.6639714062775303,
+        "correct": 785
+      },
+      "paired_vs_teacher": {
+        "both_correct": 706,
+        "left_only_correct": 50,
+        "right_only_correct": 90,
+        "neither_correct": 167
+      }
+    },
+    "r32_a64_lr5e-5": {
+      "rank": 32,
+      "alpha": 64,
+      "alpha_over_rank": 2.0,
+      "learning_rate": "5e-5",
+      "training_n": 9000,
+      "train_path": "output/lora/gemma3-270m-it_v3_n9000_r32_a64_lr5e-5_e3_drop0.05",
+      "evaluation_path": "output/lora_eval/gemma3-270m-it_v3_n9000_r32_a64_lr5e-5_e3_drop0.05_validation",
+      "training_seconds": 4107.059331237004,
+      "optimizer_updates": 3375,
+      "trainable_parameters": 1474560,
+      "epoch_loss": [
+        0.3407844153787527,
+        0.19113829873460864,
+        0.16003552628846632
+      ],
+      "attempt_seconds": 85.46047213612474,
+      "n_attempts": 1042,
+      "strict_generation": {
+        "n": 1013,
+        "valid_rate": 0.9713721618953604,
+        "accuracy": 0.7522211253701876,
+        "macro_f1": 0.6401950547773064,
+        "per_class": {
+          "A": {
+            "support": 106,
+            "recall": 0.5849056603773585,
+            "fpr": 0.030871003307607496,
+            "f1": 0.6326530612244898,
+            "correct": 62,
+            "predicted": 90,
+            "final_failures": 2,
+            "precision": 0.6888888888888889
+          },
+          "B": {
+            "support": 84,
+            "recall": 0.30952380952380953,
+            "fpr": 0.006458557588805167,
+            "f1": 0.4482758620689655,
+            "correct": 26,
+            "predicted": 32,
+            "final_failures": 2,
+            "precision": 0.8125
+          },
+          "C": {
+            "support": 562,
+            "recall": 0.8612099644128114,
+            "fpr": 0.23059866962305986,
+            "f1": 0.8417391304347827,
+            "correct": 484,
+            "predicted": 588,
+            "final_failures": 14,
+            "precision": 0.8231292517006803
+          },
+          "D": {
+            "support": 215,
+            "recall": 0.7813953488372093,
+            "fpr": 0.08771929824561403,
+            "f1": 0.7417218543046358,
+            "correct": 168,
+            "predicted": 238,
+            "final_failures": 9,
+            "precision": 0.7058823529411765
+          },
+          "E": {
+            "support": 46,
+            "recall": 0.4782608695652174,
+            "fpr": 0.014477766287487074,
+            "f1": 0.5365853658536586,
+            "correct": 22,
+            "predicted": 36,
+            "final_failures": 2,
+            "precision": 0.6111111111111112
+          }
+        },
+        "correct": 762,
+        "teacher_matches": 849,
+        "teacher_agreement_all_cases": 0.8381046396841066,
+        "predicted_counts": {
+          "D": 238,
+          "C": 588,
+          "B": 32,
+          "E": 36,
+          "A": 90,
+          "FAIL": 29
+        },
+        "confusion_rows_reference_columns_prediction": {
+          "A": {
+            "A": 62,
+            "B": 3,
+            "C": 25,
+            "D": 11,
+            "E": 3,
+            "FAIL": 2
+          },
+          "B": {
+            "A": 21,
+            "B": 26,
+            "C": 30,
+            "D": 3,
+            "E": 2,
+            "FAIL": 2
+          },
+          "C": {
+            "A": 4,
+            "B": 3,
+            "C": 484,
+            "D": 50,
+            "E": 7,
+            "FAIL": 14
+          },
+          "D": {
+            "A": 3,
+            "B": 0,
+            "C": 33,
+            "D": 168,
+            "E": 2,
+            "FAIL": 9
+          },
+          "E": {
+            "A": 0,
+            "B": 0,
+            "C": 16,
+            "D": 6,
+            "E": 22,
+            "FAIL": 2
+          }
+        }
+      },
+      "first_token_choice": {
+        "n": 1013,
+        "valid_rate": 1.0,
+        "accuracy": 0.7660414610069102,
+        "macro_f1": 0.6408039716928945,
+        "per_class": {
+          "A": {
+            "support": 106,
+            "recall": 0.5849056603773585,
+            "fpr": 0.030871003307607496,
+            "f1": 0.6326530612244898,
+            "correct": 62,
+            "predicted": 90,
+            "final_failures": 0,
+            "precision": 0.6888888888888889
+          },
+          "B": {
+            "support": 84,
+            "recall": 0.30952380952380953,
+            "fpr": 0.006458557588805167,
+            "f1": 0.4482758620689655,
+            "correct": 26,
+            "predicted": 32,
+            "final_failures": 0,
+            "precision": 0.8125
+          },
+          "C": {
+            "support": 562,
+            "recall": 0.8861209964412812,
+            "fpr": 0.2638580931263858,
+            "f1": 0.8447837150127226,
+            "correct": 498,
+            "predicted": 617,
+            "final_failures": 0,
+            "precision": 0.807131280388979
+          },
+          "D": {
+            "support": 215,
+            "recall": 0.7813953488372093,
+            "fpr": 0.08771929824561403,
+            "f1": 0.7417218543046358,
+            "correct": 168,
+            "predicted": 238,
+            "final_failures": 0,
+            "precision": 0.7058823529411765
+          },
+          "E": {
+            "support": 46,
+            "recall": 0.4782608695652174,
+            "fpr": 0.014477766287487074,
+            "f1": 0.5365853658536586,
+            "correct": 22,
+            "predicted": 36,
+            "final_failures": 0,
+            "precision": 0.6111111111111112
+          }
+        },
+        "correct": 776,
+        "teacher_matches": 865,
+        "teacher_agreement_all_cases": 0.8538993089832182,
+        "predicted_counts": {
+          "D": 238,
+          "C": 617,
+          "B": 32,
+          "E": 36,
+          "A": 90
+        },
+        "confusion_rows_reference_columns_prediction": {
+          "A": {
+            "A": 62,
+            "B": 3,
+            "C": 27,
+            "D": 11,
+            "E": 3,
+            "FAIL": 0
+          },
+          "B": {
+            "A": 21,
+            "B": 26,
+            "C": 32,
+            "D": 3,
+            "E": 2,
+            "FAIL": 0
+          },
+          "C": {
+            "A": 4,
+            "B": 3,
+            "C": 498,
+            "D": 50,
+            "E": 7,
+            "FAIL": 0
+          },
+          "D": {
+            "A": 3,
+            "B": 0,
+            "C": 42,
+            "D": 168,
+            "E": 2,
+            "FAIL": 0
+          },
+          "E": {
+            "A": 0,
+            "B": 0,
+            "C": 18,
+            "D": 6,
+            "E": 22,
+            "FAIL": 0
+          }
+        }
+      },
+      "first_choice_correct_on_empty": 14,
+      "hypothetical_all_empty_correct": {
+        "accuracy": 0.7808489634748272,
+        "macro_f1": 0.6628746716812417,
+        "correct": 791
+      },
+      "paired_vs_teacher": {
+        "both_correct": 714,
+        "left_only_correct": 48,
+        "right_only_correct": 82,
+        "neither_correct": 169
+      }
+    },
+    "r8_a8_lr5e-5": {
+      "rank": 8,
+      "alpha": 8,
+      "alpha_over_rank": 1.0,
+      "learning_rate": "5e-5",
+      "training_n": 9000,
+      "train_path": "output/lora/gemma3-270m-it_v3_n9000_r8_a8_lr5e-5_e3_drop0.05",
+      "evaluation_path": "output/lora_eval/gemma3-270m-it_v3_n9000_r8_a8_lr5e-5_e3_drop0.05_validation",
+      "training_seconds": 4062.299425182995,
+      "optimizer_updates": 3375,
+      "trainable_parameters": 368640,
+      "epoch_loss": [
+        0.5021418347689841,
+        0.25388366691271463,
+        0.21182497971091005
+      ],
+      "attempt_seconds": 85.49337940996338,
+      "n_attempts": 1042,
+      "strict_generation": {
+        "n": 1013,
+        "valid_rate": 0.9713721618953604,
+        "accuracy": 0.7305034550839091,
+        "macro_f1": 0.60015666128223,
+        "per_class": {
+          "A": {
+            "support": 106,
+            "recall": 0.5754716981132075,
+            "fpr": 0.037486218302094816,
+            "f1": 0.6069651741293532,
+            "correct": 61,
+            "predicted": 95,
+            "final_failures": 2,
+            "precision": 0.6421052631578947
+          },
+          "B": {
+            "support": 84,
+            "recall": 0.2261904761904762,
+            "fpr": 0.005382131324004306,
+            "f1": 0.35185185185185186,
+            "correct": 19,
+            "predicted": 24,
+            "final_failures": 2,
+            "precision": 0.7916666666666666
+          },
+          "C": {
+            "support": 562,
+            "recall": 0.8469750889679716,
+            "fpr": 0.2549889135254989,
+            "f1": 0.8256721595836947,
+            "correct": 476,
+            "predicted": 591,
+            "final_failures": 14,
+            "precision": 0.805414551607445
+          },
+          "D": {
+            "support": 215,
+            "recall": 0.7627906976744186,
+            "fpr": 0.09398496240601503,
+            "f1": 0.7224669603524229,
+            "correct": 164,
+            "predicted": 239,
+            "final_failures": 9,
+            "precision": 0.6861924686192469
+          },
+          "E": {
+            "support": 46,
+            "recall": 0.43478260869565216,
+            "fpr": 0.015511892450879007,
+            "f1": 0.49382716049382713,
+            "correct": 20,
+            "predicted": 35,
+            "final_failures": 2,
+            "precision": 0.5714285714285714
+          }
+        },
+        "correct": 740,
+        "teacher_matches": 818,
+        "teacher_agreement_all_cases": 0.807502467917078,
+        "predicted_counts": {
+          "C": 591,
+          "D": 239,
+          "E": 35,
+          "B": 24,
+          "A": 95,
+          "FAIL": 29
+        },
+        "confusion_rows_reference_columns_prediction": {
+          "A": {
+            "A": 61,
+            "B": 2,
+            "C": 26,
+            "D": 11,
+            "E": 4,
+            "FAIL": 2
+          },
+          "B": {
+            "A": 26,
+            "B": 19,
+            "C": 33,
+            "D": 3,
+            "E": 1,
+            "FAIL": 2
+          },
+          "C": {
+            "A": 4,
+            "B": 3,
+            "C": 476,
+            "D": 56,
+            "E": 9,
+            "FAIL": 14
+          },
+          "D": {
+            "A": 2,
+            "B": 0,
+            "C": 39,
+            "D": 164,
+            "E": 1,
+            "FAIL": 9
+          },
+          "E": {
+            "A": 2,
+            "B": 0,
+            "C": 17,
+            "D": 5,
+            "E": 20,
+            "FAIL": 2
+          }
+        }
+      },
+      "first_token_choice": {
+        "n": 1013,
+        "valid_rate": 1.0,
+        "accuracy": 0.7443237907206318,
+        "macro_f1": 0.6008428723434944,
+        "per_class": {
+          "A": {
+            "support": 106,
+            "recall": 0.5754716981132075,
+            "fpr": 0.037486218302094816,
+            "f1": 0.6069651741293532,
+            "correct": 61,
+            "predicted": 95,
+            "final_failures": 0,
+            "precision": 0.6421052631578947
+          },
+          "B": {
+            "support": 84,
+            "recall": 0.2261904761904762,
+            "fpr": 0.005382131324004306,
+            "f1": 0.35185185185185186,
+            "correct": 19,
+            "predicted": 24,
+            "final_failures": 0,
+            "precision": 0.7916666666666666
+          },
+          "C": {
+            "support": 562,
+            "recall": 0.8718861209964412,
+            "fpr": 0.28824833702882485,
+            "f1": 0.8291032148900169,
+            "correct": 490,
+            "predicted": 620,
+            "final_failures": 0,
+            "precision": 0.7903225806451613
+          },
+          "D": {
+            "support": 215,
+            "recall": 0.7627906976744186,
+            "fpr": 0.09398496240601503,
+            "f1": 0.7224669603524229,
+            "correct": 164,
+            "predicted": 239,
+            "final_failures": 0,
+            "precision": 0.6861924686192469
+          },
+          "E": {
+            "support": 46,
+            "recall": 0.43478260869565216,
+            "fpr": 0.015511892450879007,
+            "f1": 0.49382716049382713,
+            "correct": 20,
+            "predicted": 35,
+            "final_failures": 0,
+            "precision": 0.5714285714285714
+          }
+        },
+        "correct": 754,
+        "teacher_matches": 834,
+        "teacher_agreement_all_cases": 0.8232971372161896,
+        "predicted_counts": {
+          "C": 620,
+          "D": 239,
+          "E": 35,
+          "B": 24,
+          "A": 95
+        },
+        "confusion_rows_reference_columns_prediction": {
+          "A": {
+            "A": 61,
+            "B": 2,
+            "C": 28,
+            "D": 11,
+            "E": 4,
+            "FAIL": 0
+          },
+          "B": {
+            "A": 26,
+            "B": 19,
+            "C": 35,
+            "D": 3,
+            "E": 1,
+            "FAIL": 0
+          },
+          "C": {
+            "A": 4,
+            "B": 3,
+            "C": 490,
+            "D": 56,
+            "E": 9,
+            "FAIL": 0
+          },
+          "D": {
+            "A": 2,
+            "B": 0,
+            "C": 48,
+            "D": 164,
+            "E": 1,
+            "FAIL": 0
+          },
+          "E": {
+            "A": 2,
+            "B": 0,
+            "C": 19,
+            "D": 5,
+            "E": 20,
+            "FAIL": 0
+          }
+        }
+      },
+      "first_choice_correct_on_empty": 14,
+      "hypothetical_all_empty_correct": {
+        "accuracy": 0.7591312931885489,
+        "macro_f1": 0.6239377206905741,
+        "correct": 769
+      },
+      "paired_vs_teacher": {
+        "both_correct": 688,
+        "left_only_correct": 52,
+        "right_only_correct": 108,
+        "neither_correct": 165
+      }
+    },
+    "r8_a32_lr5e-5": {
+      "rank": 8,
+      "alpha": 32,
+      "alpha_over_rank": 4.0,
+      "learning_rate": "5e-5",
+      "training_n": 9000,
+      "train_path": "output/lora/gemma3-270m-it_v3_n9000_r8_a32_lr5e-5_e3_drop0.05",
+      "evaluation_path": "output/lora_eval/gemma3-270m-it_v3_n9000_r8_a32_lr5e-5_e3_drop0.05_validation",
+      "training_seconds": 4090.727931682006,
+      "optimizer_updates": 3375,
+      "trainable_parameters": 368640,
+      "epoch_loss": [
+        0.37883387861814766,
+        0.20689256995895672,
+        0.17823593660319845
+      ],
+      "attempt_seconds": 85.06931304591126,
+      "n_attempts": 1042,
+      "strict_generation": {
+        "n": 1013,
+        "valid_rate": 0.9713721618953604,
+        "accuracy": 0.7453109575518263,
+        "macro_f1": 0.6352739303971204,
+        "per_class": {
+          "A": {
+            "support": 106,
+            "recall": 0.5943396226415094,
+            "fpr": 0.03307607497243661,
+            "f1": 0.6331658291457286,
+            "correct": 63,
+            "predicted": 93,
+            "final_failures": 2,
+            "precision": 0.6774193548387096
+          },
+          "B": {
+            "support": 84,
+            "recall": 0.2857142857142857,
+            "fpr": 0.007534983853606028,
+            "f1": 0.41739130434782606,
+            "correct": 24,
+            "predicted": 31,
+            "final_failures": 2,
+            "precision": 0.7741935483870968
+          },
+          "C": {
+            "support": 562,
+            "recall": 0.8505338078291815,
+            "fpr": 0.22838137472283815,
+            "f1": 0.8363954505686789,
+            "correct": 478,
+            "predicted": 581,
+            "final_failures": 14,
+            "precision": 0.8227194492254734
+          },
+          "D": {
+            "support": 215,
+            "recall": 0.772093023255814,
+            "fpr": 0.09147869674185463,
+            "f1": 0.7312775330396476,
+            "correct": 166,
+            "predicted": 239,
+            "final_failures": 9,
+            "precision": 0.694560669456067
+          },
+          "E": {
+            "support": 46,
+            "recall": 0.5217391304347826,
+            "fpr": 0.016546018614270942,
+            "f1": 0.5581395348837209,
+            "correct": 24,
+            "predicted": 40,
+            "final_failures": 2,
+            "precision": 0.6
+          }
+        },
+        "correct": 755,
+        "teacher_matches": 846,
+        "teacher_agreement_all_cases": 0.8351431391905232,
+        "predicted_counts": {
+          "D": 239,
+          "C": 581,
+          "E": 40,
+          "B": 31,
+          "A": 93,
+          "FAIL": 29
+        },
+        "confusion_rows_reference_columns_prediction": {
+          "A": {
+            "A": 63,
+            "B": 4,
+            "C": 23,
+            "D": 12,
+            "E": 2,
+            "FAIL": 2
+          },
+          "B": {
+            "A": 21,
+            "B": 24,
+            "C": 32,
+            "D": 3,
+            "E": 2,
+            "FAIL": 2
+          },
+          "C": {
+            "A": 6,
+            "B": 3,
+            "C": 478,
+            "D": 52,
+            "E": 9,
+            "FAIL": 14
+          },
+          "D": {
+            "A": 3,
+            "B": 0,
+            "C": 34,
+            "D": 166,
+            "E": 3,
+            "FAIL": 9
+          },
+          "E": {
+            "A": 0,
+            "B": 0,
+            "C": 14,
+            "D": 6,
+            "E": 24,
+            "FAIL": 2
+          }
+        }
+      },
+      "first_token_choice": {
+        "n": 1013,
+        "valid_rate": 1.0,
+        "accuracy": 0.7591312931885489,
+        "macro_f1": 0.6359129290205859,
+        "per_class": {
+          "A": {
+            "support": 106,
+            "recall": 0.5943396226415094,
+            "fpr": 0.03307607497243661,
+            "f1": 0.6331658291457286,
+            "correct": 63,
+            "predicted": 93,
+            "final_failures": 0,
+            "precision": 0.6774193548387096
+          },
+          "B": {
+            "support": 84,
+            "recall": 0.2857142857142857,
+            "fpr": 0.007534983853606028,
+            "f1": 0.41739130434782606,
+            "correct": 24,
+            "predicted": 31,
+            "final_failures": 0,
+            "precision": 0.7741935483870968
+          },
+          "C": {
+            "support": 562,
+            "recall": 0.8754448398576512,
+            "fpr": 0.2616407982261641,
+            "f1": 0.8395904436860068,
+            "correct": 492,
+            "predicted": 610,
+            "final_failures": 0,
+            "precision": 0.8065573770491803
+          },
+          "D": {
+            "support": 215,
+            "recall": 0.772093023255814,
+            "fpr": 0.09147869674185463,
+            "f1": 0.7312775330396476,
+            "correct": 166,
+            "predicted": 239,
+            "final_failures": 0,
+            "precision": 0.694560669456067
+          },
+          "E": {
+            "support": 46,
+            "recall": 0.5217391304347826,
+            "fpr": 0.016546018614270942,
+            "f1": 0.5581395348837209,
+            "correct": 24,
+            "predicted": 40,
+            "final_failures": 0,
+            "precision": 0.6
+          }
+        },
+        "correct": 769,
+        "teacher_matches": 862,
+        "teacher_agreement_all_cases": 0.8509378084896347,
+        "predicted_counts": {
+          "D": 239,
+          "C": 610,
+          "E": 40,
+          "B": 31,
+          "A": 93
+        },
+        "confusion_rows_reference_columns_prediction": {
+          "A": {
+            "A": 63,
+            "B": 4,
+            "C": 25,
+            "D": 12,
+            "E": 2,
+            "FAIL": 0
+          },
+          "B": {
+            "A": 21,
+            "B": 24,
+            "C": 34,
+            "D": 3,
+            "E": 2,
+            "FAIL": 0
+          },
+          "C": {
+            "A": 6,
+            "B": 3,
+            "C": 492,
+            "D": 52,
+            "E": 9,
+            "FAIL": 0
+          },
+          "D": {
+            "A": 3,
+            "B": 0,
+            "C": 43,
+            "D": 166,
+            "E": 3,
+            "FAIL": 0
+          },
+          "E": {
+            "A": 0,
+            "B": 0,
+            "C": 16,
+            "D": 6,
+            "E": 24,
+            "FAIL": 0
+          }
+        }
+      },
+      "first_choice_correct_on_empty": 14,
+      "hypothetical_all_empty_correct": {
+        "accuracy": 0.773938795656466,
+        "macro_f1": 0.6577069193350155,
+        "correct": 784
+      },
+      "paired_vs_teacher": {
+        "both_correct": 706,
+        "left_only_correct": 49,
+        "right_only_correct": 90,
+        "neither_correct": 168
+      }
+    },
+    "r16_a16_lr5e-5": {
+      "rank": 16,
+      "alpha": 16,
+      "alpha_over_rank": 1.0,
+      "learning_rate": "5e-5",
+      "training_n": 9000,
+      "train_path": "output/lora/gemma3-270m-it_v3_n9000_r16_a16_lr5e-5_e3_drop0.05",
+      "evaluation_path": "output/lora_eval/gemma3-270m-it_v3_n9000_r16_a16_lr5e-5_e3_drop0.05_validation",
+      "training_seconds": 4094.5695102259924,
+      "optimizer_updates": 3375,
+      "trainable_parameters": 737280,
+      "epoch_loss": [
+        0.4508973347759909,
+        0.2267011855888284,
+        0.19281473729593887
+      ],
+      "attempt_seconds": 84.58999212074559,
+      "n_attempts": 1042,
+      "strict_generation": {
+        "n": 1013,
+        "valid_rate": 0.9713721618953604,
+        "accuracy": 0.7354392892398816,
+        "macro_f1": 0.615073201530147,
+        "per_class": {
+          "A": {
+            "support": 106,
+            "recall": 0.5849056603773585,
+            "fpr": 0.03638368246968027,
+            "f1": 0.6169154228855721,
+            "correct": 62,
+            "predicted": 95,
+            "final_failures": 2,
+            "precision": 0.6526315789473685
+          },
+          "B": {
+            "support": 84,
+            "recall": 0.25,
+            "fpr": 0.007534983853606028,
+            "f1": 0.375,
+            "correct": 21,
+            "predicted": 28,
+            "final_failures": 2,
+            "precision": 0.75
+          },
+          "C": {
+            "support": 562,
+            "recall": 0.8469750889679716,
+            "fpr": 0.24390243902439024,
+            "f1": 0.8292682926829268,
+            "correct": 476,
+            "predicted": 586,
+            "final_failures": 14,
+            "precision": 0.8122866894197952
+          },
+          "D": {
+            "support": 215,
+            "recall": 0.7627906976744186,
+            "fpr": 0.09273182957393483,
+            "f1": 0.7240618101545254,
+            "correct": 164,
+            "predicted": 238,
+            "final_failures": 9,
+            "precision": 0.6890756302521008
+          },
+          "E": {
+            "support": 46,
+            "recall": 0.4782608695652174,
+            "fpr": 0.015511892450879007,
+            "f1": 0.5301204819277109,
+            "correct": 22,
+            "predicted": 37,
+            "final_failures": 2,
+            "precision": 0.5945945945945946
+          }
+        },
+        "correct": 745,
+        "teacher_matches": 832,
+        "teacher_agreement_all_cases": 0.8213228035538006,
+        "predicted_counts": {
+          "C": 586,
+          "D": 238,
+          "E": 37,
+          "B": 28,
+          "A": 95,
+          "FAIL": 29
+        },
+        "confusion_rows_reference_columns_prediction": {
+          "A": {
+            "A": 62,
+            "B": 3,
+            "C": 23,
+            "D": 13,
+            "E": 3,
+            "FAIL": 2
+          },
+          "B": {
+            "A": 25,
+            "B": 21,
+            "C": 32,
+            "D": 3,
+            "E": 1,
+            "FAIL": 2
+          },
+          "C": {
+            "A": 5,
+            "B": 4,
+            "C": 476,
+            "D": 54,
+            "E": 9,
+            "FAIL": 14
+          },
+          "D": {
+            "A": 3,
+            "B": 0,
+            "C": 37,
+            "D": 164,
+            "E": 2,
+            "FAIL": 9
+          },
+          "E": {
+            "A": 0,
+            "B": 0,
+            "C": 18,
+            "D": 4,
+            "E": 22,
+            "FAIL": 2
+          }
+        }
+      },
+      "first_token_choice": {
+        "n": 1013,
+        "valid_rate": 1.0,
+        "accuracy": 0.7492596248766041,
+        "macro_f1": 0.6157446067148871,
+        "per_class": {
+          "A": {
+            "support": 106,
+            "recall": 0.5849056603773585,
+            "fpr": 0.03638368246968027,
+            "f1": 0.6169154228855721,
+            "correct": 62,
+            "predicted": 95,
+            "final_failures": 0,
+            "precision": 0.6526315789473685
+          },
+          "B": {
+            "support": 84,
+            "recall": 0.25,
+            "fpr": 0.007534983853606028,
+            "f1": 0.375,
+            "correct": 21,
+            "predicted": 28,
+            "final_failures": 0,
+            "precision": 0.75
+          },
+          "C": {
+            "support": 562,
+            "recall": 0.8718861209964412,
+            "fpr": 0.2771618625277162,
+            "f1": 0.832625318606627,
+            "correct": 490,
+            "predicted": 615,
+            "final_failures": 0,
+            "precision": 0.7967479674796748
+          },
+          "D": {
+            "support": 215,
+            "recall": 0.7627906976744186,
+            "fpr": 0.09273182957393483,
+            "f1": 0.7240618101545254,
+            "correct": 164,
+            "predicted": 238,
+            "final_failures": 0,
+            "precision": 0.6890756302521008
+          },
+          "E": {
+            "support": 46,
+            "recall": 0.4782608695652174,
+            "fpr": 0.015511892450879007,
+            "f1": 0.5301204819277109,
+            "correct": 22,
+            "predicted": 37,
+            "final_failures": 0,
+            "precision": 0.5945945945945946
+          }
+        },
+        "correct": 759,
+        "teacher_matches": 848,
+        "teacher_agreement_all_cases": 0.8371174728529122,
+        "predicted_counts": {
+          "C": 615,
+          "D": 238,
+          "E": 37,
+          "B": 28,
+          "A": 95
+        },
+        "confusion_rows_reference_columns_prediction": {
+          "A": {
+            "A": 62,
+            "B": 3,
+            "C": 25,
+            "D": 13,
+            "E": 3,
+            "FAIL": 0
+          },
+          "B": {
+            "A": 25,
+            "B": 21,
+            "C": 34,
+            "D": 3,
+            "E": 1,
+            "FAIL": 0
+          },
+          "C": {
+            "A": 5,
+            "B": 4,
+            "C": 490,
+            "D": 54,
+            "E": 9,
+            "FAIL": 0
+          },
+          "D": {
+            "A": 3,
+            "B": 0,
+            "C": 46,
+            "D": 164,
+            "E": 2,
+            "FAIL": 0
+          },
+          "E": {
+            "A": 0,
+            "B": 0,
+            "C": 20,
+            "D": 4,
+            "E": 22,
+            "FAIL": 0
+          }
+        }
+      },
+      "first_choice_correct_on_empty": 14,
+      "hypothetical_all_empty_correct": {
+        "accuracy": 0.7640671273445212,
+        "macro_f1": 0.63820955381952,
+        "correct": 774
+      },
+      "paired_vs_teacher": {
+        "both_correct": 695,
+        "left_only_correct": 50,
+        "right_only_correct": 101,
+        "neither_correct": 167
+      }
+    },
+    "r16_a64_lr5e-5": {
+      "rank": 16,
+      "alpha": 64,
+      "alpha_over_rank": 4.0,
+      "learning_rate": "5e-5",
+      "training_n": 9000,
+      "train_path": "output/lora/gemma3-270m-it_v3_n9000_r16_a64_lr5e-5_e3_drop0.05",
+      "evaluation_path": "output/lora_eval/gemma3-270m-it_v3_n9000_r16_a64_lr5e-5_e3_drop0.05_validation",
+      "training_seconds": 4029.7938199960045,
+      "optimizer_updates": 3375,
+      "trainable_parameters": 737280,
+      "epoch_loss": [
+        0.3407311112483343,
+        0.19080718886914352,
+        0.15984407100598846
+      ],
+      "attempt_seconds": 85.15664709024713,
+      "n_attempts": 1042,
+      "strict_generation": {
+        "n": 1013,
+        "valid_rate": 0.9713721618953604,
+        "accuracy": 0.7492596248766041,
+        "macro_f1": 0.6430833491772147,
+        "per_class": {
+          "A": {
+            "support": 106,
+            "recall": 0.5943396226415094,
+            "fpr": 0.030871003307607496,
+            "f1": 0.6395939086294417,
+            "correct": 63,
+            "predicted": 91,
+            "final_failures": 2,
+            "precision": 0.6923076923076923
+          },
+          "B": {
+            "support": 84,
+            "recall": 0.32142857142857145,
+            "fpr": 0.006458557588805167,
+            "f1": 0.46153846153846156,
+            "correct": 27,
+            "predicted": 33,
+            "final_failures": 2,
+            "precision": 0.8181818181818182
+          },
+          "C": {
+            "support": 562,
+            "recall": 0.8540925266903915,
+            "fpr": 0.2328159645232816,
+            "f1": 0.8369659982563208,
+            "correct": 480,
+            "predicted": 585,
+            "final_failures": 14,
+            "precision": 0.8205128205128205
+          },
+          "D": {
+            "support": 215,
+            "recall": 0.772093023255814,
+            "fpr": 0.08771929824561403,
+            "f1": 0.7361419068736141,
+            "correct": 166,
+            "predicted": 236,
+            "final_failures": 9,
+            "precision": 0.7033898305084746
+          },
+          "E": {
+            "support": 46,
+            "recall": 0.5,
+            "fpr": 0.016546018614270942,
+            "f1": 0.5411764705882353,
+            "correct": 23,
+            "predicted": 39,
+            "final_failures": 2,
+            "precision": 0.5897435897435898
+          }
+        },
+        "correct": 759,
+        "teacher_matches": 847,
+        "teacher_agreement_all_cases": 0.8361303060217177,
+        "predicted_counts": {
+          "D": 236,
+          "C": 585,
+          "E": 39,
+          "B": 33,
+          "A": 91,
+          "FAIL": 29
+        },
+        "confusion_rows_reference_columns_prediction": {
+          "A": {
+            "A": 63,
+            "B": 3,
+            "C": 25,
+            "D": 10,
+            "E": 3,
+            "FAIL": 2
+          },
+          "B": {
+            "A": 20,
+            "B": 27,
+            "C": 30,
+            "D": 3,
+            "E": 2,
+            "FAIL": 2
+          },
+          "C": {
+            "A": 5,
+            "B": 3,
+            "C": 480,
+            "D": 51,
+            "E": 9,
+            "FAIL": 14
+          },
+          "D": {
+            "A": 3,
+            "B": 0,
+            "C": 35,
+            "D": 166,
+            "E": 2,
+            "FAIL": 9
+          },
+          "E": {
+            "A": 0,
+            "B": 0,
+            "C": 15,
+            "D": 6,
+            "E": 23,
+            "FAIL": 2
+          }
+        }
+      },
+      "first_token_choice": {
+        "n": 1013,
+        "valid_rate": 1.0,
+        "accuracy": 0.7630799605133267,
+        "macro_f1": 0.6437173604103043,
+        "per_class": {
+          "A": {
+            "support": 106,
+            "recall": 0.5943396226415094,
+            "fpr": 0.030871003307607496,
+            "f1": 0.6395939086294417,
+            "correct": 63,
+            "predicted": 91,
+            "final_failures": 0,
+            "precision": 0.6923076923076923
+          },
+          "B": {
+            "support": 84,
+            "recall": 0.32142857142857145,
+            "fpr": 0.006458557588805167,
+            "f1": 0.46153846153846156,
+            "correct": 27,
+            "predicted": 33,
+            "final_failures": 0,
+            "precision": 0.8181818181818182
+          },
+          "C": {
+            "support": 562,
+            "recall": 0.8790035587188612,
+            "fpr": 0.2660753880266075,
+            "f1": 0.8401360544217688,
+            "correct": 494,
+            "predicted": 614,
+            "final_failures": 0,
+            "precision": 0.8045602605863192
+          },
+          "D": {
+            "support": 215,
+            "recall": 0.772093023255814,
+            "fpr": 0.08771929824561403,
+            "f1": 0.7361419068736141,
+            "correct": 166,
+            "predicted": 236,
+            "final_failures": 0,
+            "precision": 0.7033898305084746
+          },
+          "E": {
+            "support": 46,
+            "recall": 0.5,
+            "fpr": 0.016546018614270942,
+            "f1": 0.5411764705882353,
+            "correct": 23,
+            "predicted": 39,
+            "final_failures": 0,
+            "precision": 0.5897435897435898
+          }
+        },
+        "correct": 773,
+        "teacher_matches": 863,
+        "teacher_agreement_all_cases": 0.8519249753208292,
+        "predicted_counts": {
+          "D": 236,
+          "C": 614,
+          "E": 39,
+          "B": 33,
+          "A": 91
+        },
+        "confusion_rows_reference_columns_prediction": {
+          "A": {
+            "A": 63,
+            "B": 3,
+            "C": 27,
+            "D": 10,
+            "E": 3,
+            "FAIL": 0
+          },
+          "B": {
+            "A": 20,
+            "B": 27,
+            "C": 32,
+            "D": 3,
+            "E": 2,
+            "FAIL": 0
+          },
+          "C": {
+            "A": 5,
+            "B": 3,
+            "C": 494,
+            "D": 51,
+            "E": 9,
+            "FAIL": 0
+          },
+          "D": {
+            "A": 3,
+            "B": 0,
+            "C": 44,
+            "D": 166,
+            "E": 2,
+            "FAIL": 0
+          },
+          "E": {
+            "A": 0,
+            "B": 0,
+            "C": 17,
+            "D": 6,
+            "E": 23,
+            "FAIL": 0
+          }
+        }
+      },
+      "first_choice_correct_on_empty": 14,
+      "hypothetical_all_empty_correct": {
+        "accuracy": 0.7778874629812438,
+        "macro_f1": 0.6654468047892335,
+        "correct": 788
+      },
+      "paired_vs_teacher": {
+        "both_correct": 709,
+        "left_only_correct": 50,
+        "right_only_correct": 87,
+        "neither_correct": 167
+      }
+    },
+    "r8_a16_lr2e-5": {
+      "rank": 8,
+      "alpha": 16,
+      "alpha_over_rank": 2.0,
+      "learning_rate": "2e-5",
+      "training_n": 9000,
+      "train_path": "output/lora/gemma3-270m-it_v3_n9000_r8_a16_lr2e-5_e3_drop0.05",
+      "evaluation_path": "output/lora_eval/gemma3-270m-it_v3_n9000_r8_a16_lr2e-5_e3_drop0.05_validation",
+      "training_seconds": 4153.064598723984,
+      "optimizer_updates": 3375,
+      "trainable_parameters": 368640,
+      "epoch_loss": [
+        0.5588186071448856,
+        0.3249218653332856,
+        0.24161031157026688
+      ],
+      "attempt_seconds": 104.65127452631714,
+      "n_attempts": 1042,
+      "strict_generation": {
+        "n": 1013,
+        "valid_rate": 0.9713721618953604,
+        "accuracy": 0.7107601184600197,
+        "macro_f1": 0.5710609550285615,
+        "per_class": {
+          "A": {
+            "support": 106,
+            "recall": 0.5188679245283019,
+            "fpr": 0.037486218302094816,
+            "f1": 0.5641025641025641,
+            "correct": 55,
+            "predicted": 89,
+            "final_failures": 2,
+            "precision": 0.6179775280898876
+          },
+          "B": {
+            "support": 84,
+            "recall": 0.17857142857142858,
+            "fpr": 0.005382131324004306,
+            "f1": 0.28846153846153844,
+            "correct": 15,
+            "predicted": 20,
+            "final_failures": 2,
+            "precision": 0.75
+          },
+          "C": {
+            "support": 562,
+            "recall": 0.8398576512455516,
+            "fpr": 0.2838137472283814,
+            "f1": 0.8123924268502581,
+            "correct": 472,
+            "predicted": 600,
+            "final_failures": 14,
+            "precision": 0.7866666666666666
+          },
+          "D": {
+            "support": 215,
+            "recall": 0.7302325581395349,
+            "fpr": 0.09899749373433583,
+            "f1": 0.6962305986696231,
+            "correct": 157,
+            "predicted": 236,
+            "final_failures": 9,
+            "precision": 0.6652542372881356
+          },
+          "E": {
+            "support": 46,
+            "recall": 0.45652173913043476,
+            "fpr": 0.01861427094105481,
+            "f1": 0.49411764705882355,
+            "correct": 21,
+            "predicted": 39,
+            "final_failures": 2,
+            "precision": 0.5384615384615384
+          }
+        },
+        "correct": 720,
+        "teacher_matches": 809,
+        "teacher_agreement_all_cases": 0.7986179664363278,
+        "predicted_counts": {
+          "C": 600,
+          "D": 236,
+          "E": 39,
+          "B": 20,
+          "A": 89,
+          "FAIL": 29
+        },
+        "confusion_rows_reference_columns_prediction": {
+          "A": {
+            "A": 55,
+            "B": 2,
+            "C": 33,
+            "D": 10,
+            "E": 4,
+            "FAIL": 2
+          },
+          "B": {
+            "A": 25,
+            "B": 15,
+            "C": 33,
+            "D": 7,
+            "E": 2,
+            "FAIL": 2
+          },
+          "C": {
+            "A": 7,
+            "B": 2,
+            "C": 472,
+            "D": 56,
+            "E": 11,
+            "FAIL": 14
+          },
+          "D": {
+            "A": 1,
+            "B": 1,
+            "C": 46,
+            "D": 157,
+            "E": 1,
+            "FAIL": 9
+          },
+          "E": {
+            "A": 1,
+            "B": 0,
+            "C": 16,
+            "D": 6,
+            "E": 21,
+            "FAIL": 2
+          }
+        }
+      },
+      "first_token_choice": {
+        "n": 1013,
+        "valid_rate": 1.0,
+        "accuracy": 0.7245804540967423,
+        "macro_f1": 0.5718066510187113,
+        "per_class": {
+          "A": {
+            "support": 106,
+            "recall": 0.5188679245283019,
+            "fpr": 0.037486218302094816,
+            "f1": 0.5641025641025641,
+            "correct": 55,
+            "predicted": 89,
+            "final_failures": 0,
+            "precision": 0.6179775280898876
+          },
+          "B": {
+            "support": 84,
+            "recall": 0.17857142857142858,
+            "fpr": 0.005382131324004306,
+            "f1": 0.28846153846153844,
+            "correct": 15,
+            "predicted": 20,
+            "final_failures": 0,
+            "precision": 0.75
+          },
+          "C": {
+            "support": 562,
+            "recall": 0.8647686832740213,
+            "fpr": 0.3170731707317073,
+            "f1": 0.8161209068010076,
+            "correct": 486,
+            "predicted": 629,
+            "final_failures": 0,
+            "precision": 0.7726550079491256
+          },
+          "D": {
+            "support": 215,
+            "recall": 0.7302325581395349,
+            "fpr": 0.09899749373433583,
+            "f1": 0.6962305986696231,
+            "correct": 157,
+            "predicted": 236,
+            "final_failures": 0,
+            "precision": 0.6652542372881356
+          },
+          "E": {
+            "support": 46,
+            "recall": 0.45652173913043476,
+            "fpr": 0.01861427094105481,
+            "f1": 0.49411764705882355,
+            "correct": 21,
+            "predicted": 39,
+            "final_failures": 0,
+            "precision": 0.5384615384615384
+          }
+        },
+        "correct": 734,
+        "teacher_matches": 825,
+        "teacher_agreement_all_cases": 0.8144126357354393,
+        "predicted_counts": {
+          "C": 629,
+          "D": 236,
+          "E": 39,
+          "B": 20,
+          "A": 89
+        },
+        "confusion_rows_reference_columns_prediction": {
+          "A": {
+            "A": 55,
+            "B": 2,
+            "C": 35,
+            "D": 10,
+            "E": 4,
+            "FAIL": 0
+          },
+          "B": {
+            "A": 25,
+            "B": 15,
+            "C": 35,
+            "D": 7,
+            "E": 2,
+            "FAIL": 0
+          },
+          "C": {
+            "A": 7,
+            "B": 2,
+            "C": 486,
+            "D": 56,
+            "E": 11,
+            "FAIL": 0
+          },
+          "D": {
+            "A": 1,
+            "B": 1,
+            "C": 55,
+            "D": 157,
+            "E": 1,
+            "FAIL": 0
+          },
+          "E": {
+            "A": 1,
+            "B": 0,
+            "C": 18,
+            "D": 6,
+            "E": 21,
+            "FAIL": 0
+          }
+        }
+      },
+      "first_choice_correct_on_empty": 14,
+      "hypothetical_all_empty_correct": {
+        "accuracy": 0.7393879565646594,
+        "macro_f1": 0.5952880589780812,
+        "correct": 749
+      },
+      "paired_vs_teacher": {
+        "both_correct": 675,
+        "left_only_correct": 45,
+        "right_only_correct": 121,
+        "neither_correct": 172
+      }
+    },
+    "r8_a16_lr1e-4": {
+      "rank": 8,
+      "alpha": 16,
+      "alpha_over_rank": 2.0,
+      "learning_rate": "1e-4",
+      "training_n": 9000,
+      "train_path": "output/lora/gemma3-270m-it_v3_n9000_r8_a16_lr1e-4_e3_drop0.05",
+      "evaluation_path": "output/lora_eval/gemma3-270m-it_v3_n9000_r8_a16_lr1e-4_e3_drop0.05_validation",
+      "training_seconds": 4317.571726497001,
+      "optimizer_updates": 3375,
+      "trainable_parameters": 368640,
+      "epoch_loss": [
+        0.36737191402042907,
+        0.19920722468290478,
+        0.1689247314904092
+      ],
+      "attempt_seconds": 104.4545255707053,
+      "n_attempts": 1042,
+      "strict_generation": {
+        "n": 1013,
+        "valid_rate": 0.9713721618953604,
+        "accuracy": 0.7522211253701876,
+        "macro_f1": 0.6495285790125415,
+        "per_class": {
+          "A": {
+            "support": 106,
+            "recall": 0.5943396226415094,
+            "fpr": 0.030871003307607496,
+            "f1": 0.6395939086294417,
+            "correct": 63,
+            "predicted": 91,
+            "final_failures": 2,
+            "precision": 0.6923076923076923
+          },
+          "B": {
+            "support": 84,
+            "recall": 0.34523809523809523,
+            "fpr": 0.007534983853606028,
+            "f1": 0.48333333333333334,
+            "correct": 29,
+            "predicted": 36,
+            "final_failures": 2,
+            "precision": 0.8055555555555556
+          },
+          "C": {
+            "support": 562,
+            "recall": 0.8487544483985765,
+            "fpr": 0.2106430155210643,
+            "f1": 0.8412698412698413,
+            "correct": 477,
+            "predicted": 572,
+            "final_failures": 14,
+            "precision": 0.833916083916084
+          },
+          "D": {
+            "support": 215,
+            "recall": 0.786046511627907,
+            "fpr": 0.09273182957393483,
+            "f1": 0.7379912663755459,
+            "correct": 169,
+            "predicted": 243,
+            "final_failures": 9,
+            "precision": 0.6954732510288066
+          },
+          "E": {
+            "support": 46,
+            "recall": 0.5217391304347826,
+            "fpr": 0.01861427094105481,
+            "f1": 0.5454545454545454,
+            "correct": 24,
+            "predicted": 42,
+            "final_failures": 2,
+            "precision": 0.5714285714285714
+          }
+        },
+        "correct": 762,
+        "teacher_matches": 852,
+        "teacher_agreement_all_cases": 0.84106614017769,
+        "predicted_counts": {
+          "D": 243,
+          "C": 572,
+          "E": 42,
+          "B": 36,
+          "A": 91,
+          "FAIL": 29
+        },
+        "confusion_rows_reference_columns_prediction": {
+          "A": {
+            "A": 63,
+            "B": 4,
+            "C": 23,
+            "D": 12,
+            "E": 2,
+            "FAIL": 2
+          },
+          "B": {
+            "A": 21,
+            "B": 29,
+            "C": 27,
+            "D": 3,
+            "E": 2,
+            "FAIL": 2
+          },
+          "C": {
+            "A": 4,
+            "B": 3,
+            "C": 477,
+            "D": 53,
+            "E": 11,
+            "FAIL": 14
+          },
+          "D": {
+            "A": 3,
+            "B": 0,
+            "C": 31,
+            "D": 169,
+            "E": 3,
+            "FAIL": 9
+          },
+          "E": {
+            "A": 0,
+            "B": 0,
+            "C": 14,
+            "D": 6,
+            "E": 24,
+            "FAIL": 2
+          }
+        }
+      },
+      "first_token_choice": {
+        "n": 1013,
+        "valid_rate": 1.0,
+        "accuracy": 0.7660414610069102,
+        "macro_f1": 0.650148213510078,
+        "per_class": {
+          "A": {
+            "support": 106,
+            "recall": 0.5943396226415094,
+            "fpr": 0.030871003307607496,
+            "f1": 0.6395939086294417,
+            "correct": 63,
+            "predicted": 91,
+            "final_failures": 0,
+            "precision": 0.6923076923076923
+          },
+          "B": {
+            "support": 84,
+            "recall": 0.34523809523809523,
+            "fpr": 0.007534983853606028,
+            "f1": 0.48333333333333334,
+            "correct": 29,
+            "predicted": 36,
+            "final_failures": 0,
+            "precision": 0.8055555555555556
+          },
+          "C": {
+            "support": 562,
+            "recall": 0.8736654804270463,
+            "fpr": 0.24390243902439024,
+            "f1": 0.8443680137575237,
+            "correct": 491,
+            "predicted": 601,
+            "final_failures": 0,
+            "precision": 0.8169717138103162
+          },
+          "D": {
+            "support": 215,
+            "recall": 0.786046511627907,
+            "fpr": 0.09273182957393483,
+            "f1": 0.7379912663755459,
+            "correct": 169,
+            "predicted": 243,
+            "final_failures": 0,
+            "precision": 0.6954732510288066
+          },
+          "E": {
+            "support": 46,
+            "recall": 0.5217391304347826,
+            "fpr": 0.01861427094105481,
+            "f1": 0.5454545454545454,
+            "correct": 24,
+            "predicted": 42,
+            "final_failures": 0,
+            "precision": 0.5714285714285714
+          }
+        },
+        "correct": 776,
+        "teacher_matches": 868,
+        "teacher_agreement_all_cases": 0.8568608094768015,
+        "predicted_counts": {
+          "D": 243,
+          "C": 601,
+          "E": 42,
+          "B": 36,
+          "A": 91
+        },
+        "confusion_rows_reference_columns_prediction": {
+          "A": {
+            "A": 63,
+            "B": 4,
+            "C": 25,
+            "D": 12,
+            "E": 2,
+            "FAIL": 0
+          },
+          "B": {
+            "A": 21,
+            "B": 29,
+            "C": 29,
+            "D": 3,
+            "E": 2,
+            "FAIL": 0
+          },
+          "C": {
+            "A": 4,
+            "B": 3,
+            "C": 491,
+            "D": 53,
+            "E": 11,
+            "FAIL": 0
+          },
+          "D": {
+            "A": 3,
+            "B": 0,
+            "C": 40,
+            "D": 169,
+            "E": 3,
+            "FAIL": 0
+          },
+          "E": {
+            "A": 0,
+            "B": 0,
+            "C": 16,
+            "D": 6,
+            "E": 24,
+            "FAIL": 0
+          }
+        }
+      },
+      "first_choice_correct_on_empty": 14,
+      "hypothetical_all_empty_correct": {
+        "accuracy": 0.7808489634748272,
+        "macro_f1": 0.6713908322889266,
+        "correct": 791
+      },
+      "paired_vs_teacher": {
+        "both_correct": 713,
+        "left_only_correct": 49,
+        "right_only_correct": 83,
+        "neither_correct": 168
+      }
+    },
+    "r32_a32_lr5e-5": {
+      "rank": 32,
+      "alpha": 32,
+      "alpha_over_rank": 1.0,
+      "learning_rate": "5e-5",
+      "training_n": 9000,
+      "train_path": "output/lora/gemma3-270m-it_v3_n9000_r32_a32_lr5e-5_e3_drop0.05",
+      "evaluation_path": "output/lora_eval/gemma3-270m-it_v3_n9000_r32_a32_lr5e-5_e3_drop0.05_validation",
+      "training_seconds": 4192.134966720012,
+      "optimizer_updates": 3375,
+      "trainable_parameters": 1474560,
+      "epoch_loss": [
+        0.39166276440603864,
+        0.2081527832792037,
+        0.17724984220167
+      ],
+      "attempt_seconds": 95.96743085110211,
+      "n_attempts": 1042,
+      "strict_generation": {
+        "n": 1013,
+        "valid_rate": 0.9713721618953604,
+        "accuracy": 0.7472852912142152,
+        "macro_f1": 0.6374702547810817,
+        "per_class": {
+          "A": {
+            "support": 106,
+            "recall": 0.6037735849056604,
+            "fpr": 0.03197353914002205,
+            "f1": 0.6432160804020101,
+            "correct": 64,
+            "predicted": 93,
+            "final_failures": 2,
+            "precision": 0.6881720430107527
+          },
+          "B": {
+            "support": 84,
+            "recall": 0.30952380952380953,
+            "fpr": 0.007534983853606028,
+            "f1": 0.4444444444444444,
+            "correct": 26,
+            "predicted": 33,
+            "final_failures": 2,
+            "precision": 0.7878787878787878
+          },
+          "C": {
+            "support": 562,
+            "recall": 0.8540925266903915,
+            "fpr": 0.23503325942350334,
+            "f1": 0.8362369337979094,
+            "correct": 480,
+            "predicted": 586,
+            "final_failures": 14,
+            "precision": 0.8191126279863481
+          },
+          "D": {
+            "support": 215,
+            "recall": 0.7674418604651163,
+            "fpr": 0.08771929824561403,
+            "f1": 0.7333333333333333,
+            "correct": 165,
+            "predicted": 235,
+            "final_failures": 9,
+            "precision": 0.7021276595744681
+          },
+          "E": {
+            "support": 46,
+            "recall": 0.4782608695652174,
+            "fpr": 0.015511892450879007,
+            "f1": 0.5301204819277109,
+            "correct": 22,
+            "predicted": 37,
+            "final_failures": 2,
+            "precision": 0.5945945945945946
+          }
+        },
+        "correct": 757,
+        "teacher_matches": 844,
+        "teacher_agreement_all_cases": 0.8331688055281342,
+        "predicted_counts": {
+          "D": 235,
+          "C": 586,
+          "E": 37,
+          "B": 33,
+          "A": 93,
+          "FAIL": 29
+        },
+        "confusion_rows_reference_columns_prediction": {
+          "A": {
+            "A": 64,
+            "B": 3,
+            "C": 24,
+            "D": 11,
+            "E": 2,
+            "FAIL": 2
+          },
+          "B": {
+            "A": 22,
+            "B": 26,
+            "C": 29,
+            "D": 3,
+            "E": 2,
+            "FAIL": 2
+          },
+          "C": {
+            "A": 4,
+            "B": 4,
+            "C": 480,
+            "D": 50,
+            "E": 10,
+            "FAIL": 14
+          },
+          "D": {
+            "A": 3,
+            "B": 0,
+            "C": 37,
+            "D": 165,
+            "E": 1,
+            "FAIL": 9
+          },
+          "E": {
+            "A": 0,
+            "B": 0,
+            "C": 16,
+            "D": 6,
+            "E": 22,
+            "FAIL": 2
+          }
+        }
+      },
+      "first_token_choice": {
+        "n": 1013,
+        "valid_rate": 1.0,
+        "accuracy": 0.7611056268509379,
+        "macro_f1": 0.6381073200181013,
+        "per_class": {
+          "A": {
+            "support": 106,
+            "recall": 0.6037735849056604,
+            "fpr": 0.03197353914002205,
+            "f1": 0.6432160804020101,
+            "correct": 64,
+            "predicted": 93,
+            "final_failures": 0,
+            "precision": 0.6881720430107527
+          },
+          "B": {
+            "support": 84,
+            "recall": 0.30952380952380953,
+            "fpr": 0.007534983853606028,
+            "f1": 0.4444444444444444,
+            "correct": 26,
+            "predicted": 33,
+            "final_failures": 0,
+            "precision": 0.7878787878787878
+          },
+          "C": {
+            "support": 562,
+            "recall": 0.8790035587188612,
+            "fpr": 0.2682926829268293,
+            "f1": 0.8394222599830077,
+            "correct": 494,
+            "predicted": 615,
+            "final_failures": 0,
+            "precision": 0.8032520325203252
+          },
+          "D": {
+            "support": 215,
+            "recall": 0.7674418604651163,
+            "fpr": 0.08771929824561403,
+            "f1": 0.7333333333333333,
+            "correct": 165,
+            "predicted": 235,
+            "final_failures": 0,
+            "precision": 0.7021276595744681
+          },
+          "E": {
+            "support": 46,
+            "recall": 0.4782608695652174,
+            "fpr": 0.015511892450879007,
+            "f1": 0.5301204819277109,
+            "correct": 22,
+            "predicted": 37,
+            "final_failures": 0,
+            "precision": 0.5945945945945946
+          }
+        },
+        "correct": 771,
+        "teacher_matches": 860,
+        "teacher_agreement_all_cases": 0.8489634748272458,
+        "predicted_counts": {
+          "D": 235,
+          "C": 615,
+          "E": 37,
+          "B": 33,
+          "A": 93
+        },
+        "confusion_rows_reference_columns_prediction": {
+          "A": {
+            "A": 64,
+            "B": 3,
+            "C": 26,
+            "D": 11,
+            "E": 2,
+            "FAIL": 0
+          },
+          "B": {
+            "A": 22,
+            "B": 26,
+            "C": 31,
+            "D": 3,
+            "E": 2,
+            "FAIL": 0
+          },
+          "C": {
+            "A": 4,
+            "B": 4,
+            "C": 494,
+            "D": 50,
+            "E": 10,
+            "FAIL": 0
+          },
+          "D": {
+            "A": 3,
+            "B": 0,
+            "C": 46,
+            "D": 165,
+            "E": 1,
+            "FAIL": 0
+          },
+          "E": {
+            "A": 0,
+            "B": 0,
+            "C": 18,
+            "D": 6,
+            "E": 22,
+            "FAIL": 0
+          }
+        }
+      },
+      "first_choice_correct_on_empty": 14,
+      "hypothetical_all_empty_correct": {
+        "accuracy": 0.7759131293188549,
+        "macro_f1": 0.660087729151482,
+        "correct": 786
+      },
+      "paired_vs_teacher": {
+        "both_correct": 707,
+        "left_only_correct": 50,
+        "right_only_correct": 89,
+        "neither_correct": 167
+      }
+    },
+    "original_n9000": {
+      "rank": 8,
+      "alpha": 16,
+      "alpha_over_rank": 2.0,
+      "learning_rate": "2e-4",
+      "training_n": 9000,
+      "train_path": "output/lora/gemma3-270m-it_v3_n9000",
+      "evaluation_path": "output/lora_eval/gemma3-270m-it_v3_n9000_validation",
+      "training_seconds": 4043.108569796008,
+      "optimizer_updates": 3375,
+      "trainable_parameters": 368640,
+      "epoch_loss": [
+        0.32022577400402064,
+        0.1822191281573226,
+        0.14910028197067893
+      ],
+      "attempt_seconds": 84.40772142026981,
+      "n_attempts": 1042,
+      "strict_generation": {
+        "n": 1013,
+        "valid_rate": 0.9713721618953604,
+        "accuracy": 0.7453109575518263,
+        "macro_f1": 0.6273563335446619,
+        "per_class": {
+          "A": {
+            "support": 106,
+            "recall": 0.5660377358490566,
+            "fpr": 0.02866593164277839,
+            "f1": 0.625,
+            "correct": 60,
+            "predicted": 86,
+            "final_failures": 2,
+            "precision": 0.6976744186046512
+          },
+          "B": {
+            "support": 84,
+            "recall": 0.2857142857142857,
+            "fpr": 0.008611410118406888,
+            "f1": 0.41379310344827586,
+            "correct": 24,
+            "predicted": 32,
+            "final_failures": 2,
+            "precision": 0.75
+          },
+          "C": {
+            "support": 562,
+            "recall": 0.8612099644128114,
+            "fpr": 0.24833702882483372,
+            "f1": 0.8359240069084629,
+            "correct": 484,
+            "predicted": 596,
+            "final_failures": 14,
+            "precision": 0.8120805369127517
+          },
+          "D": {
+            "support": 215,
+            "recall": 0.7674418604651163,
+            "fpr": 0.08395989974937343,
+            "f1": 0.738255033557047,
+            "correct": 165,
+            "predicted": 232,
+            "final_failures": 9,
+            "precision": 0.7112068965517241
+          },
+          "E": {
+            "support": 46,
+            "recall": 0.4782608695652174,
+            "fpr": 0.016546018614270942,
+            "f1": 0.5238095238095238,
+            "correct": 22,
+            "predicted": 38,
+            "final_failures": 2,
+            "precision": 0.5789473684210527
+          }
+        },
+        "correct": 755,
+        "teacher_matches": 854,
+        "teacher_agreement_all_cases": 0.843040473840079,
+        "predicted_counts": {
+          "D": 232,
+          "C": 596,
+          "E": 38,
+          "B": 32,
+          "A": 86,
+          "FAIL": 29
+        },
+        "confusion_rows_reference_columns_prediction": {
+          "A": {
+            "A": 60,
+            "B": 5,
+            "C": 27,
+            "D": 10,
+            "E": 2,
+            "FAIL": 2
+          },
+          "B": {
+            "A": 19,
+            "B": 24,
+            "C": 34,
+            "D": 3,
+            "E": 2,
+            "FAIL": 2
+          },
+          "C": {
+            "A": 4,
+            "B": 3,
+            "C": 484,
+            "D": 47,
+            "E": 10,
+            "FAIL": 14
+          },
+          "D": {
+            "A": 3,
+            "B": 0,
+            "C": 36,
+            "D": 165,
+            "E": 2,
+            "FAIL": 9
+          },
+          "E": {
+            "A": 0,
+            "B": 0,
+            "C": 15,
+            "D": 7,
+            "E": 22,
+            "FAIL": 2
+          }
+        }
+      },
+      "first_token_choice": {
+        "n": 1013,
+        "valid_rate": 1.0,
+        "accuracy": 0.7591312931885489,
+        "macro_f1": 0.6279895608066088,
+        "per_class": {
+          "A": {
+            "support": 106,
+            "recall": 0.5660377358490566,
+            "fpr": 0.02866593164277839,
+            "f1": 0.625,
+            "correct": 60,
+            "predicted": 86,
+            "final_failures": 0,
+            "precision": 0.6976744186046512
+          },
+          "B": {
+            "support": 84,
+            "recall": 0.2857142857142857,
+            "fpr": 0.008611410118406888,
+            "f1": 0.41379310344827586,
+            "correct": 24,
+            "predicted": 32,
+            "final_failures": 0,
+            "precision": 0.75
+          },
+          "C": {
+            "support": 562,
+            "recall": 0.8861209964412812,
+            "fpr": 0.28159645232815966,
+            "f1": 0.8390901432181971,
+            "correct": 498,
+            "predicted": 625,
+            "final_failures": 0,
+            "precision": 0.7968
+          },
+          "D": {
+            "support": 215,
+            "recall": 0.7674418604651163,
+            "fpr": 0.08395989974937343,
+            "f1": 0.738255033557047,
+            "correct": 165,
+            "predicted": 232,
+            "final_failures": 0,
+            "precision": 0.7112068965517241
+          },
+          "E": {
+            "support": 46,
+            "recall": 0.4782608695652174,
+            "fpr": 0.016546018614270942,
+            "f1": 0.5238095238095238,
+            "correct": 22,
+            "predicted": 38,
+            "final_failures": 0,
+            "precision": 0.5789473684210527
+          }
+        },
+        "correct": 769,
+        "teacher_matches": 870,
+        "teacher_agreement_all_cases": 0.8588351431391905,
+        "predicted_counts": {
+          "D": 232,
+          "C": 625,
+          "E": 38,
+          "B": 32,
+          "A": 86
+        },
+        "confusion_rows_reference_columns_prediction": {
+          "A": {
+            "A": 60,
+            "B": 5,
+            "C": 29,
+            "D": 10,
+            "E": 2,
+            "FAIL": 0
+          },
+          "B": {
+            "A": 19,
+            "B": 24,
+            "C": 36,
+            "D": 3,
+            "E": 2,
+            "FAIL": 0
+          },
+          "C": {
+            "A": 4,
+            "B": 3,
+            "C": 498,
+            "D": 47,
+            "E": 10,
+            "FAIL": 0
+          },
+          "D": {
+            "A": 3,
+            "B": 0,
+            "C": 45,
+            "D": 165,
+            "E": 2,
+            "FAIL": 0
+          },
+          "E": {
+            "A": 0,
+            "B": 0,
+            "C": 17,
+            "D": 7,
+            "E": 22,
+            "FAIL": 0
+          }
+        }
+      },
+      "first_choice_correct_on_empty": 14,
+      "hypothetical_all_empty_correct": {
+        "accuracy": 0.773938795656466,
+        "macro_f1": 0.6501960009980106,
+        "correct": 784
+      },
+      "paired_vs_teacher": {
+        "both_correct": 711,
+        "left_only_correct": 44,
+        "right_only_correct": 85,
+        "neither_correct": 173
+      }
+    },
+    "original_n8000": {
+      "rank": 8,
+      "alpha": 16,
+      "alpha_over_rank": 2.0,
+      "learning_rate": "2e-4",
+      "training_n": 8000,
+      "train_path": "output/lora/gemma3-270m-it_v3_n8000",
+      "evaluation_path": "output/lora_eval/gemma3-270m-it_v3_n8000_validation",
+      "training_seconds": 3685.767690623994,
+      "optimizer_updates": 3000,
+      "trainable_parameters": 368640,
+      "epoch_loss": [
+        0.32152888455428186,
+        0.19424075563298537,
+        0.1568281860454008
+      ],
+      "attempt_seconds": 84.9780930318957,
+      "n_attempts": 1042,
+      "strict_generation": {
+        "n": 1013,
+        "valid_rate": 0.9713721618953604,
+        "accuracy": 0.7482724580454096,
+        "macro_f1": 0.639279857824196,
+        "per_class": {
+          "A": {
+            "support": 106,
+            "recall": 0.5471698113207547,
+            "fpr": 0.026460859977949284,
+            "f1": 0.6170212765957447,
+            "correct": 58,
+            "predicted": 82,
+            "final_failures": 2,
+            "precision": 0.7073170731707317
+          },
+          "B": {
+            "support": 84,
+            "recall": 0.32142857142857145,
+            "fpr": 0.012917115177610334,
+            "f1": 0.43902439024390244,
+            "correct": 27,
+            "predicted": 39,
+            "final_failures": 2,
+            "precision": 0.6923076923076923
+          },
+          "C": {
+            "support": 562,
+            "recall": 0.8701067615658363,
+            "fpr": 0.24611973392461198,
+            "f1": 0.8416523235800344,
+            "correct": 489,
+            "predicted": 600,
+            "final_failures": 14,
+            "precision": 0.815
+          },
+          "D": {
+            "support": 215,
+            "recall": 0.7441860465116279,
+            "fpr": 0.08145363408521303,
+            "f1": 0.7272727272727273,
+            "correct": 160,
+            "predicted": 225,
+            "final_failures": 9,
+            "precision": 0.7111111111111111
+          },
+          "E": {
+            "support": 46,
+            "recall": 0.5217391304347826,
+            "fpr": 0.014477766287487074,
+            "f1": 0.5714285714285714,
+            "correct": 24,
+            "predicted": 38,
+            "final_failures": 2,
+            "precision": 0.631578947368421
+          }
+        },
+        "correct": 758,
+        "teacher_matches": 846,
+        "teacher_agreement_all_cases": 0.8351431391905232,
+        "predicted_counts": {
+          "C": 600,
+          "D": 225,
+          "B": 39,
+          "E": 38,
+          "A": 82,
+          "FAIL": 29
+        },
+        "confusion_rows_reference_columns_prediction": {
+          "A": {
+            "A": 58,
+            "B": 6,
+            "C": 24,
+            "D": 13,
+            "E": 3,
+            "FAIL": 2
+          },
+          "B": {
+            "A": 19,
+            "B": 27,
+            "C": 31,
+            "D": 3,
+            "E": 2,
+            "FAIL": 2
+          },
+          "C": {
+            "A": 2,
+            "B": 6,
+            "C": 489,
+            "D": 44,
+            "E": 7,
+            "FAIL": 14
+          },
+          "D": {
+            "A": 3,
+            "B": 0,
+            "C": 41,
+            "D": 160,
+            "E": 2,
+            "FAIL": 9
+          },
+          "E": {
+            "A": 0,
+            "B": 0,
+            "C": 15,
+            "D": 5,
+            "E": 24,
+            "FAIL": 2
+          }
+        }
+      },
+      "first_token_choice": {
+        "n": 1013,
+        "valid_rate": 1.0,
+        "accuracy": 0.7620927936821322,
+        "macro_f1": 0.6398830622937475,
+        "per_class": {
+          "A": {
+            "support": 106,
+            "recall": 0.5471698113207547,
+            "fpr": 0.026460859977949284,
+            "f1": 0.6170212765957447,
+            "correct": 58,
+            "predicted": 82,
+            "final_failures": 0,
+            "precision": 0.7073170731707317
+          },
+          "B": {
+            "support": 84,
+            "recall": 0.32142857142857145,
+            "fpr": 0.012917115177610334,
+            "f1": 0.43902439024390244,
+            "correct": 27,
+            "predicted": 39,
+            "final_failures": 0,
+            "precision": 0.6923076923076923
+          },
+          "C": {
+            "support": 562,
+            "recall": 0.895017793594306,
+            "fpr": 0.2793791574279379,
+            "f1": 0.8446683459277917,
+            "correct": 503,
+            "predicted": 629,
+            "final_failures": 0,
+            "precision": 0.7996820349761526
+          },
+          "D": {
+            "support": 215,
+            "recall": 0.7441860465116279,
+            "fpr": 0.08145363408521303,
+            "f1": 0.7272727272727273,
+            "correct": 160,
+            "predicted": 225,
+            "final_failures": 0,
+            "precision": 0.7111111111111111
+          },
+          "E": {
+            "support": 46,
+            "recall": 0.5217391304347826,
+            "fpr": 0.014477766287487074,
+            "f1": 0.5714285714285714,
+            "correct": 24,
+            "predicted": 38,
+            "final_failures": 0,
+            "precision": 0.631578947368421
+          }
+        },
+        "correct": 772,
+        "teacher_matches": 862,
+        "teacher_agreement_all_cases": 0.8509378084896347,
+        "predicted_counts": {
+          "C": 629,
+          "D": 225,
+          "B": 39,
+          "E": 38,
+          "A": 82
+        },
+        "confusion_rows_reference_columns_prediction": {
+          "A": {
+            "A": 58,
+            "B": 6,
+            "C": 26,
+            "D": 13,
+            "E": 3,
+            "FAIL": 0
+          },
+          "B": {
+            "A": 19,
+            "B": 27,
+            "C": 33,
+            "D": 3,
+            "E": 2,
+            "FAIL": 0
+          },
+          "C": {
+            "A": 2,
+            "B": 6,
+            "C": 503,
+            "D": 44,
+            "E": 7,
+            "FAIL": 0
+          },
+          "D": {
+            "A": 3,
+            "B": 0,
+            "C": 50,
+            "D": 160,
+            "E": 2,
+            "FAIL": 0
+          },
+          "E": {
+            "A": 0,
+            "B": 0,
+            "C": 17,
+            "D": 5,
+            "E": 24,
+            "FAIL": 0
+          }
+        }
+      },
+      "first_choice_correct_on_empty": 14,
+      "hypothetical_all_empty_correct": {
+        "accuracy": 0.7769002961500494,
+        "macro_f1": 0.6616912502790246,
+        "correct": 787
+      },
+      "paired_vs_teacher": {
+        "both_correct": 710,
+        "left_only_correct": 48,
+        "right_only_correct": 86,
+        "neither_correct": 169
+      }
+    }
+  },
+  "common_empty_complaint_ids": [
+    "10338981",
+    "10346666",
+    "10354698",
+    "10355123",
+    "10374146",
+    "10383660",
+    "10385839",
+    "10403690",
+    "10412951",
+    "10433604",
+    "10435008",
+    "10456897",
+    "10459087",
+    "10471132",
+    "10476283",
+    "10479846",
+    "10498497",
+    "10549465",
+    "10578632",
+    "10586125",
+    "10587409",
+    "10590416",
+    "10598894",
+    "10611493",
+    "10630798",
+    "10632237",
+    "10632313",
+    "10640999",
+    "10641188"
+  ],
+  "paired_contrasts": [
+    {
+      "left": "r16_a32_lr5e-5",
+      "right": "r8_a16_lr5e-5",
+      "both_correct": 740,
+      "left_only_correct": 16,
+      "right_only_correct": 11,
+      "neither_correct": 246,
+      "macro_f1": {
+        "difference": 0.013385864313270934,
+        "ci95": [
+          -0.004640190553290802,
+          0.03353326263925089
+        ]
+      },
+      "accuracy": {
+        "difference": 0.0049358341559723184,
+        "ci95": [
+          -0.0049358341559724295,
+          0.015794669299111552
+        ]
+      }
+    },
+    {
+      "left": "r32_a64_lr5e-5",
+      "right": "r16_a32_lr5e-5",
+      "both_correct": 743,
+      "left_only_correct": 19,
+      "right_only_correct": 13,
+      "neither_correct": 238,
+      "macro_f1": {
+        "difference": -0.0013336412449601598,
+        "ci95": [
+          -0.020804649956601612,
+          0.017265499765248053
+        ]
+      },
+      "accuracy": {
+        "difference": 0.005923000987166915,
+        "ci95": [
+          -0.0049358341559724295,
+          0.016781836130306038
+        ]
+      }
+    },
+    {
+      "left": "r32_a32_lr5e-5",
+      "right": "r8_a8_lr5e-5",
+      "both_correct": 725,
+      "left_only_correct": 32,
+      "right_only_correct": 15,
+      "neither_correct": 241,
+      "macro_f1": {
+        "difference": 0.03731359349885166,
+        "ci95": [
+          0.011132786177662016,
+          0.0634072128888776
+        ]
+      },
+      "accuracy": {
+        "difference": 0.016781836130306038,
+        "ci95": [
+          0.0039486673247778326,
+          0.029615004935834133
+        ]
+      }
+    },
+    {
+      "left": "r8_a16_lr5e-5",
+      "right": "r8_a8_lr5e-5",
+      "both_correct": 730,
+      "left_only_correct": 21,
+      "right_only_correct": 10,
+      "neither_correct": 252,
+      "macro_f1": {
+        "difference": 0.027986170426765655,
+        "ci95": [
+          0.010256055203745462,
+          0.048922499761859126
+        ]
+      },
+      "accuracy": {
+        "difference": 0.010858835143139234,
+        "ci95": [
+          0.0009871668311943749,
+          0.021717670286278357
+        ]
+      }
+    },
+    {
+      "left": "r8_a32_lr5e-5",
+      "right": "r8_a16_lr5e-5",
+      "both_correct": 739,
+      "left_only_correct": 16,
+      "right_only_correct": 12,
+      "neither_correct": 246,
+      "macro_f1": {
+        "difference": 0.007131098688124782,
+        "ci95": [
+          -0.011469530206322496,
+          0.028705549681133584
+        ]
+      },
+      "accuracy": {
+        "difference": 0.003948667324777944,
+        "ci95": [
+          -0.005923000987166804,
+          0.014807502467917066
+        ]
+      }
+    },
+    {
+      "left": "r16_a32_lr5e-5",
+      "right": "r16_a16_lr5e-5",
+      "both_correct": 738,
+      "left_only_correct": 18,
+      "right_only_correct": 7,
+      "neither_correct": 250,
+      "macro_f1": {
+        "difference": 0.02645549449211959,
+        "ci95": [
+          0.006054940307024104,
+          0.04696549817392478
+        ]
+      },
+      "accuracy": {
+        "difference": 0.010858835143139123,
+        "ci95": [
+          0.000987166831194486,
+          0.02073050345508387
+        ]
+      }
+    },
+    {
+      "left": "r16_a64_lr5e-5",
+      "right": "r16_a32_lr5e-5",
+      "both_correct": 746,
+      "left_only_correct": 13,
+      "right_only_correct": 10,
+      "neither_correct": 244,
+      "macro_f1": {
+        "difference": 0.0015546531549480713,
+        "ci95": [
+          -0.015219431120443286,
+          0.018970310487047115
+        ]
+      },
+      "accuracy": {
+        "difference": 0.0029615004935834577,
+        "ci95": [
+          -0.005923000987166807,
+          0.01184600197433372
+        ]
+      }
+    },
+    {
+      "left": "r32_a64_lr5e-5",
+      "right": "r32_a32_lr5e-5",
+      "both_correct": 745,
+      "left_only_correct": 17,
+      "right_only_correct": 12,
+      "neither_correct": 239,
+      "macro_f1": {
+        "difference": 0.0027247999962247693,
+        "ci95": [
+          -0.015533615358777403,
+          0.021183146993976956
+        ]
+      },
+      "accuracy": {
+        "difference": 0.0049358341559724295,
+        "ci95": [
+          -0.005923000987166804,
+          0.014807502467917066
+        ]
+      }
+    },
+    {
+      "left": "r8_a16_lr5e-5",
+      "right": "r8_a16_lr2e-5",
+      "both_correct": 707,
+      "left_only_correct": 44,
+      "right_only_correct": 13,
+      "neither_correct": 249,
+      "macro_f1": {
+        "difference": 0.057081876680434185,
+        "ci95": [
+          0.02951630264784278,
+          0.08786292614656076
+        ]
+      },
+      "accuracy": {
+        "difference": 0.03060217176702862,
+        "ci95": [
+          0.015794669299111552,
+          0.045409674234945685
+        ]
+      }
+    },
+    {
+      "left": "r8_a16_lr1e-4",
+      "right": "r8_a16_lr5e-5",
+      "both_correct": 741,
+      "left_only_correct": 21,
+      "right_only_correct": 10,
+      "neither_correct": 241,
+      "macro_f1": {
+        "difference": 0.02138574730354581,
+        "ci95": [
+          0.0004399613416559646,
+          0.04549178779988711
+        ]
+      },
+      "accuracy": {
+        "difference": 0.010858835143139234,
+        "ci95": [
+          0.0,
+          0.021717670286278357
+        ]
+      }
+    },
+    {
+      "left": "r8_a16_lr1e-4",
+      "right": "original_n9000",
+      "both_correct": 739,
+      "left_only_correct": 23,
+      "right_only_correct": 16,
+      "neither_correct": 235,
+      "macro_f1": {
+        "difference": 0.022172245467879548,
+        "ci95": [
+          0.0003898027063414383,
+          0.045477902489322104
+        ]
+      },
+      "accuracy": {
+        "difference": 0.00691016781836129,
+        "ci95": [
+          -0.004935834155972321,
+          0.01875616979269501
+        ]
+      }
+    },
+    {
+      "left": "r8_a16_lr1e-4",
+      "right": "r16_a64_lr5e-5",
+      "both_correct": 747,
+      "left_only_correct": 15,
+      "right_only_correct": 12,
+      "neither_correct": 239,
+      "macro_f1": {
+        "difference": 0.0064452298353268045,
+        "ci95": [
+          -0.010457456415687249,
+          0.02489083917110957
+        ]
+      },
+      "accuracy": {
+        "difference": 0.0029615004935834577,
+        "ci95": [
+          -0.00691016781836129,
+          0.012833168805528095
+        ]
+      }
+    },
+    {
+      "left": "r8_a16_lr1e-4",
+      "right": "r32_a64_lr5e-5",
+      "both_correct": 749,
+      "left_only_correct": 13,
+      "right_only_correct": 13,
+      "neither_correct": 238,
+      "macro_f1": {
+        "difference": 0.009333524235235036,
+        "ci95": [
+          -0.009247592641479474,
+          0.03051028383696533
+        ]
+      },
+      "accuracy": {
+        "difference": 0.0,
+        "ci95": [
+          -0.009871668311944748,
+          0.009871668311944748
+        ]
+      }
+    },
+    {
+      "left": "r8_a16_lr1e-4",
+      "right": "original_n8000",
+      "both_correct": 737,
+      "left_only_correct": 25,
+      "right_only_correct": 21,
+      "neither_correct": 230,
+      "macro_f1": {
+        "difference": 0.010248721188345411,
+        "ci95": [
+          -0.010082017360259094,
+          0.03231102588155374
+        ]
+      },
+      "accuracy": {
+        "difference": 0.003948667324777944,
+        "ci95": [
+          -0.008884501480750262,
+          0.017769002961500524
+        ]
+      }
+    },
+    {
+      "left": "r8_a16_lr1e-4",
+      "right": "teacher",
+      "both_correct": 713,
+      "left_only_correct": 49,
+      "right_only_correct": 83,
+      "neither_correct": 168,
+      "macro_f1": {
+        "difference": -0.033801110467340356,
+        "ci95": [
+          -0.07450302099455323,
+          0.0047997911366600065
+        ]
+      },
+      "accuracy": {
+        "difference": -0.033563672260611965,
+        "ci95": [
+          -0.05528134254689043,
+          -0.01184600197433372
+        ]
+      }
+    }
+  ],
+  "source_sha256": {
+    "data/mortgage_complaint.csv": "fa8771fed133082444f7e3f62f1554f1dd523366bbb482fa54a5cf1a6bed00e8",
+    "data/lora/teacher_deepseek-v4.1-flash-1017_v3/history_n9000.csv": "b10a58023735c08bd045cbf65394d22c8ff4ae848b0f28e5784dd94c5205aea5",
+    "data/lora/teacher_deepseek-v4.1-flash-1017_v3/history_n8000.csv": "21472c037e8720522d5f7cb8ec3967083c68eb3f1a02fcc6c0fcecc1b342aa1d",
+    "student_lora.sh": "4708eee85ab3fbde7d2ab3dfdd1f7310aa6d6f913824b1de48642c9f72d5ff82",
+    "code/prompts/mortgage_v3.toml": "321da8ce69689045c57df3675a3d4867e37e1fab2aaeb3a8c160577f801bdbd0",
+    "output/baseline_v3/teacher_deepseek-v4.1-flash-1017_all/run.sqlite": "f5e1e7b590e36933ab83e2524a6484f3bb7c14e8cba5c593452c3589ba507200",
+    "output/baseline_v3/teacher_deepseek-v4.1-flash-1017_all/predictions.csv": "49044dbfe9b8f818f9a14a4950486a2c7ae81a9ce4fd5d0a994d4e4c33273b0b",
+    "output/baseline_v3/teacher_deepseek-v4.1-flash-1017_all/config.json": "b661eae3789d7ab98cd09cff3b7cf8e8b68e0d4597bf6abc4f445bc07206d790",
+    "output/lora/gemma3-270m-it_v3_n9000_r8_a16_lr5e-5_e3_drop0.05/training.json": "816d705cc4cfca5bfa1cf03dca7ba525517f99db89182f6f7d32f0202514a547",
+    "output/lora/gemma3-270m-it_v3_n9000_r8_a16_lr5e-5_e3_drop0.05/adapter_config.json": "08a52ac04efe5bf666c511a37723cfd0bb6c19a3b2ea8cfa5fefa6a149607d8b",
+    "output/lora/gemma3-270m-it_v3_n9000_r8_a16_lr5e-5_e3_drop0.05/loss_tokens.jsonl": "e0bea66b365742a8276cb10f252644d6123ef75541a92629543e40454f754606",
+    "output/lora_eval/gemma3-270m-it_v3_n9000_r8_a16_lr5e-5_e3_drop0.05_validation/metrics.json": "d50dfff3574773e458f1e13ad7ed66e7177f6c35808482377eb5d94db3f812c7",
+    "output/lora_eval/gemma3-270m-it_v3_n9000_r8_a16_lr5e-5_e3_drop0.05_validation/config.json": "03ea5461cd917ae0d7ddfb7d155aa919f4e22cb7b916b32b493ba97e6bccfb1c",
+    "output/lora_eval/gemma3-270m-it_v3_n9000_r8_a16_lr5e-5_e3_drop0.05_validation/predictions.csv": "629656b3a38b89cecfc0ec3b4bc8640746e65af3cc8ef843ee309f62256d0c13",
+    "output/lora_eval/gemma3-270m-it_v3_n9000_r8_a16_lr5e-5_e3_drop0.05_validation/run.sqlite": "1fe5e1aad49adf3741d08429c2e8f6723e868edddac2a2dfa48a9cad057bf7eb",
+    "output/lora/gemma3-270m-it_v3_n9000_r16_a32_lr5e-5_e3_drop0.05/training.json": "05a1c104841b83d5840b15a5e69d931be61619b9e3563b3e71cf30a103cafd42",
+    "output/lora/gemma3-270m-it_v3_n9000_r16_a32_lr5e-5_e3_drop0.05/adapter_config.json": "a03f7c7272140ddb2ad2296a80e493c7c60be6a3c4f2b29a190bda22a4b2be44",
+    "output/lora/gemma3-270m-it_v3_n9000_r16_a32_lr5e-5_e3_drop0.05/loss_tokens.jsonl": "e0bea66b365742a8276cb10f252644d6123ef75541a92629543e40454f754606",
+    "output/lora_eval/gemma3-270m-it_v3_n9000_r16_a32_lr5e-5_e3_drop0.05_validation/metrics.json": "416387ab1b1aa5e7b1b59464e069927d98eebaf10a0e176980b8409af55f8389",
+    "output/lora_eval/gemma3-270m-it_v3_n9000_r16_a32_lr5e-5_e3_drop0.05_validation/config.json": "dabbe03371715b731682b550bad1d4430ec5cc3d3eb97c9aeeda657c7c7a50d4",
+    "output/lora_eval/gemma3-270m-it_v3_n9000_r16_a32_lr5e-5_e3_drop0.05_validation/predictions.csv": "a28ff727457d4a69fa6c0489d234d72b4e6e401e4d3aee22ed03da453330f72e",
+    "output/lora_eval/gemma3-270m-it_v3_n9000_r16_a32_lr5e-5_e3_drop0.05_validation/run.sqlite": "4fbfacea13b00c40306c26580c41151ec8515ab77e1bf2f8ad3536d5b1dbe888",
+    "output/lora/gemma3-270m-it_v3_n9000_r32_a64_lr5e-5_e3_drop0.05/training.json": "02b56c7fffe43b98cc0f6ad4f70325d5d3d71c2187b18646b4dc7a6964c5d062",
+    "output/lora/gemma3-270m-it_v3_n9000_r32_a64_lr5e-5_e3_drop0.05/adapter_config.json": "7c9e5d38478ae66eeb9ba69636259950f236ee8bf5921f01656e4b67a9ac9f43",
+    "output/lora/gemma3-270m-it_v3_n9000_r32_a64_lr5e-5_e3_drop0.05/loss_tokens.jsonl": "e0bea66b365742a8276cb10f252644d6123ef75541a92629543e40454f754606",
+    "output/lora_eval/gemma3-270m-it_v3_n9000_r32_a64_lr5e-5_e3_drop0.05_validation/metrics.json": "43ea988b3ca4303739ce9908aca1cc3933d0bd1ed78e476cba6708eef39c43bd",
+    "output/lora_eval/gemma3-270m-it_v3_n9000_r32_a64_lr5e-5_e3_drop0.05_validation/config.json": "3fbcc5144978b291f27d19322cf19bffcd3f8fac3fa4f3f99035742f583c8df6",
+    "output/lora_eval/gemma3-270m-it_v3_n9000_r32_a64_lr5e-5_e3_drop0.05_validation/predictions.csv": "4411a390969c789b82676b87ade45f75249180cd3d90b0e29aeb6690d5b8eef8",
+    "output/lora_eval/gemma3-270m-it_v3_n9000_r32_a64_lr5e-5_e3_drop0.05_validation/run.sqlite": "74276691317adcd646687b2301f24abb451ebfd4b0cc536a86f287d163ae8b0e",
+    "output/lora/gemma3-270m-it_v3_n9000_r8_a8_lr5e-5_e3_drop0.05/training.json": "75417abfe9f16f58d629cab3060d4128c1989748f8eb18e8fb3267b6765ff9ff",
+    "output/lora/gemma3-270m-it_v3_n9000_r8_a8_lr5e-5_e3_drop0.05/adapter_config.json": "e3f0e6d36366289090c7b208f74ec73717b4a7b4adc7af3089c3b9b200dfa7a7",
+    "output/lora/gemma3-270m-it_v3_n9000_r8_a8_lr5e-5_e3_drop0.05/loss_tokens.jsonl": "e0bea66b365742a8276cb10f252644d6123ef75541a92629543e40454f754606",
+    "output/lora_eval/gemma3-270m-it_v3_n9000_r8_a8_lr5e-5_e3_drop0.05_validation/metrics.json": "f79aea2ff9680884d75e556ecf51f261d7b5b21a044116a27e1e9ac2e0d49d41",
+    "output/lora_eval/gemma3-270m-it_v3_n9000_r8_a8_lr5e-5_e3_drop0.05_validation/config.json": "14ebd4f2717bc06468382906934851f19337ccaa6031b160618b31d2b7212bfa",
+    "output/lora_eval/gemma3-270m-it_v3_n9000_r8_a8_lr5e-5_e3_drop0.05_validation/predictions.csv": "07354525585bf50d34059e2848a311a1b092578467a005a3b686c764771e0038",
+    "output/lora_eval/gemma3-270m-it_v3_n9000_r8_a8_lr5e-5_e3_drop0.05_validation/run.sqlite": "cd498265735fb2c6639211f3eabc286ec25bcf0fc457a6b72097d1f555d6d9be",
+    "output/lora/gemma3-270m-it_v3_n9000_r8_a32_lr5e-5_e3_drop0.05/training.json": "a956c408ed7e503b1e09c927bd2eae1509bbbb562241fdfb811552bd7291b771",
+    "output/lora/gemma3-270m-it_v3_n9000_r8_a32_lr5e-5_e3_drop0.05/adapter_config.json": "4774caedb48c11a02ba59b4ce1e6851f36fdaae98d77192b07dbc76704423cd3",
+    "output/lora/gemma3-270m-it_v3_n9000_r8_a32_lr5e-5_e3_drop0.05/loss_tokens.jsonl": "e0bea66b365742a8276cb10f252644d6123ef75541a92629543e40454f754606",
+    "output/lora_eval/gemma3-270m-it_v3_n9000_r8_a32_lr5e-5_e3_drop0.05_validation/metrics.json": "6d5cbc698a44b36a6f8adcc9e0cd7210b6585b7c29f2326cddf2f0b60eac6117",
+    "output/lora_eval/gemma3-270m-it_v3_n9000_r8_a32_lr5e-5_e3_drop0.05_validation/config.json": "a9f2e1618386a18e16a0568ead888e6078255952193012280834f99129d9d59d",
+    "output/lora_eval/gemma3-270m-it_v3_n9000_r8_a32_lr5e-5_e3_drop0.05_validation/predictions.csv": "ba6eafa04886ff91e20ce3efb2f9d66f92d97321109f98985aaf604cc7c6ace4",
+    "output/lora_eval/gemma3-270m-it_v3_n9000_r8_a32_lr5e-5_e3_drop0.05_validation/run.sqlite": "adde6e3d798795942af3c516684e03b7c78a89d65c16cba4919ae3625b54c48f",
+    "output/lora/gemma3-270m-it_v3_n9000_r16_a16_lr5e-5_e3_drop0.05/training.json": "1199375c40e3dbb69460332b613ef2668f46cba8cbe0c8baf13b1bec81973234",
+    "output/lora/gemma3-270m-it_v3_n9000_r16_a16_lr5e-5_e3_drop0.05/adapter_config.json": "bf75f344cf261567856977df0438ab7aeba3f549cf753cf48f54d8b0d013c146",
+    "output/lora/gemma3-270m-it_v3_n9000_r16_a16_lr5e-5_e3_drop0.05/loss_tokens.jsonl": "e0bea66b365742a8276cb10f252644d6123ef75541a92629543e40454f754606",
+    "output/lora_eval/gemma3-270m-it_v3_n9000_r16_a16_lr5e-5_e3_drop0.05_validation/metrics.json": "282ccd3835a300442f2b07f2507ffaf856801fb67774b01a7b5728622b76784d",
+    "output/lora_eval/gemma3-270m-it_v3_n9000_r16_a16_lr5e-5_e3_drop0.05_validation/config.json": "31b6421bf0a4a6dcf3b59aba93e63eb8ea0826a1fc28da12e95eba1c63a4b097",
+    "output/lora_eval/gemma3-270m-it_v3_n9000_r16_a16_lr5e-5_e3_drop0.05_validation/predictions.csv": "1149f0772d882b12cb8291c5c9a5d36474e35ae729638a31d44a3381ab294758",
+    "output/lora_eval/gemma3-270m-it_v3_n9000_r16_a16_lr5e-5_e3_drop0.05_validation/run.sqlite": "5adcd25b543505b4c4b82341e36fdf7399e1a729a6cd61bb0a42475b3be51a31",
+    "output/lora/gemma3-270m-it_v3_n9000_r16_a64_lr5e-5_e3_drop0.05/training.json": "d13bb1fdeb52f9bbcae73064bcd218a4ae64b291c306a9684764ae673402f29d",
+    "output/lora/gemma3-270m-it_v3_n9000_r16_a64_lr5e-5_e3_drop0.05/adapter_config.json": "ea497c8870b2464a0be6edda32c1967394df55cb760e496fd51d98e55be1c4a9",
+    "output/lora/gemma3-270m-it_v3_n9000_r16_a64_lr5e-5_e3_drop0.05/loss_tokens.jsonl": "e0bea66b365742a8276cb10f252644d6123ef75541a92629543e40454f754606",
+    "output/lora_eval/gemma3-270m-it_v3_n9000_r16_a64_lr5e-5_e3_drop0.05_validation/metrics.json": "b24aac81d86cedc554f539b319518f71ad76ea6045f5e6961c7a85c8e30ef507",
+    "output/lora_eval/gemma3-270m-it_v3_n9000_r16_a64_lr5e-5_e3_drop0.05_validation/config.json": "1205aa6dc0c47c69a8f96f17f3f561a0634867038b4baae382248a3edba92dc6",
+    "output/lora_eval/gemma3-270m-it_v3_n9000_r16_a64_lr5e-5_e3_drop0.05_validation/predictions.csv": "ce3119c85812527e8dc418c2b9884e1bb1e52d14aa7d4d2c4a3092c78e72d8db",
+    "output/lora_eval/gemma3-270m-it_v3_n9000_r16_a64_lr5e-5_e3_drop0.05_validation/run.sqlite": "91f97d62e1f477770f1e760c70e93469fccbeac6dd6133280f0f19090562f55b",
+    "output/lora/gemma3-270m-it_v3_n9000_r8_a16_lr2e-5_e3_drop0.05/training.json": "88f29a42ca9182dc38714396be2f2765f24927c3735dabdacf0fb73e0ab0c1e8",
+    "output/lora/gemma3-270m-it_v3_n9000_r8_a16_lr2e-5_e3_drop0.05/adapter_config.json": "08a52ac04efe5bf666c511a37723cfd0bb6c19a3b2ea8cfa5fefa6a149607d8b",
+    "output/lora/gemma3-270m-it_v3_n9000_r8_a16_lr2e-5_e3_drop0.05/loss_tokens.jsonl": "e0bea66b365742a8276cb10f252644d6123ef75541a92629543e40454f754606",
+    "output/lora_eval/gemma3-270m-it_v3_n9000_r8_a16_lr2e-5_e3_drop0.05_validation/metrics.json": "be28266f36ab60da37ad5cf3ada926edb309a3658071369d4f161275a2dfef62",
+    "output/lora_eval/gemma3-270m-it_v3_n9000_r8_a16_lr2e-5_e3_drop0.05_validation/config.json": "a40bd413eb26226b5d9f27ce7041f0a8fbb56905b95a35bab1d8300d6a8b6f7e",
+    "output/lora_eval/gemma3-270m-it_v3_n9000_r8_a16_lr2e-5_e3_drop0.05_validation/predictions.csv": "68f119783e2364eb7e218d4429ff05dfa0a5569ad167681ee972161cb4145b90",
+    "output/lora_eval/gemma3-270m-it_v3_n9000_r8_a16_lr2e-5_e3_drop0.05_validation/run.sqlite": "40dd609eddf66897905626a082269474346a62933ea0b4dd0e0a8c2ff3f1e927",
+    "output/lora/gemma3-270m-it_v3_n9000_r8_a16_lr1e-4_e3_drop0.05/training.json": "54839f6acd8ffd3e2e006eaabee4033b39dcdcf3a0251cc9039d758b3686819a",
+    "output/lora/gemma3-270m-it_v3_n9000_r8_a16_lr1e-4_e3_drop0.05/adapter_config.json": "08a52ac04efe5bf666c511a37723cfd0bb6c19a3b2ea8cfa5fefa6a149607d8b",
+    "output/lora/gemma3-270m-it_v3_n9000_r8_a16_lr1e-4_e3_drop0.05/loss_tokens.jsonl": "e0bea66b365742a8276cb10f252644d6123ef75541a92629543e40454f754606",
+    "output/lora_eval/gemma3-270m-it_v3_n9000_r8_a16_lr1e-4_e3_drop0.05_validation/metrics.json": "10648fe22334a3c419472745d20b7cfa655050d4adb1530ff626f310cc281a53",
+    "output/lora_eval/gemma3-270m-it_v3_n9000_r8_a16_lr1e-4_e3_drop0.05_validation/config.json": "595d0fa681bfc9f90f677a797a97ac9672f87d809387c3369d92b265b249b443",
+    "output/lora_eval/gemma3-270m-it_v3_n9000_r8_a16_lr1e-4_e3_drop0.05_validation/predictions.csv": "52ad878c0e5ff589e9e5c7590fcc2bc1b5d9d66ddc2c117da16695fd44e4c5e2",
+    "output/lora_eval/gemma3-270m-it_v3_n9000_r8_a16_lr1e-4_e3_drop0.05_validation/run.sqlite": "895f3be4617f65e119086e7b174a991f793085073ae693350764b86382976de2",
+    "output/lora/gemma3-270m-it_v3_n9000_r32_a32_lr5e-5_e3_drop0.05/training.json": "072a2c369d13ac5d493a9c2a41a14f7a632c89e25445579a625b491afd825307",
+    "output/lora/gemma3-270m-it_v3_n9000_r32_a32_lr5e-5_e3_drop0.05/adapter_config.json": "387d0b3205f10e7be1a8d7f21cbfde76adba7b9f0eb3ae3ffd3f79f21083923f",
+    "output/lora/gemma3-270m-it_v3_n9000_r32_a32_lr5e-5_e3_drop0.05/loss_tokens.jsonl": "e0bea66b365742a8276cb10f252644d6123ef75541a92629543e40454f754606",
+    "output/lora_eval/gemma3-270m-it_v3_n9000_r32_a32_lr5e-5_e3_drop0.05_validation/metrics.json": "8f2c01ba663fafff62ac1f8d38768dd95c5bf141e6a7762197f0521605ddef37",
+    "output/lora_eval/gemma3-270m-it_v3_n9000_r32_a32_lr5e-5_e3_drop0.05_validation/config.json": "931b0af503f4abb63af59cd7f4f410f69e8e2bb0e6c5803a239adf6602894b07",
+    "output/lora_eval/gemma3-270m-it_v3_n9000_r32_a32_lr5e-5_e3_drop0.05_validation/predictions.csv": "dc17523ec71a5d48dfcb20c2064ea8ca0075b32a6cf8cf16aec36392adb798bf",
+    "output/lora_eval/gemma3-270m-it_v3_n9000_r32_a32_lr5e-5_e3_drop0.05_validation/run.sqlite": "0cf33c71c6f52442a09eb1c9f535784ff57ab05b0fc657626397b2eabc08eca3",
+    "output/lora/gemma3-270m-it_v3_n9000/training.json": "09508f8188d901e06c28f0126a0119209e73b1e24fdc8642bd2be91fc78ec885",
+    "output/lora/gemma3-270m-it_v3_n9000/adapter_config.json": "c5d63ac3a47a7d2d08a394a366cb070dc1daa8807c26094fea4de480f0a12adb",
+    "output/lora/gemma3-270m-it_v3_n9000/loss_tokens.jsonl": "e0bea66b365742a8276cb10f252644d6123ef75541a92629543e40454f754606",
+    "output/lora_eval/gemma3-270m-it_v3_n9000_validation/metrics.json": "8ee289e06c88386746364bbe773fd71a95da39aba97438e26501a8d79d35357c",
+    "output/lora_eval/gemma3-270m-it_v3_n9000_validation/config.json": "99685d59fa7e1cfb7ef0b93d7e44352533f7ce0c97f61e8ce47e1c95479a0ec1",
+    "output/lora_eval/gemma3-270m-it_v3_n9000_validation/predictions.csv": "ffa7a633146f34db538ca03f8a8a914c9c57c935cce0c021dce556b3b5d915a5",
+    "output/lora_eval/gemma3-270m-it_v3_n9000_validation/run.sqlite": "0b848c4f1247bda3dab5480a3e1c20b6b7d5eadf8d3ab276ff687dd258baf3b4",
+    "output/lora/gemma3-270m-it_v3_n8000/training.json": "0b858647c4c1d099468199f1219c61d9f21be854ed75d72b290399f92d7c46a3",
+    "output/lora/gemma3-270m-it_v3_n8000/adapter_config.json": "08a52ac04efe5bf666c511a37723cfd0bb6c19a3b2ea8cfa5fefa6a149607d8b",
+    "output/lora/gemma3-270m-it_v3_n8000/loss_tokens.jsonl": "960d43f6e4008c305a49d65968463a9a2262e213d6064e3c8598b80fbd439ebb",
+    "output/lora_eval/gemma3-270m-it_v3_n8000_validation/metrics.json": "15ad5a1392ac9f19dbf2cd7992ea8ec7d7d47771dd34d97fc474edf7b71a1262",
+    "output/lora_eval/gemma3-270m-it_v3_n8000_validation/config.json": "6bffa804c17613d18eb4a7510ff68eda16c952757c380362b03c1aa7bf06ac41",
+    "output/lora_eval/gemma3-270m-it_v3_n8000_validation/predictions.csv": "64fbad8c1bc163db51e063b5834da5f38c0a1646fd87464281dee079b026126e",
+    "output/lora_eval/gemma3-270m-it_v3_n8000_validation/run.sqlite": "1ff205d13a0ea3d7896f1d6bfc09ccbcd27bdd41045a1ee3e54cfddbd5723ce1"
+  }
+}
