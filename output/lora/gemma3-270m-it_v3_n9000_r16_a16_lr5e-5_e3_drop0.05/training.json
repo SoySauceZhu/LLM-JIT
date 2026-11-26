@@ -1,0 +1,72 @@
+{
+  "student_model": "google/gemma-3-270m-it",
+  "revision": "ac82b4e820549b854eebf28ce6dedaf9fdfa17b3",
+  "prompt": "v3",
+  "chat_template_sha256": "7de1c58e208eda46e9c7f86397df37ec49883aeece39fb961e0a6b24088dd3c4",
+  "n_training_examples": 9000,
+  "n_invalid_answers_skipped": 0,
+  "n_clipped": 34,
+  "train_csv": "data/lora/teacher_deepseek-v4.1-flash-1017_v3/history_n9000.csv",
+  "train_csv_sha256": "b10a58023735c08bd045cbf65394d22c8ff4ae848b0f28e5784dd94c5205aea5",
+  "ordered_complaint_ids_sha256": "c57123468ae58225c9f7cc44ad3b2a8156ab0c2c615afc62befa7bbf2865777d",
+  "teacher_label_counts": {
+    "A": 720,
+    "B": 246,
+    "C": 5387,
+    "D": 2187,
+    "E": 460
+  },
+  "clipping": {
+    "tokenizer": "HuggingFaceTB/SmolLM2-135M-Instruct",
+    "revision": "12fd25f77366fa6b3b4b768ec3050bf629380bac",
+    "head": 2000,
+    "tail": 1000
+  },
+  "loss": {
+    "type": "completion_only_causal_lm_cross_entropy",
+    "ignore_index": -100,
+    "end_of_turn_id": 106,
+    "supervised_tokens_per_example": 2
+  },
+  "device": "cuda",
+  "gpu": "Quadro RTX 6000",
+  "base_dtype": "float32",
+  "adapter_dtype": "torch.float32",
+  "seed": 42,
+  "epochs": 3,
+  "batch_size": 8,
+  "micro_batch_size": 1,
+  "optimizer": "AdamW",
+  "learning_rate": 5e-05,
+  "weight_decay": 0.0,
+  "trainable_parameters": 737280,
+  "packages": {
+    "peft": "0.18.1",
+    "torch": "2.10.0+cu126",
+    "transformers": "5.5.4",
+    "tokenizers": "0.22.2"
+  },
+  "epoch_metrics": [
+    {
+      "epoch": 1,
+      "completion_loss": 0.4508973347759909,
+      "optimizer_updates": 1125
+    },
+    {
+      "epoch": 2,
+      "completion_loss": 0.2267011855888284,
+      "optimizer_updates": 2250
+    },
+    {
+      "epoch": 3,
+      "completion_loss": 0.19281473729593887,
+      "optimizer_updates": 3375
+    }
+  ],
+  "optimizer_updates": 3375,
+  "training_seconds": 4094.5695102259924,
+  "adapter_files_sha256": {
+    "adapter_config.json": "bf75f344cf261567856977df0438ab7aeba3f549cf753cf48f54d8b0d013c146",
+    "adapter_model.safetensors": "dd020f2e02893d60d709217428c8c8ecf39c4e128c4723c7ae3a7a06685eef46"
+  }
+}
