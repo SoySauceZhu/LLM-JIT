@@ -243,7 +243,7 @@ uv run --locked --extra lora python code/student_baseline.py \
 
 Use `strict_generation.teacher_agreement_all_cases` to compare the two Students on the full cohort. `teacher_agreement_by_class` uses each valid Teacher label as its denominator and counts Student failures as disagreements. Each run also records accuracy and macro-F1 against the CFPB reference labels.
 
-Run mixed-precision Qwen3 N9000 training and adapter validation with `sh student_qwen3_lora_fp16_mixed.sh`. Training runs with gradient checkpointing disabled and saves the adapter under `output/lora/qwen3-0.6b_v3_n9000_fp16_mixed`. FP32 validation writes its metrics to `output/lora_eval/qwen3-0.6b_v3_n9000_fp16_mixed_validation/metrics.json`.
+Run the FP16 mixed-precision Qwen3 learning curve with `sh student_qwen3_lora_fp16_mixed.sh`. It trains the 100, 200, and 500 sample prefixes and each 1,000-sample increment through 9,000, with gradient checkpointing disabled and an FP32 October validation after each adapter. Pass sizes as arguments to select specific prefixes, for example `sh student_qwen3_lora_fp16_mixed.sh 100 200 500`. Set `QWEN_MICRO_BATCH_SIZE=2` to use micro-batch 2 with effective batch size 8. The script reuses completed adapters and the validation ledger for each prefix. Adapter directories use `output/lora/qwen3-0.6b_v3_nXXXX_fp16_mixed`, with a suffix such as `_mb2` for a larger micro-batch. The corresponding validation results are under `output/lora_eval/`.
 
 ## Code and checks
 
