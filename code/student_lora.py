@@ -201,6 +201,7 @@ def train(model, parameters, examples, pad_id, args, *, class_weights=None, sort
     step = 0
     skipped_updates = 0
     for epoch in range(1, args.epochs + 1):
+        print(f"epoch={epoch}/{args.epochs} started", flush=True)
         rng.shuffle(order)
         loss_sum = 0.0
         for start_index in range(0, len(order), args.batch_size):
