@@ -194,12 +194,13 @@ uv run --locked --extra lora python code/student_lora.py \
   --train-csv "$TRAIN_CSV" --device cuda --output "$ADAPTER_DIR" --run
 ```
 
-The trainer uses the frozen v3 chat and shared narrative clipping. It accepts only complaint IDs and text from the frozen history cohort and skips rows without a valid A–E `teacher_label`. The only unmasked targets are the final assistant letter and the native turn terminator (`<end_of_turn>` for Gemma and `<|im_end|>` for Qwen3). Qwen3 training and inference both use `enable_thinking=False`. The native causal LM shifts labels internally. Each optimizer update gives all its answer tokens equal weight, including when the final effective batch is partial.
+The trainer uses the frozen v3 chat and shared narrative clipping. It accepts only complaint IDs and text from the frozen history cohort and skips rows without a valid A–E `teacher_label`. The only unmasked targets are the final assistant letter and the native turn terminator (`<end_of_turn>` for Gemma and `<|im_end|>` for Qwen3). Qwen3 training and inference both use `enable_thinking=False`. By default, each optimizer update gives all its answer tokens equal weight, including when the final effective batch is partial.
 
 Defaults are FP32, rank 8, alpha 16, dropout 0.05 on `q_proj` and `v_proj`, AdamW at `2e-4`, three epochs, effective batch 8, micro-batch 1 and seed 42. Use `--dtype bfloat16` on a CUDA GPU with native BF16 support. The output contains PEFT adapter weights, `training.json` with runtime and optimizer metrics, and `loss_tokens.jsonl` with each sample's supervised token IDs and zero-based target start.
 
 - `--dtype float16-mixed` stores the frozen base in FP16 and uses FP16 autocast, dynamic loss scaling, and FP32 LoRA parameters and AdamW moments. Scaling is updated after each effective batch and skipped updates are recorded in `training.json`.
-- `--dtype float16` uses FP16 base weights, LoRA parameters, gradients, and AdamW moments. AdamW uses `eps=1e-4`, which is representable in FP16. Both modes use the model's native causal LM loss, which computes cross-entropy in FP32.
+- `--dtype bfloat16-mixed` uses a BF16 base and BF16 autocast on supported CUDA GPUs. LoRA parameters and AdamW moments are FP32.
+- `--dtype float16` uses FP16 base weights, LoRA parameters, gradients, and AdamW moments. AdamW uses `eps=1e-4`, which is representable in FP16. Loss cross-entropy uses FP32 in every precision mode.
 
 Evaluate the saved adapter with the same autoregressive generation and strict label parsing as the baseline. Use a fresh output directory for each adapter.
 
@@ -208,6 +209,12 @@ uv run --locked --extra lora python code/student_baseline.py \
   --device cuda --split validation --prompt-version v3 --adapter "$ADAPTER_DIR" \
   --output output/lora_eval/gemma3-270m-it_v3_n0100_validation --run
 ```
+
+### Gemma 3 N9000 with B/E weighting
+
+Run `sh student_gemma3_lora_be.sh` on the RTX 4090 to train with BF16 mixed precision and gradient checkpointing disabled, then run FP32 October validation. The script uses the original N9000 learning rate of `2e-4` and writes metrics to `output/lora_eval/gemma3-270m-it_v3_n9000_bf16_mixed_be1.5_validation/metrics.json`.
+
+The repeatable `--class-weight LABEL=WEIGHT` option applies to the letter target for the corresponding Teacher class. The launcher sets B and E to `1.5` relative to the default `1` for other classes. The trainer normalizes the mean letter weight to `1` across the accepted training rows, gives every turn terminator weight `1`, and divides the weighted loss across all answer tokens in each effective batch. The requested and normalized weights appear in `training.json`.
 
 ### Qwen3-0.6B N9000 comparison
 
@@ -236,7 +243,7 @@ uv run --locked --extra lora python code/student_baseline.py \
 
 Use `strict_generation.teacher_agreement_all_cases` to compare the two Students on the full cohort. `teacher_agreement_by_class` uses each valid Teacher label as its denominator and counts Student failures as disagreements. Each run also records accuracy and macro-F1 against the CFPB reference labels.
 
-Run mixed-precision Qwen3 N9000 training and adapter validation with `sh student_qwen3_lora_fp16_mixed.sh`. Training runs with gradient checkpointing disabled and saves the adapter under `output/lora/qwen3-0.6b_v3_n9000_fp16_mixed`. FP32 validation writes its metrics to `output/lora_eval/qwen3-0.6b_v3_n9000_fp16_mixed_validation/metrics.json`.
+Run the FP16 mixed-precision Qwen3 learning curve with `sh student_qwen3_lora_fp16_mixed.sh`. It trains the 100, 200, and 500 sample prefixes and each 1,000-sample increment through 9,000, with gradient checkpointing disabled and an FP32 October validation after each adapter. Pass sizes as arguments to select specific prefixes, for example `sh student_qwen3_lora_fp16_mixed.sh 100 200 500`. Set `QWEN_MICRO_BATCH_SIZE=2` to use micro-batch 2 with effective batch size 8. The script reuses completed adapters and the validation ledger for each prefix. Adapter directories use `output/lora/qwen3-0.6b_v3_nXXXX_fp16_mixed`, with a suffix such as `_mb2` for a larger micro-batch. The corresponding validation results are under `output/lora_eval/`.
 
 ## Code and checks
 

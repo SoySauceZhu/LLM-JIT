@@ -1,0 +1,232 @@
+{
+  "n_expected": 1013,
+  "n_terminal": 1013,
+  "n_pending": 0,
+  "complete": true,
+  "provisional": false,
+  "metric_denominator": "terminal_cases",
+  "teacher_run": "/root/LLM-JIT/output/baseline_v3/teacher_deepseek-v4.1-flash-1017_all",
+  "teacher_model": "deepseek-ai/DeepSeek-V4.1-Flash-1017",
+  "model": "Qwen/Qwen3-0.6B",
+  "model_revision": "c1899de289a04d12100db370d81485cdf75e47ca",
+  "device": "cuda",
+  "dtype": "torch.float32",
+  "pairing_status": "complete",
+  "clipped": 2,
+  "usage": {
+    "attempts": 1013,
+    "known_prompt_tokens": 1080678,
+    "known_completion_tokens": 2026,
+    "attempts_missing_usage": 0,
+    "attempt_seconds": 123.7347614596365,
+    "cost_usd": null,
+    "pricing_status": "unpriced"
+  },
+  "strict_generation": {
+    "n": 1013,
+    "valid_rate": 1.0,
+    "accuracy": 0.7670286278381047,
+    "macro_f1": 0.6566822466325093,
+    "per_class": {
+      "A": {
+        "support": 106,
+        "recall": 0.4716981132075472,
+        "fpr": 0.014332965821389196,
+        "f1": 0.591715976331361
+      },
+      "B": {
+        "support": 84,
+        "recall": 0.4166666666666667,
+        "fpr": 0.023681377825618945,
+        "f1": 0.49645390070921985
+      },
+      "C": {
+        "support": 562,
+        "recall": 0.8932384341637011,
+        "fpr": 0.25942350332594233,
+        "f1": 0.8501270110076207
+      },
+      "D": {
+        "support": 215,
+        "recall": 0.7534883720930232,
+        "fpr": 0.08395989974937343,
+        "f1": 0.7297297297297297
+      },
+      "E": {
+        "support": 46,
+        "recall": 0.6086956521739131,
+        "fpr": 0.017580144777662874,
+        "f1": 0.6153846153846154
+      }
+    },
+    "correct": 777,
+    "teacher_matches": 887,
+    "teacher_agreement_all_cases": 0.8756169792694966,
+    "predicted_counts": {
+      "D": 229,
+      "C": 619,
+      "B": 57,
+      "E": 45,
+      "A": 63
+    },
+    "confusion_rows_reference_columns_prediction": {
+      "A": {
+        "A": 50,
+        "B": 18,
+        "C": 24,
+        "D": 13,
+        "E": 1,
+        "FAIL": 0
+      },
+      "B": {
+        "A": 8,
+        "B": 35,
+        "C": 35,
+        "D": 3,
+        "E": 3,
+        "FAIL": 0
+      },
+      "C": {
+        "A": 1,
+        "B": 4,
+        "C": 502,
+        "D": 46,
+        "E": 9,
+        "FAIL": 0
+      },
+      "D": {
+        "A": 3,
+        "B": 0,
+        "C": 46,
+        "D": 162,
+        "E": 4,
+        "FAIL": 0
+      },
+      "E": {
+        "A": 1,
+        "B": 0,
+        "C": 12,
+        "D": 5,
+        "E": 28,
+        "FAIL": 0
+      }
+    }
+  },
+  "first_token_choice": {
+    "n": 1013,
+    "valid_rate": 1.0,
+    "accuracy": 0.7670286278381047,
+    "macro_f1": 0.6566822466325093,
+    "per_class": {
+      "A": {
+        "support": 106,
+        "recall": 0.4716981132075472,
+        "fpr": 0.014332965821389196,
+        "f1": 0.591715976331361
+      },
+      "B": {
+        "support": 84,
+        "recall": 0.4166666666666667,
+        "fpr": 0.023681377825618945,
+        "f1": 0.49645390070921985
+      },
+      "C": {
+        "support": 562,
+        "recall": 0.8932384341637011,
+        "fpr": 0.25942350332594233,
+        "f1": 0.8501270110076207
+      },
+      "D": {
+        "support": 215,
+        "recall": 0.7534883720930232,
+        "fpr": 0.08395989974937343,
+        "f1": 0.7297297297297297
+      },
+      "E": {
+        "support": 46,
+        "recall": 0.6086956521739131,
+        "fpr": 0.017580144777662874,
+        "f1": 0.6153846153846154
+      }
+    },
+    "correct": 777,
+    "teacher_matches": 887,
+    "teacher_agreement_all_cases": 0.8756169792694966,
+    "predicted_counts": {
+      "D": 229,
+      "C": 619,
+      "B": 57,
+      "E": 45,
+      "A": 63
+    },
+    "confusion_rows_reference_columns_prediction": {
+      "A": {
+        "A": 50,
+        "B": 18,
+        "C": 24,
+        "D": 13,
+        "E": 1,
+        "FAIL": 0
+      },
+      "B": {
+        "A": 8,
+        "B": 35,
+        "C": 35,
+        "D": 3,
+        "E": 3,
+        "FAIL": 0
+      },
+      "C": {
+        "A": 1,
+        "B": 4,
+        "C": 502,
+        "D": 46,
+        "E": 9,
+        "FAIL": 0
+      },
+      "D": {
+        "A": 3,
+        "B": 0,
+        "C": 46,
+        "D": 162,
+        "E": 4,
+        "FAIL": 0
+      },
+      "E": {
+        "A": 1,
+        "B": 0,
+        "C": 12,
+        "D": 5,
+        "E": 28,
+        "FAIL": 0
+      }
+    }
+  },
+  "teacher_agreement_by_class": {
+    "A": {
+      "support": 85,
+      "matches": 54,
+      "agreement": 0.6352941176470588
+    },
+    "B": {
+      "support": 43,
+      "matches": 30,
+      "agreement": 0.6976744186046512
+    },
+    "C": {
+      "support": 598,
+      "matches": 563,
+      "agreement": 0.9414715719063546
+    },
+    "D": {
+      "support": 232,
+      "matches": 199,
+      "agreement": 0.8577586206896551
+    },
+    "E": {
+      "support": 54,
+      "matches": 41,
+      "agreement": 0.7592592592592593
+    }
+  }
+}

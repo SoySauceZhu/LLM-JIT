@@ -13,7 +13,7 @@ from pathlib import Path
 from tempfile import TemporaryDirectory
 
 from mortgage_data import HEAD, REVISION, TAIL, TOKENIZER, load_cohort, prepare_cases, sha256
-from mortgage_prompt import build_messages, load_prompt, parse_label
+from mortgage_prompt import LABELS, build_messages, load_prompt, parse_label
 from run_store import file_sha256
 from student_baseline import (
     DEFAULT_STUDENT_MODEL, LORA_STUDENT_MODELS, STUDENT_MODELS,
@@ -23,6 +23,7 @@ from student_baseline import (
 IGNORE = -100
 ANSWER_TOKENS = 2  # One category letter and the end-of-turn token.
 LOSS_WINDOW = ANSWER_TOKENS + 1  # Include the position that predicts the letter.
+MIXED_PRECISION_DTYPES = {"float16-mixed": "float16", "bfloat16-mixed": "bfloat16"}
 
 
 @dataclass
@@ -126,12 +127,42 @@ def collate(examples, pad_id, device):
     }.items()}
 
 
-def completion_loss(model, batch, tokens_per_update):
+def parse_class_weight(value):
+    label, _, raw_weight = value.partition("=")
+    try:
+        weight = float(raw_weight)
+    except ValueError:
+        weight = 0.0
+    if label not in LABELS or not 0 < weight < math.inf:
+        raise argparse.ArgumentTypeError("Expected LABEL=WEIGHT with an A–E label and a positive finite weight")
+    return label, weight
+
+
+def normalize_class_weights(class_weights, label_counts):
+    """Set the mean letter weight across the training rows to one."""
+    weights = {label: class_weights.get(label, 1.0) for label in label_counts}
+    scale = max(weights.values())
+    scaled = {label: weight / scale for label, weight in weights.items()}
+    mean = sum(label_counts[label] * weight for label, weight in scaled.items()) / sum(label_counts.values())
+    return {label: weight / mean for label, weight in scaled.items()}
+
+
+def completion_loss(model, batch, tokens_per_update, *, letter_weights=None):
     # Omit the LM head at other positions. The full prompt still enters the causal decoder.
-    # Labels are unshifted and aligned to this window. The causal LM shifts them internally.
     labels = batch["labels"][:, -LOSS_WINDOW:]
-    return model(**{**batch, "labels": labels}, use_cache=False, logits_to_keep=LOSS_WINDOW,
-                 num_items_in_batch=tokens_per_update).loss
+    if letter_weights is None:
+        # The native causal LM shifts these labels internally.
+        return model(**{**batch, "labels": labels}, use_cache=False, logits_to_keep=LOSS_WINDOW,
+                     num_items_in_batch=tokens_per_update).loss
+
+    from torch.nn.functional import cross_entropy
+
+    inputs = {name: value for name, value in batch.items() if name != "labels"}
+    logits = model(**inputs, use_cache=False, logits_to_keep=LOSS_WINDOW).logits
+    # The last prompt token predicts the letter, and the letter predicts the end of turn.
+    answer_logits = logits[:, :-1].float().flatten(0, 1)
+    token_losses = cross_entropy(answer_logits, labels[:, 1:].flatten(), reduction="none").view(-1, ANSWER_TOKENS)
+    return (token_losses[:, 0] * letter_weights + token_losses[:, 1]).sum() / tokens_per_update
 
 
 def add_lora(base, rank, alpha, dropout, *, student_model=DEFAULT_STUDENT_MODEL, autocast_adapter_dtype=True):
@@ -149,17 +180,17 @@ def add_lora(base, rank, alpha, dropout, *, student_model=DEFAULT_STUDENT_MODEL,
     return model, [param for _, param in trainable]
 
 
-def train(model, parameters, examples, pad_id, args):
+def train(model, parameters, examples, pad_id, args, *, class_weights=None, sort_micro_batches_by_length=False):
     import torch
 
     model.train()
     if args.gradient_checkpointing:
         model.gradient_checkpointing_enable(gradient_checkpointing_kwargs={"use_reentrant": False})
-    mixed_precision = args.dtype == "float16-mixed"
+    amp_dtype = getattr(torch, MIXED_PRECISION_DTYPES[args.dtype]) if args.dtype in MIXED_PRECISION_DTYPES else None
     # AdamW's default epsilon rounds to zero when its moments are stored in FP16.
     optimizer_eps = 1e-4 if args.dtype == "float16" else 1e-8
     optimizer = torch.optim.AdamW(parameters, lr=args.learning_rate, weight_decay=0.0, eps=optimizer_eps)
-    scaler = torch.amp.GradScaler(args.device, enabled=mixed_precision)
+    scaler = torch.amp.GradScaler(args.device, enabled=amp_dtype == torch.float16)
     scale = scaler.get_scale()
     rng = random.Random(args.seed)
     order = list(range(len(examples)))
@@ -170,18 +201,27 @@ def train(model, parameters, examples, pad_id, args):
     step = 0
     skipped_updates = 0
     for epoch in range(1, args.epochs + 1):
+        print(f"epoch={epoch}/{args.epochs} started", flush=True)
         rng.shuffle(order)
         loss_sum = 0.0
         for start_index in range(0, len(order), args.batch_size):
             indices = order[start_index:start_index + args.batch_size]
+            if sort_micro_batches_by_length and 1 < args.micro_batch_size < len(indices):
+                indices.sort(key=lambda i: len(examples[i].input_ids))
             target_count = ANSWER_TOKENS * len(indices)
+            weights = None
+            if class_weights is not None:
+                weights = torch.tensor([class_weights[examples[i].teacher_label] for i in indices],
+                                       dtype=torch.float32, device=args.device)
             optimizer.zero_grad(set_to_none=True)
             step_loss = torch.zeros((), device=args.device)
             for offset in range(0, len(indices), args.micro_batch_size):
-                sample = [examples[i] for i in indices[offset:offset + args.micro_batch_size]]
+                end = offset + args.micro_batch_size
+                sample = [examples[i] for i in indices[offset:end]]
                 batch = collate(sample, pad_id, args.device)
-                with torch.autocast(args.device, dtype=torch.float16, enabled=mixed_precision):
-                    loss = completion_loss(model, batch, target_count)
+                letter_weights = None if weights is None else weights[offset:end]
+                with torch.autocast(args.device, dtype=amp_dtype, enabled=amp_dtype is not None):
+                    loss = completion_loss(model, batch, target_count, letter_weights=letter_weights)
                 scaler.scale(loss).backward()
                 step_loss += loss.detach()
             mean_loss = step_loss.item()
@@ -232,11 +272,12 @@ def main():
     parser.add_argument("--train-csv", type=Path, required=True)
     parser.add_argument("--output", type=Path, help="New directory for the adapter and training records")
     parser.add_argument("--device", choices=("cuda", "cpu", "mps"), default="cuda")
-    parser.add_argument("--dtype", choices=("float32", "bfloat16", "float16-mixed", "float16"), default="float32",
-                        help="float16-mixed uses FP16 base weights with FP32 LoRA updates and AMP; "
-                             "float16 also stores LoRA weights and AdamW moments in FP16")
+    parser.add_argument("--dtype", choices=("float32", "bfloat16", "float16", *MIXED_PRECISION_DTYPES),
+                        default="float32", help="Mixed modes use AMP with FP32 LoRA weights and AdamW moments")
     parser.add_argument("--gradient-checkpointing", action="store_true",
                         help="Recompute decoder activations during backward to reduce memory use")
+    parser.add_argument("--class-weight", action="append", type=parse_class_weight, default=[],
+                        metavar="LABEL=WEIGHT", help="Relative Teacher class weight for letter loss, repeatable")
     parser.add_argument("--rank", type=int, default=8)
     parser.add_argument("--alpha", type=int, default=16)
     parser.add_argument("--dropout", type=float, default=0.05)
@@ -244,6 +285,8 @@ def main():
     parser.add_argument("--epochs", type=int, default=3)
     parser.add_argument("--batch-size", type=int, default=8, help="Effective batch size per optimizer update")
     parser.add_argument("--micro-batch-size", type=int, default=1)
+    parser.add_argument("--sort-micro-batches-by-length", action="store_true",
+                        help="Group similar lengths within each effective batch to reduce padding")
     parser.add_argument("--seed", type=int, default=42)
     action = parser.add_mutually_exclusive_group(required=True)
     action.add_argument("--audit-only", action="store_true", help="Check every target using the tokenizer only")
@@ -257,6 +300,9 @@ def main():
         parser.error("Rank, alpha, epochs and batch sizes must be positive, with micro batch <= effective batch")
     if not 0 <= args.dropout < 1 or not 0 < args.learning_rate < math.inf:
         parser.error("Dropout must be in [0, 1) and learning rate must be positive and finite")
+    class_weights = dict(args.class_weight)
+    if len(class_weights) != len(args.class_weight):
+        parser.error("--class-weight may be set once per label")
 
     from transformers import AutoConfig, AutoTokenizer
 
@@ -266,16 +312,25 @@ def main():
     tokenizer = AutoTokenizer.from_pretrained(profile["model"], **kwargs)
     context_window = AutoConfig.from_pretrained(profile["model"], **kwargs).max_position_embeddings
     examples, stop_id, clipped = prepare_examples(rows, tokenizer, context_window, args.student_model)
+    label_counts = dict(sorted(Counter(example.teacher_label for example in examples).items()))
     targets = {example.teacher_label: example.input_ids[-ANSWER_TOKENS:] for example in examples}
     print(f"examples={len(examples)} skipped_invalid={skipped} clipped={clipped} "
           f"loss_tokens={len(examples) * ANSWER_TOKENS} targets={dict(sorted(targets.items()))}", flush=True)
+    loss_config = {"type": "completion_only_causal_lm_cross_entropy", "ignore_index": IGNORE,
+                   "end_of_turn_id": stop_id, "supervised_tokens_per_example": ANSWER_TOKENS}
+    letter_weights = None
+    if class_weights:
+        letter_weights = normalize_class_weights(class_weights, label_counts)
+        loss_config.update(class_weights=class_weights, normalized_letter_weights=letter_weights,
+                           end_of_turn_weight=1.0)
+        print(f"class_weights={class_weights} normalized_letter_weights={letter_weights}", flush=True)
     if args.audit_only:
         return
 
     import torch
 
     torch.manual_seed(args.seed)
-    base_dtype = "float16" if args.dtype == "float16-mixed" else args.dtype
+    base_dtype = MIXED_PRECISION_DTYPES.get(args.dtype, args.dtype)
     base, _, settings, _ = load_student(args.student_model, args.device, dtype=base_dtype)
     if stop_id not in settings.eos_token_id:
         raise ValueError("The supervised end-of-turn token is not a stop token for generation")
@@ -293,19 +348,20 @@ def main():
         "n_training_examples": len(examples), "n_invalid_answers_skipped": skipped, "n_clipped": clipped,
         "train_csv": str(args.train_csv), "train_csv_sha256": file_sha256(args.train_csv),
         "ordered_complaint_ids_sha256": sha256("".join(e.complaint_id + "\n" for e in examples)),
-        "teacher_label_counts": dict(sorted(Counter(e.teacher_label for e in examples).items())),
+        "teacher_label_counts": label_counts,
         "clipping": {"tokenizer": TOKENIZER, "revision": REVISION, "head": HEAD, "tail": TAIL},
-        "loss": {"type": "completion_only_causal_lm_cross_entropy", "ignore_index": IGNORE,
-                 "end_of_turn_id": stop_id, "supervised_tokens_per_example": ANSWER_TOKENS},
+        "loss": loss_config,
         "device": args.device, "gpu": torch.cuda.get_device_name() if args.device == "cuda" else None,
         "precision": args.dtype, "base_dtype": base_dtype, "adapter_dtype": adapter_dtype, "seed": args.seed,
         "gradient_checkpointing": args.gradient_checkpointing,
         "epochs": args.epochs, "batch_size": args.batch_size, "micro_batch_size": args.micro_batch_size,
+        "sort_micro_batches_by_length": args.sort_micro_batches_by_length,
         "optimizer": "AdamW", "learning_rate": args.learning_rate, "weight_decay": 0.0,
         "trainable_parameters": trainable_count,
         "packages": {package: version(package) for package in ("peft", "torch", "transformers", "tokenizers")},
     }
-    summary.update(train(model, parameters, examples, tokenizer.pad_token_id, args))
+    summary.update(train(model, parameters, examples, tokenizer.pad_token_id, args, class_weights=letter_weights,
+                         sort_micro_batches_by_length=args.sort_micro_batches_by_length))
     save_run(args.output, model, examples, summary, student_model=args.student_model)
     print(f"Saved adapter to {args.output}", flush=True)
 

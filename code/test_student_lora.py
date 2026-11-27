@@ -1,6 +1,7 @@
 """Regression checks for completion boundaries, token weights and frozen base weights."""
 
 import csv
+import random
 import unittest
 from argparse import Namespace
 from copy import deepcopy
@@ -16,8 +17,8 @@ from transformers import Gemma3ForCausalLM, Gemma3TextConfig, Qwen3Config, Qwen3
 from mortgage_prompt import load_prompt
 from student_baseline import STUDENT_MODELS, adapter_identity, load_student
 from student_lora import (
-    Example, add_lora, collate, completion_loss, encode_answer, prepare_examples, read_training_rows, save_run,
-    train,
+    Example, add_lora, collate, completion_loss, encode_answer, normalize_class_weights, prepare_examples,
+    read_training_rows, save_run, train,
 )
 
 
@@ -115,6 +116,54 @@ class StudentLoRATest(unittest.TestCase):
                 torch.testing.assert_close(full.loss, explicit)
                 torch.testing.assert_close(tail, explicit)
                 torch.testing.assert_close(accumulated, explicit)
+
+    def test_class_weights_apply_only_to_letter_and_accumulate_over_the_effective_batch(self):
+        examples = [Example("1", "A", [2, 3, 4, 10, 7]), Example("2", "B", [2, 4, 11, 7]),
+                    Example("3", "E", [2, 3, 4, 5, 15, 7])]
+        batch = collate(examples, 0, "cpu")
+        weights = normalize_class_weights({"B": 1.5, "E": 1.5}, {"A": 1, "B": 1, "E": 1})
+        self.assertEqual(weights, {"A": 0.75, "B": 1.125, "E": 1.125})
+        letter_weights = torch.tensor([weights[example.teacher_label] for example in examples])
+        model = tiny_gemma().eval()
+        with torch.no_grad():
+            full = model(**batch, use_cache=False)
+            targets = torch.tensor([[10, 7], [11, 7], [15, 7]])
+            token_losses = cross_entropy(full.logits[:, -3:-1].transpose(1, 2), targets, reduction="none")
+            expected = (token_losses[:, 0] @ letter_weights + token_losses[:, 1].sum()) / targets.numel()
+            weighted = completion_loss(model, batch, targets.numel(), letter_weights=letter_weights)
+            accumulated = sum(
+                completion_loss(model, collate(examples[start:start + 2], 0, "cpu"), targets.numel(),
+                                letter_weights=letter_weights[start:start + 2])
+                for start in (0, 2)
+            )
+            torch.testing.assert_close(weighted, expected)
+            torch.testing.assert_close(accumulated, expected)
+            torch.testing.assert_close(completion_loss(model, batch, targets.numel(),
+                                                       letter_weights=torch.ones_like(letter_weights)), full.loss)
+
+    def test_length_sort_keeps_examples_and_weights_in_the_same_optimizer_update(self):
+        lengths = (10, 5, 12, 7, 14, 6, 8, 15, 9, 11, 13)
+        examples = [Example(str(i), "AB"[i % 2], [2] * (length - 2) + [10 + i, 7])
+                    for i, length in enumerate(lengths)]
+        args = Namespace(device="cpu", dtype="float32", learning_rate=2e-4, seed=42, batch_size=8,
+                         micro_batch_size=4, epochs=1, gradient_checkpointing=False)
+        order = list(range(len(examples)))
+        random.Random(args.seed).shuffle(order)
+        first_update = sorted(order[:8], key=lengths.__getitem__)
+        expected = [first_update[:4], first_update[4:], order[8:]]
+        model = tiny_gemma()
+        weights = {"A": 1.0, "B": 1.5}
+
+        with patch("student_lora.collate", wraps=collate) as batches, \
+                patch("student_lora.completion_loss", wraps=completion_loss) as losses:
+            train(model, list(model.parameters()), examples, 0, args, class_weights=weights,
+                  sort_micro_batches_by_length=True)
+
+        batch_ids = [[int(example.complaint_id) for example in call.args[0]] for call in batches.call_args_list]
+        self.assertEqual(batch_ids, expected)
+        self.assertEqual([call.args[2] for call in losses.call_args_list], [16, 16, 6])
+        self.assertEqual([call.kwargs["letter_weights"].tolist() for call in losses.call_args_list],
+                         [[weights[examples[i].teacher_label] for i in group] for group in expected])
 
     @unittest.skipUnless(find_spec("peft"), "requires the lora extra")
     def test_optimizer_updates_only_lora(self):
