@@ -4,6 +4,8 @@
 
 The default pairing is **DeepSeek V4.1 Flash 1017 Teacher → Gemma 3 270M IT Student**, using the frozen v3 prompt. Qwen3-0.6B is also available for LoRA training. Gemma 4 31B IT remains an optional Teacher baseline, and SmolLM2-135M and Qwen3.5-0.8B remain available for Student baseline inference.
 
+[Student accuracy 与 Teacher consistency 未达 90% 的综合分析](Student_Accuracy_Consistency_Analysis.md)汇总任务难度、标签口径、类别不平衡、训练方案、输出失败及 confidence 证据，并区分已确认结论与待验证原因。
+
 ## Environment
 
 Use [uv](https://docs.astral.sh/uv/getting-started/installation/) from the repository root. `.python-version` selects Python 3.12.10; `pyproject.toml` and `uv.lock` pin direct and transitive dependencies.
