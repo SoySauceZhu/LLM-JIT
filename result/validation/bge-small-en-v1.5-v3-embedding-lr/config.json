@@ -1,0 +1,107 @@
+{
+  "split": "validation",
+  "sizes": [
+    0,
+    100,
+    200,
+    500,
+    1000,
+    2000,
+    3000,
+    4000,
+    5000,
+    6000,
+    7000,
+    8000,
+    9000
+  ],
+  "teacher": "deepseek-ai/DeepSeek-V4.1-Flash-1017",
+  "labels": [
+    "A",
+    "B",
+    "C",
+    "D",
+    "E"
+  ],
+  "packages": {
+    "torch": "2.10.0+cu126",
+    "transformers": "5.5.4",
+    "tokenizers": "0.22.2",
+    "huggingface-hub": "1.11.0",
+    "numpy": "2.5.5",
+    "scipy": "1.18.1",
+    "scikit-learn": "1.7.2",
+    "matplotlib": "3.10.7",
+    "threadpoolctl": "3.8.0"
+  },
+  "source_sha256": {
+    "data/mortgage_complaint.csv": "fa8771fed133082444f7e3f62f1554f1dd523366bbb482fa54a5cf1a6bed00e8",
+    "output/baseline_v3/teacher_deepseek-v4.1-flash-1017_all/predictions.csv": "49044dbfe9b8f818f9a14a4950486a2c7ae81a9ce4fd5d0a994d4e4c33273b0b",
+    "code/prompts/mortgage_v3.toml": "321da8ce69689045c57df3675a3d4867e37e1fab2aaeb3a8c160577f801bdbd0",
+    "data/lora/teacher_deepseek-v4.1-flash-1017_v3/history_n0100.csv": "54b9c6d5b7626f5e19accb1baef55f9c4f60c54420e53972a9c3b98ccfffb3bd",
+    "data/lora/teacher_deepseek-v4.1-flash-1017_v3/history_n0200.csv": "83f717f25bc41666ba760c45279f35e97008310960f822ed29f90b7042337303",
+    "data/lora/teacher_deepseek-v4.1-flash-1017_v3/history_n0500.csv": "18f8cb46a83fba40502ee08dd259fd4de34e1944b0f5d513fc28d3bc9087d8e1",
+    "data/lora/teacher_deepseek-v4.1-flash-1017_v3/history_n1000.csv": "df38c073db6efb0316b8effc009ed01e9be61121102b97ae60b3b761c93d0ea2",
+    "data/lora/teacher_deepseek-v4.1-flash-1017_v3/history_n2000.csv": "81835da73b5842447eb767a5f3741deb7baec1bfb38a4fa033440fff2e688a9c",
+    "data/lora/teacher_deepseek-v4.1-flash-1017_v3/history_n3000.csv": "48057cc462727690befeeefa9b66d3a7792403c82217cd63e991b0e0cfa82ed8",
+    "data/lora/teacher_deepseek-v4.1-flash-1017_v3/history_n4000.csv": "87e8c68c0d0c6812bba26eb0f3379033cb8d3be4269f847251a31baff48a2271",
+    "data/lora/teacher_deepseek-v4.1-flash-1017_v3/history_n5000.csv": "f2f432c1db5e3b0c0efd5ab731b57f3dac135f8af63b1b1f1daa3af504049288",
+    "data/lora/teacher_deepseek-v4.1-flash-1017_v3/history_n6000.csv": "d6054fe6339a46d7803421ca58bdccc9e3ade35480b6e63aae681585c54dc1e6",
+    "data/lora/teacher_deepseek-v4.1-flash-1017_v3/history_n7000.csv": "b1e37d1e3add0f419dcfba22ff4789f67a7945868d8a8f5920d8f600581a6f91",
+    "data/lora/teacher_deepseek-v4.1-flash-1017_v3/history_n8000.csv": "21472c037e8720522d5f7cb8ec3967083c68eb3f1a02fcc6c0fcecc1b342aa1d",
+    "data/lora/teacher_deepseek-v4.1-flash-1017_v3/history_n9000.csv": "b10a58023735c08bd045cbf65394d22c8ff4ae848b0f28e5784dd94c5205aea5",
+    "data/lora/teacher_deepseek-v4.1-flash-1017_v3/manifest.json": "9a0c2172aef7f79b34efc622c4539f27171c676839793025046197f07f63f5ee"
+  },
+  "embedding": {
+    "model": "BAAI/bge-small-en-v1.5",
+    "revision": "5c38ec7c405ec4b44b94cc5a9bb96e735b38267a",
+    "dimension": 384,
+    "max_length": 512,
+    "pooling": "normalized CLS, content-token-weighted sum, L2 norm",
+    "device": "cuda",
+    "gpu": "Quadro RTX 6000",
+    "gpu_memory_bytes": 23591780352,
+    "cuda_runtime": "12.6",
+    "dtype": "float16",
+    "batch_size": 64,
+    "encoder_sha256": "8e2f9d3750d2c464986e8c3c147914634576e41acc81efc5530b26b9c4e7dd32",
+    "embedding_versions": {
+      "torch": "2.10.0+cu126",
+      "transformers": "5.5.4",
+      "tokenizers": "0.22.2"
+    },
+    "input_sha256": "cd2b23c564b773f85adc0a30802dbe7bba17a92d26197e9c59f1e6b1a2fcae8c",
+    "chunks": 13199,
+    "chunk_size": 510,
+    "seconds": 10.745802215998992,
+    "cache_key": "073b1fc4ed2d1766e9b53ae2b2d1c20cc93b04c752bc32d6c8fc5ca3ab073073",
+    "cache_reused": true,
+    "cache_sha256": "4d3af825eb5fa75aafda54f06f5a38d863b8a8ef8ce23fb810edc9f2cf5b51fd"
+  },
+  "code_sha256": {
+    "student_embedding_lr.py": "b3ae6718c11fe46602eb7c77362b10a5dd5c6ae695cbcdb312d50d4878cadfc4",
+    "mortgage_embedding.py": "8e2f9d3750d2c464986e8c3c147914634576e41acc81efc5530b26b9c4e7dd32",
+    "embedding_lr_results.py": "aa1bf4c338d4767bee43941a92a78433f1f263e937d7afeb0fd705ce5beebc6a",
+    "confidence_gated_fallback.py": "d3f83122ec9efde41cf792f7bcff968dc2d6bca30dbab7042386efae4359929e",
+    "evaluation.py": "dd5ef379db91f04947ce61d65db0c79a7f183c139131351e7253c2c5cfb64782"
+  },
+  "descriptions": {
+    "A": "Applying for a mortgage or refinancing an existing mortgage. Choose A for problems with an application, eligibility, an offer or rate quote, or a lender's decision to approve or deny a new loan.",
+    "B": "Closing on a mortgage. Choose B for problems completing the transaction, such as incorrect final documents, signing delays, closing costs, or funds due at settlement.",
+    "C": "Managing an existing mortgage account. Choose C when the consumer wants the servicer to correct how it handled a payment, balance, fee, escrow account, or payoff on an existing loan.",
+    "D": "Difficulty paying or seeking mortgage relief. Choose D when the main problem is inability to pay, getting or changing a relief arrangement, or seeking help to avoid foreclosure. Examples include forbearance, a repayment plan, or a hardship loan modification.",
+    "E": "Credit reporting and related services. Choose E when the main problem concerns information on a credit report, a credit inquiry or dispute, or access to a credit report, score, monitoring service, fraud alert, or security freeze."
+  },
+  "lr_options": {
+    "solver": "lbfgs",
+    "C": 10.0,
+    "fit_intercept": true,
+    "class_weight": null,
+    "max_iter": 2000,
+    "tol": 1e-08
+  },
+  "prototype_scale": 10.0,
+  "history_multichunk_cases": 1872,
+  "validation_multichunk_cases": 248,
+  "validation_max_content_tokens": 6852
+}

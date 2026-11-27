@@ -247,6 +247,18 @@ Use `strict_generation.teacher_agreement_all_cases` to compare the two Students 
 
 Run the FP16 mixed-precision Qwen3 learning curve with `sh student_qwen3_lora_fp16_mixed.sh`. It trains the 100, 200, and 500 sample prefixes and each 1,000-sample increment through 9,000, with gradient checkpointing disabled and an FP32 October validation after each adapter. Pass sizes as arguments to select specific prefixes, for example `sh student_qwen3_lora_fp16_mixed.sh 100 200 500`. Set `QWEN_MICRO_BATCH_SIZE=2` to use micro-batch 2 with effective batch size 8. The script reuses completed adapters and the validation ledger for each prefix. Adapter directories use `output/lora/qwen3-0.6b_v3_nXXXX_fp16_mixed`, with a suffix such as `_mb2` for a larger micro-batch. The corresponding validation results are under `output/lora_eval/`.
 
+## BGE Small + logistic regression Student
+
+Run the complete 13-checkpoint October validation experiment from the repository root on the Quadro RTX 6000.
+
+```bash
+uv run --locked --extra embedding-lr python code/student_embedding_lr.py --device cuda
+```
+
+The experiment freezes `BAAI/bge-small-en-v1.5` and caches the 384-dimensional complaint embeddings in `.cache/embedding_lr`. The n0 head uses the five v3 category descriptions as zero-shot prototypes. The remaining heads fit multinomial LR on the chronological DeepSeek-labeled history prefixes also used by LoRA, at 100, 200, 500 and each 1,000 through 9,000. Inference records all five probabilities per case. The confidence gate replays the archived DeepSeek predictions for low-confidence cases.
+
+The [validation report](result/validation/bge-small-en-v1.5-v3-embedding-lr/note.md) links the per-checkpoint parameters, validation metrics, prediction ledgers and Student/Teacher comparison plots. Use `--output` for a separate result directory or `--batch-size` to adjust the embedding batch size.
+
 ## Confidence-gated Teacher fallback (offline)
 
 [CGTF 实验报告](result/validation/gemma3-270m-it-v3-cgtf/note.md) evaluates confidence-gated Teacher fallback on all 12 archived Gemma validation checkpoints. A request is escalated only when `confidence < threshold`; equality retains the Student output. The primary mode preserves original strict outputs, including failures; a separate five-way mode provides a diagnostic comparison. No new Teacher API calls are made.
@@ -268,6 +280,7 @@ The script writes threshold metrics, routing counts, per-request hybrid validati
 | `code/teacher_baseline.py` / `code/teacher_collection.py` | Full-cohort collection, retries, concurrency, resume and exports |
 | `code/student_baseline.py` | Student inference, resume, Teacher pairing and scoring |
 | `code/student_lora.py` | History-only completion SFT, target token audit and PEFT adapter export |
+| `code/student_embedding_lr.py` | BGE embeddings, LR checkpoints, validation probabilities and fallback replay |
 | `code/evaluation.py` / `code/run_store.py` | Metrics, raw attempt ledger, locking and atomic exports |
 
 Run offline checks without API calls or model downloads:

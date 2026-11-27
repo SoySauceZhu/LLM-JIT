@@ -1,0 +1,2894 @@
+{
+  "n_validation": 1013,
+  "checkpoints": {
+    "0": {
+      "n": 1013,
+      "valid_rate": 1.0,
+      "accuracy": 0.2744323790720632,
+      "macro_f1": 0.2514187648340582,
+      "per_class": {
+        "A": {
+          "support": 106,
+          "recall": 0.2830188679245283,
+          "fpr": 0.03638368246968027,
+          "f1": 0.35502958579881655
+        },
+        "B": {
+          "support": 84,
+          "recall": 0.8571428571428571,
+          "fpr": 0.6695371367061357,
+          "f1": 0.18508997429305912
+        },
+        "C": {
+          "support": 562,
+          "recall": 0.23665480427046262,
+          "fpr": 0.07538802660753881,
+          "f1": 0.36488340192043894
+        },
+        "D": {
+          "support": 215,
+          "recall": 0.19069767441860466,
+          "fpr": 0.05263157894736842,
+          "f1": 0.2751677852348993
+        },
+        "E": {
+          "support": 46,
+          "recall": 0.043478260869565216,
+          "fpr": 0.004136504653567736,
+          "f1": 0.07692307692307693
+        }
+      },
+      "correct": 278,
+      "teacher_matches": 267,
+      "teacher_agreement_all_cases": 0.263573543928924,
+      "predicted_counts": {
+        "D": 83,
+        "B": 694,
+        "A": 63,
+        "C": 167,
+        "E": 6
+      },
+      "confusion_rows_reference_columns_prediction": {
+        "A": {
+          "A": 30,
+          "B": 63,
+          "C": 8,
+          "D": 5,
+          "E": 0,
+          "FAIL": 0
+        },
+        "B": {
+          "A": 6,
+          "B": 72,
+          "C": 4,
+          "D": 2,
+          "E": 0,
+          "FAIL": 0
+        },
+        "C": {
+          "A": 18,
+          "B": 374,
+          "C": 133,
+          "D": 33,
+          "E": 4,
+          "FAIL": 0
+        },
+        "D": {
+          "A": 9,
+          "B": 152,
+          "C": 13,
+          "D": 41,
+          "E": 0,
+          "FAIL": 0
+        },
+        "E": {
+          "A": 0,
+          "B": 33,
+          "C": 9,
+          "D": 2,
+          "E": 2,
+          "FAIL": 0
+        }
+      },
+      "fit_seconds": 0.0,
+      "fit_iterations": 0,
+      "teacher_agreement_by_label": {
+        "A": {
+          "support": 85,
+          "matches": 30,
+          "agreement": 0.35294117647058826
+        },
+        "B": {
+          "support": 43,
+          "matches": 41,
+          "agreement": 0.9534883720930233
+        },
+        "C": {
+          "support": 598,
+          "matches": 145,
+          "agreement": 0.24247491638795987
+        },
+        "D": {
+          "support": 232,
+          "matches": 48,
+          "agreement": 0.20689655172413793
+        },
+        "E": {
+          "support": 54,
+          "matches": 3,
+          "agreement": 0.05555555555555555
+        }
+      },
+      "training_label_counts": {
+        "A": 0,
+        "B": 0,
+        "C": 0,
+        "D": 0,
+        "E": 0
+      },
+      "confidence": {
+        "mean_confidence": 0.2980772309536229,
+        "correct_mean_confidence": 0.303332026067494,
+        "incorrect_mean_confidence": 0.2960897030057914,
+        "ece_10_bins": 0.026033053601142667,
+        "multiclass_brier": 0.7516004075791379,
+        "confidence_correctness_auroc": 0.5381637547105173,
+        "bins": [
+          {
+            "confidence_min": 0.0,
+            "confidence_max": 0.1,
+            "n": 0,
+            "mean_confidence": null,
+            "accuracy": null
+          },
+          {
+            "confidence_min": 0.1,
+            "confidence_max": 0.2,
+            "n": 0,
+            "mean_confidence": null,
+            "accuracy": null
+          },
+          {
+            "confidence_min": 0.2,
+            "confidence_max": 0.3,
+            "n": 589,
+            "mean_confidence": 0.2726752524940712,
+            "accuracy": 0.25127334465195245
+          },
+          {
+            "confidence_min": 0.3,
+            "confidence_max": 0.4,
+            "n": 406,
+            "mean_confidence": 0.3289559985418247,
+            "accuracy": 0.29802955665024633
+          },
+          {
+            "confidence_min": 0.4,
+            "confidence_max": 0.5,
+            "n": 18,
+            "mean_confidence": 0.4327986571684032,
+            "accuracy": 0.5
+          },
+          {
+            "confidence_min": 0.5,
+            "confidence_max": 0.6,
+            "n": 0,
+            "mean_confidence": null,
+            "accuracy": null
+          },
+          {
+            "confidence_min": 0.6,
+            "confidence_max": 0.7,
+            "n": 0,
+            "mean_confidence": null,
+            "accuracy": null
+          },
+          {
+            "confidence_min": 0.7,
+            "confidence_max": 0.8,
+            "n": 0,
+            "mean_confidence": null,
+            "accuracy": null
+          },
+          {
+            "confidence_min": 0.8,
+            "confidence_max": 0.9,
+            "n": 0,
+            "mean_confidence": null,
+            "accuracy": null
+          },
+          {
+            "confidence_min": 0.9,
+            "confidence_max": 1.0,
+            "n": 0,
+            "mean_confidence": null,
+            "accuracy": null
+          }
+        ]
+      }
+    },
+    "100": {
+      "n": 1013,
+      "valid_rate": 1.0,
+      "accuracy": 0.6100691016781836,
+      "macro_f1": 0.2641991547780117,
+      "per_class": {
+        "A": {
+          "support": 106,
+          "recall": 0.08490566037735849,
+          "fpr": 0.0011025358324145535,
+          "f1": 0.15517241379310345
+        },
+        "B": {
+          "support": 84,
+          "recall": 0.0,
+          "fpr": 0.0,
+          "f1": 0.0
+        },
+        "C": {
+          "support": 562,
+          "recall": 0.9555160142348754,
+          "fpr": 0.7450110864745011,
+          "f1": 0.748432055749129
+        },
+        "D": {
+          "support": 215,
+          "recall": 0.33488372093023255,
+          "fpr": 0.07268170426065163,
+          "f1": 0.41739130434782606
+        },
+        "E": {
+          "support": 46,
+          "recall": 0.0,
+          "fpr": 0.0,
+          "f1": 0.0
+        }
+      },
+      "correct": 618,
+      "teacher_matches": 660,
+      "teacher_agreement_all_cases": 0.6515301085883515,
+      "predicted_counts": {
+        "C": 873,
+        "D": 130,
+        "A": 10
+      },
+      "confusion_rows_reference_columns_prediction": {
+        "A": {
+          "A": 9,
+          "B": 0,
+          "C": 83,
+          "D": 14,
+          "E": 0,
+          "FAIL": 0
+        },
+        "B": {
+          "A": 1,
+          "B": 0,
+          "C": 68,
+          "D": 15,
+          "E": 0,
+          "FAIL": 0
+        },
+        "C": {
+          "A": 0,
+          "B": 0,
+          "C": 537,
+          "D": 25,
+          "E": 0,
+          "FAIL": 0
+        },
+        "D": {
+          "A": 0,
+          "B": 0,
+          "C": 143,
+          "D": 72,
+          "E": 0,
+          "FAIL": 0
+        },
+        "E": {
+          "A": 0,
+          "B": 0,
+          "C": 42,
+          "D": 4,
+          "E": 0,
+          "FAIL": 0
+        }
+      },
+      "fit_seconds": 0.04438557097455487,
+      "fit_iterations": 111,
+      "teacher_agreement_by_label": {
+        "A": {
+          "support": 85,
+          "matches": 9,
+          "agreement": 0.10588235294117647
+        },
+        "B": {
+          "support": 43,
+          "matches": 0,
+          "agreement": 0.0
+        },
+        "C": {
+          "support": 598,
+          "matches": 574,
+          "agreement": 0.959866220735786
+        },
+        "D": {
+          "support": 232,
+          "matches": 77,
+          "agreement": 0.33189655172413796
+        },
+        "E": {
+          "support": 54,
+          "matches": 0,
+          "agreement": 0.0
+        }
+      },
+      "training_label_counts": {
+        "A": 7,
+        "B": 2,
+        "C": 65,
+        "D": 23,
+        "E": 3
+      },
+      "confidence": {
+        "mean_confidence": 0.6946769511498739,
+        "correct_mean_confidence": 0.7539664365170596,
+        "incorrect_mean_confidence": 0.6019151740437455,
+        "ece_10_bins": 0.08926184409976201,
+        "multiclass_brier": 0.529698052303939,
+        "confidence_correctness_auroc": 0.7591987218876736,
+        "bins": [
+          {
+            "confidence_min": 0.0,
+            "confidence_max": 0.1,
+            "n": 0,
+            "mean_confidence": null,
+            "accuracy": null
+          },
+          {
+            "confidence_min": 0.1,
+            "confidence_max": 0.2,
+            "n": 0,
+            "mean_confidence": null,
+            "accuracy": null
+          },
+          {
+            "confidence_min": 0.2,
+            "confidence_max": 0.3,
+            "n": 0,
+            "mean_confidence": null,
+            "accuracy": null
+          },
+          {
+            "confidence_min": 0.3,
+            "confidence_max": 0.4,
+            "n": 28,
+            "mean_confidence": 0.37069813598921597,
+            "accuracy": 0.39285714285714285
+          },
+          {
+            "confidence_min": 0.4,
+            "confidence_max": 0.5,
+            "n": 155,
+            "mean_confidence": 0.45244437938278437,
+            "accuracy": 0.2903225806451613
+          },
+          {
+            "confidence_min": 0.5,
+            "confidence_max": 0.6,
+            "n": 146,
+            "mean_confidence": 0.5540445124029684,
+            "accuracy": 0.4863013698630137
+          },
+          {
+            "confidence_min": 0.6,
+            "confidence_max": 0.7,
+            "n": 163,
+            "mean_confidence": 0.647952199647358,
+            "accuracy": 0.49693251533742333
+          },
+          {
+            "confidence_min": 0.7,
+            "confidence_max": 0.8,
+            "n": 173,
+            "mean_confidence": 0.7476454588655178,
+            "accuracy": 0.6184971098265896
+          },
+          {
+            "confidence_min": 0.8,
+            "confidence_max": 0.9,
+            "n": 210,
+            "mean_confidence": 0.8480321392977226,
+            "accuracy": 0.819047619047619
+          },
+          {
+            "confidence_min": 0.9,
+            "confidence_max": 1.0,
+            "n": 138,
+            "mean_confidence": 0.9366898834288672,
+            "accuracy": 0.9492753623188406
+          }
+        ]
+      }
+    },
+    "200": {
+      "n": 1013,
+      "valid_rate": 1.0,
+      "accuracy": 0.6416584402764067,
+      "macro_f1": 0.2964190500782905,
+      "per_class": {
+        "A": {
+          "support": 106,
+          "recall": 0.0660377358490566,
+          "fpr": 0.005512679162072767,
+          "f1": 0.11864406779661017
+        },
+        "B": {
+          "support": 84,
+          "recall": 0.011904761904761904,
+          "fpr": 0.0,
+          "f1": 0.023529411764705882
+        },
+        "C": {
+          "support": 562,
+          "recall": 0.9217081850533808,
+          "fpr": 0.5742793791574279,
+          "f1": 0.7737117251680359
+        },
+        "D": {
+          "support": 215,
+          "recall": 0.5767441860465117,
+          "fpr": 0.12406015037593984,
+          "f1": 0.5662100456621004
+        },
+        "E": {
+          "support": 46,
+          "recall": 0.0,
+          "fpr": 0.0,
+          "f1": 0.0
+        }
+      },
+      "correct": 650,
+      "teacher_matches": 706,
+      "teacher_agreement_all_cases": 0.6969397828232972,
+      "predicted_counts": {
+        "C": 777,
+        "D": 223,
+        "A": 12,
+        "B": 1
+      },
+      "confusion_rows_reference_columns_prediction": {
+        "A": {
+          "A": 7,
+          "B": 0,
+          "C": 71,
+          "D": 28,
+          "E": 0,
+          "FAIL": 0
+        },
+        "B": {
+          "A": 5,
+          "B": 1,
+          "C": 59,
+          "D": 19,
+          "E": 0,
+          "FAIL": 0
+        },
+        "C": {
+          "A": 0,
+          "B": 0,
+          "C": 518,
+          "D": 44,
+          "E": 0,
+          "FAIL": 0
+        },
+        "D": {
+          "A": 0,
+          "B": 0,
+          "C": 91,
+          "D": 124,
+          "E": 0,
+          "FAIL": 0
+        },
+        "E": {
+          "A": 0,
+          "B": 0,
+          "C": 38,
+          "D": 8,
+          "E": 0,
+          "FAIL": 0
+        }
+      },
+      "fit_seconds": 0.05383560201153159,
+      "fit_iterations": 141,
+      "teacher_agreement_by_label": {
+        "A": {
+          "support": 85,
+          "matches": 9,
+          "agreement": 0.10588235294117647
+        },
+        "B": {
+          "support": 43,
+          "matches": 1,
+          "agreement": 0.023255813953488372
+        },
+        "C": {
+          "support": 598,
+          "matches": 558,
+          "agreement": 0.9331103678929766
+        },
+        "D": {
+          "support": 232,
+          "matches": 138,
+          "agreement": 0.5948275862068966
+        },
+        "E": {
+          "support": 54,
+          "matches": 0,
+          "agreement": 0.0
+        }
+      },
+      "training_label_counts": {
+        "A": 12,
+        "B": 6,
+        "C": 123,
+        "D": 51,
+        "E": 8
+      },
+      "confidence": {
+        "mean_confidence": 0.7051634410848547,
+        "correct_mean_confidence": 0.7682108893218259,
+        "incorrect_mean_confidence": 0.5922685613216836,
+        "ece_10_bins": 0.06441921589771482,
+        "multiclass_brier": 0.4847874515341003,
+        "confidence_correctness_auroc": 0.7838397965670694,
+        "bins": [
+          {
+            "confidence_min": 0.0,
+            "confidence_max": 0.1,
+            "n": 0,
+            "mean_confidence": null,
+            "accuracy": null
+          },
+          {
+            "confidence_min": 0.1,
+            "confidence_max": 0.2,
+            "n": 0,
+            "mean_confidence": null,
+            "accuracy": null
+          },
+          {
+            "confidence_min": 0.2,
+            "confidence_max": 0.3,
+            "n": 2,
+            "mean_confidence": 0.2684750286432044,
+            "accuracy": 0.5
+          },
+          {
+            "confidence_min": 0.3,
+            "confidence_max": 0.4,
+            "n": 44,
+            "mean_confidence": 0.3654173702449587,
+            "accuracy": 0.18181818181818182
+          },
+          {
+            "confidence_min": 0.4,
+            "confidence_max": 0.5,
+            "n": 129,
+            "mean_confidence": 0.45431482231660536,
+            "accuracy": 0.3798449612403101
+          },
+          {
+            "confidence_min": 0.5,
+            "confidence_max": 0.6,
+            "n": 133,
+            "mean_confidence": 0.5507933512698503,
+            "accuracy": 0.39097744360902253
+          },
+          {
+            "confidence_min": 0.6,
+            "confidence_max": 0.7,
+            "n": 171,
+            "mean_confidence": 0.6525592592292393,
+            "accuracy": 0.5672514619883041
+          },
+          {
+            "confidence_min": 0.7,
+            "confidence_max": 0.8,
+            "n": 171,
+            "mean_confidence": 0.7550333034981453,
+            "accuracy": 0.7017543859649122
+          },
+          {
+            "confidence_min": 0.8,
+            "confidence_max": 0.9,
+            "n": 180,
+            "mean_confidence": 0.8518840594064955,
+            "accuracy": 0.8444444444444444
+          },
+          {
+            "confidence_min": 0.9,
+            "confidence_max": 1.0,
+            "n": 183,
+            "mean_confidence": 0.9388834139541486,
+            "accuracy": 0.9344262295081968
+          }
+        ]
+      }
+    },
+    "500": {
+      "n": 1013,
+      "valid_rate": 1.0,
+      "accuracy": 0.6752221125370188,
+      "macro_f1": 0.4323578876150278,
+      "per_class": {
+        "A": {
+          "support": 106,
+          "recall": 0.12264150943396226,
+          "fpr": 0.007717750826901874,
+          "f1": 0.20634920634920634
+        },
+        "B": {
+          "support": 84,
+          "recall": 0.023809523809523808,
+          "fpr": 0.0,
+          "f1": 0.046511627906976744
+        },
+        "C": {
+          "support": 562,
+          "recall": 0.896797153024911,
+          "fpr": 0.4501108647450111,
+          "f1": 0.7943262411347518
+        },
+        "D": {
+          "support": 215,
+          "recall": 0.6883720930232559,
+          "fpr": 0.14160401002506265,
+          "f1": 0.6218487394957983
+        },
+        "E": {
+          "support": 46,
+          "recall": 0.3695652173913043,
+          "fpr": 0.0062047569803516025,
+          "f1": 0.4927536231884058
+        }
+      },
+      "correct": 684,
+      "teacher_matches": 758,
+      "teacher_agreement_all_cases": 0.7482724580454096,
+      "predicted_counts": {
+        "C": 707,
+        "D": 261,
+        "E": 23,
+        "A": 20,
+        "B": 2
+      },
+      "confusion_rows_reference_columns_prediction": {
+        "A": {
+          "A": 13,
+          "B": 0,
+          "C": 62,
+          "D": 31,
+          "E": 0,
+          "FAIL": 0
+        },
+        "B": {
+          "A": 7,
+          "B": 2,
+          "C": 57,
+          "D": 16,
+          "E": 2,
+          "FAIL": 0
+        },
+        "C": {
+          "A": 0,
+          "B": 0,
+          "C": 504,
+          "D": 56,
+          "E": 2,
+          "FAIL": 0
+        },
+        "D": {
+          "A": 0,
+          "B": 0,
+          "C": 65,
+          "D": 148,
+          "E": 2,
+          "FAIL": 0
+        },
+        "E": {
+          "A": 0,
+          "B": 0,
+          "C": 19,
+          "D": 10,
+          "E": 17,
+          "FAIL": 0
+        }
+      },
+      "fit_seconds": 0.09686197299743071,
+      "fit_iterations": 204,
+      "teacher_agreement_by_label": {
+        "A": {
+          "support": 85,
+          "matches": 18,
+          "agreement": 0.21176470588235294
+        },
+        "B": {
+          "support": 43,
+          "matches": 2,
+          "agreement": 0.046511627906976744
+        },
+        "C": {
+          "support": 598,
+          "matches": 549,
+          "agreement": 0.9180602006688964
+        },
+        "D": {
+          "support": 232,
+          "matches": 169,
+          "agreement": 0.728448275862069
+        },
+        "E": {
+          "support": 54,
+          "matches": 20,
+          "agreement": 0.37037037037037035
+        }
+      },
+      "training_label_counts": {
+        "A": 22,
+        "B": 12,
+        "C": 308,
+        "D": 130,
+        "E": 28
+      },
+      "confidence": {
+        "mean_confidence": 0.7467998641849738,
+        "correct_mean_confidence": 0.8060384630814603,
+        "incorrect_mean_confidence": 0.6236411965703939,
+        "ece_10_bins": 0.07157775164795505,
+        "multiclass_brier": 0.44727216218541227,
+        "confidence_correctness_auroc": 0.7806617607849411,
+        "bins": [
+          {
+            "confidence_min": 0.0,
+            "confidence_max": 0.1,
+            "n": 0,
+            "mean_confidence": null,
+            "accuracy": null
+          },
+          {
+            "confidence_min": 0.1,
+            "confidence_max": 0.2,
+            "n": 0,
+            "mean_confidence": null,
+            "accuracy": null
+          },
+          {
+            "confidence_min": 0.2,
+            "confidence_max": 0.3,
+            "n": 2,
+            "mean_confidence": 0.2742796365115291,
+            "accuracy": 0.0
+          },
+          {
+            "confidence_min": 0.3,
+            "confidence_max": 0.4,
+            "n": 31,
+            "mean_confidence": 0.35755406257733424,
+            "accuracy": 0.1935483870967742
+          },
+          {
+            "confidence_min": 0.4,
+            "confidence_max": 0.5,
+            "n": 109,
+            "mean_confidence": 0.45937324425790255,
+            "accuracy": 0.3577981651376147
+          },
+          {
+            "confidence_min": 0.5,
+            "confidence_max": 0.6,
+            "n": 127,
+            "mean_confidence": 0.5509071195067348,
+            "accuracy": 0.4566929133858268
+          },
+          {
+            "confidence_min": 0.6,
+            "confidence_max": 0.7,
+            "n": 114,
+            "mean_confidence": 0.6483676954038383,
+            "accuracy": 0.6052631578947368
+          },
+          {
+            "confidence_min": 0.7,
+            "confidence_max": 0.8,
+            "n": 145,
+            "mean_confidence": 0.7551861596528815,
+            "accuracy": 0.6344827586206897
+          },
+          {
+            "confidence_min": 0.8,
+            "confidence_max": 0.9,
+            "n": 203,
+            "mean_confidence": 0.8524486606865489,
+            "accuracy": 0.7733990147783252
+          },
+          {
+            "confidence_min": 0.9,
+            "confidence_max": 1.0,
+            "n": 282,
+            "mean_confidence": 0.951686705177009,
+            "accuracy": 0.9326241134751773
+          }
+        ]
+      }
+    },
+    "1000": {
+      "n": 1013,
+      "valid_rate": 1.0,
+      "accuracy": 0.7226061204343535,
+      "macro_f1": 0.5414892642793975,
+      "per_class": {
+        "A": {
+          "support": 106,
+          "recall": 0.33962264150943394,
+          "fpr": 0.017640573318632856,
+          "f1": 0.45569620253164556
+        },
+        "B": {
+          "support": 84,
+          "recall": 0.07142857142857142,
+          "fpr": 0.001076426264800861,
+          "f1": 0.13186813186813187
+        },
+        "C": {
+          "support": 562,
+          "recall": 0.9145907473309609,
+          "fpr": 0.4079822616407982,
+          "f1": 0.8158730158730159
+        },
+        "D": {
+          "support": 215,
+          "recall": 0.7023255813953488,
+          "fpr": 0.08646616541353383,
+          "f1": 0.6942528735632184
+        },
+        "E": {
+          "support": 46,
+          "recall": 0.5434782608695652,
+          "fpr": 0.011375387797311272,
+          "f1": 0.6097560975609756
+        }
+      },
+      "correct": 732,
+      "teacher_matches": 808,
+      "teacher_agreement_all_cases": 0.7976307996051333,
+      "predicted_counts": {
+        "C": 698,
+        "D": 220,
+        "B": 7,
+        "E": 36,
+        "A": 52
+      },
+      "confusion_rows_reference_columns_prediction": {
+        "A": {
+          "A": 36,
+          "B": 1,
+          "C": 50,
+          "D": 19,
+          "E": 0,
+          "FAIL": 0
+        },
+        "B": {
+          "A": 15,
+          "B": 6,
+          "C": 54,
+          "D": 6,
+          "E": 3,
+          "FAIL": 0
+        },
+        "C": {
+          "A": 1,
+          "B": 0,
+          "C": 514,
+          "D": 41,
+          "E": 6,
+          "FAIL": 0
+        },
+        "D": {
+          "A": 0,
+          "B": 0,
+          "C": 62,
+          "D": 151,
+          "E": 2,
+          "FAIL": 0
+        },
+        "E": {
+          "A": 0,
+          "B": 0,
+          "C": 18,
+          "D": 3,
+          "E": 25,
+          "FAIL": 0
+        }
+      },
+      "fit_seconds": 0.16142445395234972,
+      "fit_iterations": 263,
+      "teacher_agreement_by_label": {
+        "A": {
+          "support": 85,
+          "matches": 40,
+          "agreement": 0.47058823529411764
+        },
+        "B": {
+          "support": 43,
+          "matches": 6,
+          "agreement": 0.13953488372093023
+        },
+        "C": {
+          "support": 598,
+          "matches": 562,
+          "agreement": 0.939799331103679
+        },
+        "D": {
+          "support": 232,
+          "matches": 169,
+          "agreement": 0.728448275862069
+        },
+        "E": {
+          "support": 54,
+          "matches": 31,
+          "agreement": 0.5740740740740741
+        }
+      },
+      "training_label_counts": {
+        "A": 61,
+        "B": 23,
+        "C": 621,
+        "D": 245,
+        "E": 50
+      },
+      "confidence": {
+        "mean_confidence": 0.7780229967971154,
+        "correct_mean_confidence": 0.8223954735497548,
+        "incorrect_mean_confidence": 0.6624334844023396,
+        "ece_10_bins": 0.061312251866746506,
+        "multiclass_brier": 0.4123548531505117,
+        "confidence_correctness_auroc": 0.7464266962254245,
+        "bins": [
+          {
+            "confidence_min": 0.0,
+            "confidence_max": 0.1,
+            "n": 0,
+            "mean_confidence": null,
+            "accuracy": null
+          },
+          {
+            "confidence_min": 0.1,
+            "confidence_max": 0.2,
+            "n": 0,
+            "mean_confidence": null,
+            "accuracy": null
+          },
+          {
+            "confidence_min": 0.2,
+            "confidence_max": 0.3,
+            "n": 2,
+            "mean_confidence": 0.294763393610704,
+            "accuracy": 0.0
+          },
+          {
+            "confidence_min": 0.3,
+            "confidence_max": 0.4,
+            "n": 36,
+            "mean_confidence": 0.37043323563250485,
+            "accuracy": 0.3333333333333333
+          },
+          {
+            "confidence_min": 0.4,
+            "confidence_max": 0.5,
+            "n": 80,
+            "mean_confidence": 0.46267490384039867,
+            "accuracy": 0.5
+          },
+          {
+            "confidence_min": 0.5,
+            "confidence_max": 0.6,
+            "n": 107,
+            "mean_confidence": 0.552046637691981,
+            "accuracy": 0.5420560747663551
+          },
+          {
+            "confidence_min": 0.6,
+            "confidence_max": 0.7,
+            "n": 95,
+            "mean_confidence": 0.644972733749179,
+            "accuracy": 0.5052631578947369
+          },
+          {
+            "confidence_min": 0.7,
+            "confidence_max": 0.8,
+            "n": 128,
+            "mean_confidence": 0.7533489417563788,
+            "accuracy": 0.6953125
+          },
+          {
+            "confidence_min": 0.8,
+            "confidence_max": 0.9,
+            "n": 201,
+            "mean_confidence": 0.8565695332117685,
+            "accuracy": 0.7761194029850746
+          },
+          {
+            "confidence_min": 0.9,
+            "confidence_max": 1.0,
+            "n": 364,
+            "mean_confidence": 0.9567517569193917,
+            "accuracy": 0.9038461538461539
+          }
+        ]
+      }
+    },
+    "2000": {
+      "n": 1013,
+      "valid_rate": 1.0,
+      "accuracy": 0.7305034550839091,
+      "macro_f1": 0.5719373522988935,
+      "per_class": {
+        "A": {
+          "support": 106,
+          "recall": 0.4339622641509434,
+          "fpr": 0.023153252480705624,
+          "f1": 0.5317919075144508
+        },
+        "B": {
+          "support": 84,
+          "recall": 0.10714285714285714,
+          "fpr": 0.002152852529601722,
+          "f1": 0.18947368421052632
+        },
+        "C": {
+          "support": 562,
+          "recall": 0.9074733096085409,
+          "fpr": 0.36807095343680707,
+          "f1": 0.8239095315024233
+        },
+        "D": {
+          "support": 215,
+          "recall": 0.6930232558139535,
+          "fpr": 0.09273182957393483,
+          "f1": 0.680365296803653
+        },
+        "E": {
+          "support": 46,
+          "recall": 0.5652173913043478,
+          "fpr": 0.010341261633919338,
+          "f1": 0.6341463414634146
+        }
+      },
+      "correct": 740,
+      "teacher_matches": 829,
+      "teacher_agreement_all_cases": 0.8183613030602171,
+      "predicted_counts": {
+        "C": 676,
+        "D": 223,
+        "B": 11,
+        "E": 36,
+        "A": 67
+      },
+      "confusion_rows_reference_columns_prediction": {
+        "A": {
+          "A": 46,
+          "B": 1,
+          "C": 40,
+          "D": 18,
+          "E": 1,
+          "FAIL": 0
+        },
+        "B": {
+          "A": 19,
+          "B": 9,
+          "C": 46,
+          "D": 9,
+          "E": 1,
+          "FAIL": 0
+        },
+        "C": {
+          "A": 1,
+          "B": 1,
+          "C": 510,
+          "D": 44,
+          "E": 6,
+          "FAIL": 0
+        },
+        "D": {
+          "A": 1,
+          "B": 0,
+          "C": 63,
+          "D": 149,
+          "E": 2,
+          "FAIL": 0
+        },
+        "E": {
+          "A": 0,
+          "B": 0,
+          "C": 17,
+          "D": 3,
+          "E": 26,
+          "FAIL": 0
+        }
+      },
+      "fit_seconds": 0.30914205900626257,
+      "fit_iterations": 316,
+      "teacher_agreement_by_label": {
+        "A": {
+          "support": 85,
+          "matches": 50,
+          "agreement": 0.5882352941176471
+        },
+        "B": {
+          "support": 43,
+          "matches": 9,
+          "agreement": 0.20930232558139536
+        },
+        "C": {
+          "support": 598,
+          "matches": 563,
+          "agreement": 0.9414715719063546
+        },
+        "D": {
+          "support": 232,
+          "matches": 176,
+          "agreement": 0.7586206896551724
+        },
+        "E": {
+          "support": 54,
+          "matches": 31,
+          "agreement": 0.5740740740740741
+        }
+      },
+      "training_label_counts": {
+        "A": 131,
+        "B": 48,
+        "C": 1230,
+        "D": 478,
+        "E": 113
+      },
+      "confidence": {
+        "mean_confidence": 0.807887336981528,
+        "correct_mean_confidence": 0.8530786643458194,
+        "incorrect_mean_confidence": 0.6853906987046946,
+        "ece_10_bins": 0.07738388189761888,
+        "multiclass_brier": 0.39502676682104626,
+        "confidence_correctness_auroc": 0.7616077616077617,
+        "bins": [
+          {
+            "confidence_min": 0.0,
+            "confidence_max": 0.1,
+            "n": 0,
+            "mean_confidence": null,
+            "accuracy": null
+          },
+          {
+            "confidence_min": 0.1,
+            "confidence_max": 0.2,
+            "n": 0,
+            "mean_confidence": null,
+            "accuracy": null
+          },
+          {
+            "confidence_min": 0.2,
+            "confidence_max": 0.3,
+            "n": 1,
+            "mean_confidence": 0.2722364606498519,
+            "accuracy": 0.0
+          },
+          {
+            "confidence_min": 0.3,
+            "confidence_max": 0.4,
+            "n": 22,
+            "mean_confidence": 0.36315318477436004,
+            "accuracy": 0.22727272727272727
+          },
+          {
+            "confidence_min": 0.4,
+            "confidence_max": 0.5,
+            "n": 59,
+            "mean_confidence": 0.45540338858777174,
+            "accuracy": 0.4406779661016949
+          },
+          {
+            "confidence_min": 0.5,
+            "confidence_max": 0.6,
+            "n": 115,
+            "mean_confidence": 0.5530810968292956,
+            "accuracy": 0.5043478260869565
+          },
+          {
+            "confidence_min": 0.6,
+            "confidence_max": 0.7,
+            "n": 83,
+            "mean_confidence": 0.6556579869782334,
+            "accuracy": 0.5421686746987951
+          },
+          {
+            "confidence_min": 0.7,
+            "confidence_max": 0.8,
+            "n": 107,
+            "mean_confidence": 0.7488115471573146,
+            "accuracy": 0.6542056074766355
+          },
+          {
+            "confidence_min": 0.8,
+            "confidence_max": 0.9,
+            "n": 163,
+            "mean_confidence": 0.8543313548260599,
+            "accuracy": 0.7607361963190185
+          },
+          {
+            "confidence_min": 0.9,
+            "confidence_max": 1.0,
+            "n": 463,
+            "mean_confidence": 0.9629733919500666,
+            "accuracy": 0.8898488120950324
+          }
+        ]
+      }
+    },
+    "3000": {
+      "n": 1013,
+      "valid_rate": 1.0,
+      "accuracy": 0.7423494570582428,
+      "macro_f1": 0.6073414909041969,
+      "per_class": {
+        "A": {
+          "support": 106,
+          "recall": 0.49056603773584906,
+          "fpr": 0.019845644983461964,
+          "f1": 0.5909090909090909
+        },
+        "B": {
+          "support": 84,
+          "recall": 0.19047619047619047,
+          "fpr": 0.006458557588805167,
+          "f1": 0.3018867924528302
+        },
+        "C": {
+          "support": 562,
+          "recall": 0.8932384341637011,
+          "fpr": 0.31263858093126384,
+          "f1": 0.833195020746888
+        },
+        "D": {
+          "support": 215,
+          "recall": 0.7255813953488373,
+          "fpr": 0.10651629072681704,
+          "f1": 0.6842105263157895
+        },
+        "E": {
+          "support": 46,
+          "recall": 0.5652173913043478,
+          "fpr": 0.011375387797311272,
+          "f1": 0.6265060240963856
+        }
+      },
+      "correct": 752,
+      "teacher_matches": 828,
+      "teacher_agreement_all_cases": 0.8173741362290227,
+      "predicted_counts": {
+        "C": 643,
+        "D": 241,
+        "B": 22,
+        "E": 37,
+        "A": 70
+      },
+      "confusion_rows_reference_columns_prediction": {
+        "A": {
+          "A": 52,
+          "B": 2,
+          "C": 32,
+          "D": 19,
+          "E": 1,
+          "FAIL": 0
+        },
+        "B": {
+          "A": 16,
+          "B": 16,
+          "C": 37,
+          "D": 14,
+          "E": 1,
+          "FAIL": 0
+        },
+        "C": {
+          "A": 1,
+          "B": 3,
+          "C": 502,
+          "D": 49,
+          "E": 7,
+          "FAIL": 0
+        },
+        "D": {
+          "A": 1,
+          "B": 1,
+          "C": 55,
+          "D": 156,
+          "E": 2,
+          "FAIL": 0
+        },
+        "E": {
+          "A": 0,
+          "B": 0,
+          "C": 17,
+          "D": 3,
+          "E": 26,
+          "FAIL": 0
+        }
+      },
+      "fit_seconds": 0.5225725760101341,
+      "fit_iterations": 361,
+      "teacher_agreement_by_label": {
+        "A": {
+          "support": 85,
+          "matches": 56,
+          "agreement": 0.6588235294117647
+        },
+        "B": {
+          "support": 43,
+          "matches": 12,
+          "agreement": 0.27906976744186046
+        },
+        "C": {
+          "support": 598,
+          "matches": 549,
+          "agreement": 0.9180602006688964
+        },
+        "D": {
+          "support": 232,
+          "matches": 180,
+          "agreement": 0.7758620689655172
+        },
+        "E": {
+          "support": 54,
+          "matches": 31,
+          "agreement": 0.5740740740740741
+        }
+      },
+      "training_label_counts": {
+        "A": 210,
+        "B": 70,
+        "C": 1807,
+        "D": 749,
+        "E": 164
+      },
+      "confidence": {
+        "mean_confidence": 0.8204661985561876,
+        "correct_mean_confidence": 0.8623511679598059,
+        "incorrect_mean_confidence": 0.6997861334545754,
+        "ece_10_bins": 0.08576400886117967,
+        "multiclass_brier": 0.38353694767136814,
+        "confidence_correctness_auroc": 0.7617439064155865,
+        "bins": [
+          {
+            "confidence_min": 0.0,
+            "confidence_max": 0.1,
+            "n": 0,
+            "mean_confidence": null,
+            "accuracy": null
+          },
+          {
+            "confidence_min": 0.1,
+            "confidence_max": 0.2,
+            "n": 0,
+            "mean_confidence": null,
+            "accuracy": null
+          },
+          {
+            "confidence_min": 0.2,
+            "confidence_max": 0.3,
+            "n": 3,
+            "mean_confidence": 0.274887174984886,
+            "accuracy": 0.6666666666666666
+          },
+          {
+            "confidence_min": 0.3,
+            "confidence_max": 0.4,
+            "n": 20,
+            "mean_confidence": 0.36509987777834263,
+            "accuracy": 0.5
+          },
+          {
+            "confidence_min": 0.4,
+            "confidence_max": 0.5,
+            "n": 54,
+            "mean_confidence": 0.4650330825885445,
+            "accuracy": 0.4444444444444444
+          },
+          {
+            "confidence_min": 0.5,
+            "confidence_max": 0.6,
+            "n": 93,
+            "mean_confidence": 0.5511382384519374,
+            "accuracy": 0.4946236559139785
+          },
+          {
+            "confidence_min": 0.6,
+            "confidence_max": 0.7,
+            "n": 88,
+            "mean_confidence": 0.6481389128453848,
+            "accuracy": 0.45454545454545453
+          },
+          {
+            "confidence_min": 0.7,
+            "confidence_max": 0.8,
+            "n": 91,
+            "mean_confidence": 0.7472549632337848,
+            "accuracy": 0.6373626373626373
+          },
+          {
+            "confidence_min": 0.8,
+            "confidence_max": 0.9,
+            "n": 175,
+            "mean_confidence": 0.8541875443846033,
+            "accuracy": 0.7714285714285715
+          },
+          {
+            "confidence_min": 0.9,
+            "confidence_max": 1.0,
+            "n": 489,
+            "mean_confidence": 0.9654779369511474,
+            "accuracy": 0.8936605316973415
+          }
+        ]
+      }
+    },
+    "4000": {
+      "n": 1013,
+      "valid_rate": 1.0,
+      "accuracy": 0.7354392892398816,
+      "macro_f1": 0.5917932060898261,
+      "per_class": {
+        "A": {
+          "support": 106,
+          "recall": 0.5094339622641509,
+          "fpr": 0.027563395810363836,
+          "f1": 0.5837837837837838
+        },
+        "B": {
+          "support": 84,
+          "recall": 0.14285714285714285,
+          "fpr": 0.005382131324004306,
+          "f1": 0.2376237623762376
+        },
+        "C": {
+          "support": 562,
+          "recall": 0.891459074733096,
+          "fpr": 0.3170731707317073,
+          "f1": 0.8308457711442786
+        },
+        "D": {
+          "support": 215,
+          "recall": 0.7069767441860465,
+          "fpr": 0.10651629072681704,
+          "f1": 0.672566371681416
+        },
+        "E": {
+          "support": 46,
+          "recall": 0.5652173913043478,
+          "fpr": 0.010341261633919338,
+          "f1": 0.6341463414634146
+        }
+      },
+      "correct": 745,
+      "teacher_matches": 831,
+      "teacher_agreement_all_cases": 0.8203356367226061,
+      "predicted_counts": {
+        "C": 644,
+        "D": 237,
+        "B": 17,
+        "E": 36,
+        "A": 79
+      },
+      "confusion_rows_reference_columns_prediction": {
+        "A": {
+          "A": 54,
+          "B": 2,
+          "C": 30,
+          "D": 19,
+          "E": 1,
+          "FAIL": 0
+        },
+        "B": {
+          "A": 21,
+          "B": 12,
+          "C": 37,
+          "D": 12,
+          "E": 2,
+          "FAIL": 0
+        },
+        "C": {
+          "A": 3,
+          "B": 2,
+          "C": 501,
+          "D": 51,
+          "E": 5,
+          "FAIL": 0
+        },
+        "D": {
+          "A": 1,
+          "B": 1,
+          "C": 59,
+          "D": 152,
+          "E": 2,
+          "FAIL": 0
+        },
+        "E": {
+          "A": 0,
+          "B": 0,
+          "C": 17,
+          "D": 3,
+          "E": 26,
+          "FAIL": 0
+        }
+      },
+      "fit_seconds": 0.7809912340017036,
+      "fit_iterations": 417,
+      "teacher_agreement_by_label": {
+        "A": {
+          "support": 85,
+          "matches": 59,
+          "agreement": 0.6941176470588235
+        },
+        "B": {
+          "support": 43,
+          "matches": 10,
+          "agreement": 0.23255813953488372
+        },
+        "C": {
+          "support": 598,
+          "matches": 551,
+          "agreement": 0.9214046822742475
+        },
+        "D": {
+          "support": 232,
+          "matches": 180,
+          "agreement": 0.7758620689655172
+        },
+        "E": {
+          "support": 54,
+          "matches": 31,
+          "agreement": 0.5740740740740741
+        }
+      },
+      "training_label_counts": {
+        "A": 284,
+        "B": 92,
+        "C": 2436,
+        "D": 973,
+        "E": 215
+      },
+      "confidence": {
+        "mean_confidence": 0.8304262767900086,
+        "correct_mean_confidence": 0.875956831077055,
+        "incorrect_mean_confidence": 0.7038581314771369,
+        "ece_10_bins": 0.09594746858751467,
+        "multiclass_brier": 0.3834865261483066,
+        "confidence_correctness_auroc": 0.7761845136732446,
+        "bins": [
+          {
+            "confidence_min": 0.0,
+            "confidence_max": 0.1,
+            "n": 0,
+            "mean_confidence": null,
+            "accuracy": null
+          },
+          {
+            "confidence_min": 0.1,
+            "confidence_max": 0.2,
+            "n": 0,
+            "mean_confidence": null,
+            "accuracy": null
+          },
+          {
+            "confidence_min": 0.2,
+            "confidence_max": 0.3,
+            "n": 1,
+            "mean_confidence": 0.2764907007888395,
+            "accuracy": 0.0
+          },
+          {
+            "confidence_min": 0.3,
+            "confidence_max": 0.4,
+            "n": 15,
+            "mean_confidence": 0.3675677569708776,
+            "accuracy": 0.4
+          },
+          {
+            "confidence_min": 0.4,
+            "confidence_max": 0.5,
+            "n": 47,
+            "mean_confidence": 0.46308652648904186,
+            "accuracy": 0.3404255319148936
+          },
+          {
+            "confidence_min": 0.5,
+            "confidence_max": 0.6,
+            "n": 87,
+            "mean_confidence": 0.5451678929617779,
+            "accuracy": 0.367816091954023
+          },
+          {
+            "confidence_min": 0.6,
+            "confidence_max": 0.7,
+            "n": 81,
+            "mean_confidence": 0.6507826625035985,
+            "accuracy": 0.5679012345679012
+          },
+          {
+            "confidence_min": 0.7,
+            "confidence_max": 0.8,
+            "n": 111,
+            "mean_confidence": 0.7480390975283356,
+            "accuracy": 0.6666666666666666
+          },
+          {
+            "confidence_min": 0.8,
+            "confidence_max": 0.9,
+            "n": 160,
+            "mean_confidence": 0.8549599815047355,
+            "accuracy": 0.74375
+          },
+          {
+            "confidence_min": 0.9,
+            "confidence_max": 1.0,
+            "n": 511,
+            "mean_confidence": 0.9661405193171675,
+            "accuracy": 0.8845401174168297
+          }
+        ]
+      }
+    },
+    "5000": {
+      "n": 1013,
+      "valid_rate": 1.0,
+      "accuracy": 0.7443237907206318,
+      "macro_f1": 0.611815906506185,
+      "per_class": {
+        "A": {
+          "support": 106,
+          "recall": 0.5188679245283019,
+          "fpr": 0.023153252480705624,
+          "f1": 0.6043956043956044
+        },
+        "B": {
+          "support": 84,
+          "recall": 0.20238095238095238,
+          "fpr": 0.0032292787944025836,
+          "f1": 0.3269230769230769
+        },
+        "C": {
+          "support": 562,
+          "recall": 0.8932384341637011,
+          "fpr": 0.3082039911308204,
+          "f1": 0.8345802161263508
+        },
+        "D": {
+          "support": 215,
+          "recall": 0.7162790697674418,
+          "fpr": 0.10401002506265664,
+          "f1": 0.6814159292035398
+        },
+        "E": {
+          "support": 46,
+          "recall": 0.5652173913043478,
+          "fpr": 0.01344364012409514,
+          "f1": 0.611764705882353
+        }
+      },
+      "correct": 754,
+      "teacher_matches": 840,
+      "teacher_agreement_all_cases": 0.8292201382033564,
+      "predicted_counts": {
+        "C": 641,
+        "D": 237,
+        "B": 20,
+        "E": 39,
+        "A": 76
+      },
+      "confusion_rows_reference_columns_prediction": {
+        "A": {
+          "A": 55,
+          "B": 1,
+          "C": 31,
+          "D": 18,
+          "E": 1,
+          "FAIL": 0
+        },
+        "B": {
+          "A": 18,
+          "B": 17,
+          "C": 34,
+          "D": 13,
+          "E": 2,
+          "FAIL": 0
+        },
+        "C": {
+          "A": 2,
+          "B": 2,
+          "C": 502,
+          "D": 49,
+          "E": 7,
+          "FAIL": 0
+        },
+        "D": {
+          "A": 1,
+          "B": 0,
+          "C": 57,
+          "D": 154,
+          "E": 3,
+          "FAIL": 0
+        },
+        "E": {
+          "A": 0,
+          "B": 0,
+          "C": 17,
+          "D": 3,
+          "E": 26,
+          "FAIL": 0
+        }
+      },
+      "fit_seconds": 1.1140684339916334,
+      "fit_iterations": 457,
+      "teacher_agreement_by_label": {
+        "A": {
+          "support": 85,
+          "matches": 57,
+          "agreement": 0.6705882352941176
+        },
+        "B": {
+          "support": 43,
+          "matches": 13,
+          "agreement": 0.3023255813953488
+        },
+        "C": {
+          "support": 598,
+          "matches": 553,
+          "agreement": 0.9247491638795987
+        },
+        "D": {
+          "support": 232,
+          "matches": 185,
+          "agreement": 0.7974137931034483
+        },
+        "E": {
+          "support": 54,
+          "matches": 32,
+          "agreement": 0.5925925925925926
+        }
+      },
+      "training_label_counts": {
+        "A": 380,
+        "B": 125,
+        "C": 3015,
+        "D": 1211,
+        "E": 269
+      },
+      "confidence": {
+        "mean_confidence": 0.8360005531854109,
+        "correct_mean_confidence": 0.8772553209078335,
+        "incorrect_mean_confidence": 0.7158998008197484,
+        "ece_10_bins": 0.09260542212791,
+        "multiclass_brier": 0.3804668142036913,
+        "confidence_correctness_auroc": 0.7648986614503855,
+        "bins": [
+          {
+            "confidence_min": 0.0,
+            "confidence_max": 0.1,
+            "n": 0,
+            "mean_confidence": null,
+            "accuracy": null
+          },
+          {
+            "confidence_min": 0.1,
+            "confidence_max": 0.2,
+            "n": 0,
+            "mean_confidence": null,
+            "accuracy": null
+          },
+          {
+            "confidence_min": 0.2,
+            "confidence_max": 0.3,
+            "n": 2,
+            "mean_confidence": 0.2648169403121239,
+            "accuracy": 0.5
+          },
+          {
+            "confidence_min": 0.3,
+            "confidence_max": 0.4,
+            "n": 9,
+            "mean_confidence": 0.3631897285416466,
+            "accuracy": 0.2222222222222222
+          },
+          {
+            "confidence_min": 0.4,
+            "confidence_max": 0.5,
+            "n": 49,
+            "mean_confidence": 0.46141867560416644,
+            "accuracy": 0.42857142857142855
+          },
+          {
+            "confidence_min": 0.5,
+            "confidence_max": 0.6,
+            "n": 87,
+            "mean_confidence": 0.5465389347831158,
+            "accuracy": 0.4367816091954023
+          },
+          {
+            "confidence_min": 0.6,
+            "confidence_max": 0.7,
+            "n": 85,
+            "mean_confidence": 0.6502438204632555,
+            "accuracy": 0.47058823529411764
+          },
+          {
+            "confidence_min": 0.7,
+            "confidence_max": 0.8,
+            "n": 97,
+            "mean_confidence": 0.7551150169579566,
+            "accuracy": 0.7525773195876289
+          },
+          {
+            "confidence_min": 0.8,
+            "confidence_max": 0.9,
+            "n": 153,
+            "mean_confidence": 0.8549033783968244,
+            "accuracy": 0.7189542483660131
+          },
+          {
+            "confidence_min": 0.9,
+            "confidence_max": 1.0,
+            "n": 531,
+            "mean_confidence": 0.9672216915811194,
+            "accuracy": 0.8832391713747646
+          }
+        ]
+      }
+    },
+    "6000": {
+      "n": 1013,
+      "valid_rate": 1.0,
+      "accuracy": 0.7482724580454096,
+      "macro_f1": 0.6168778426446245,
+      "per_class": {
+        "A": {
+          "support": 106,
+          "recall": 0.5283018867924528,
+          "fpr": 0.024255788313120176,
+          "f1": 0.6086956521739131
+        },
+        "B": {
+          "support": 84,
+          "recall": 0.2261904761904762,
+          "fpr": 0.005382131324004306,
+          "f1": 0.35185185185185186
+        },
+        "C": {
+          "support": 562,
+          "recall": 0.891459074733096,
+          "fpr": 0.2926829268292683,
+          "f1": 0.8384937238493724
+        },
+        "D": {
+          "support": 215,
+          "recall": 0.7302325581395349,
+          "fpr": 0.10401002506265664,
+          "f1": 0.6901098901098901
+        },
+        "E": {
+          "support": 46,
+          "recall": 0.5434782608695652,
+          "fpr": 0.01344364012409514,
+          "f1": 0.5952380952380952
+        }
+      },
+      "correct": 758,
+      "teacher_matches": 848,
+      "teacher_agreement_all_cases": 0.8371174728529122,
+      "predicted_counts": {
+        "C": 633,
+        "D": 240,
+        "B": 24,
+        "E": 38,
+        "A": 78
+      },
+      "confusion_rows_reference_columns_prediction": {
+        "A": {
+          "A": 56,
+          "B": 2,
+          "C": 29,
+          "D": 18,
+          "E": 1,
+          "FAIL": 0
+        },
+        "B": {
+          "A": 19,
+          "B": 19,
+          "C": 32,
+          "D": 12,
+          "E": 2,
+          "FAIL": 0
+        },
+        "C": {
+          "A": 2,
+          "B": 3,
+          "C": 501,
+          "D": 49,
+          "E": 7,
+          "FAIL": 0
+        },
+        "D": {
+          "A": 1,
+          "B": 0,
+          "C": 54,
+          "D": 157,
+          "E": 3,
+          "FAIL": 0
+        },
+        "E": {
+          "A": 0,
+          "B": 0,
+          "C": 17,
+          "D": 4,
+          "E": 25,
+          "FAIL": 0
+        }
+      },
+      "fit_seconds": 1.3754158220253885,
+      "fit_iterations": 458,
+      "teacher_agreement_by_label": {
+        "A": {
+          "support": 85,
+          "matches": 60,
+          "agreement": 0.7058823529411765
+        },
+        "B": {
+          "support": 43,
+          "matches": 16,
+          "agreement": 0.37209302325581395
+        },
+        "C": {
+          "support": 598,
+          "matches": 552,
+          "agreement": 0.9230769230769231
+        },
+        "D": {
+          "support": 232,
+          "matches": 188,
+          "agreement": 0.8103448275862069
+        },
+        "E": {
+          "support": 54,
+          "matches": 32,
+          "agreement": 0.5925925925925926
+        }
+      },
+      "training_label_counts": {
+        "A": 469,
+        "B": 151,
+        "C": 3595,
+        "D": 1480,
+        "E": 305
+      },
+      "confidence": {
+        "mean_confidence": 0.8400108724147677,
+        "correct_mean_confidence": 0.8791152351648017,
+        "incorrect_mean_confidence": 0.7237712372597646,
+        "ece_10_bins": 0.09988120447700728,
+        "multiclass_brier": 0.37834025771974406,
+        "confidence_correctness_auroc": 0.76261058513115,
+        "bins": [
+          {
+            "confidence_min": 0.0,
+            "confidence_max": 0.1,
+            "n": 0,
+            "mean_confidence": null,
+            "accuracy": null
+          },
+          {
+            "confidence_min": 0.1,
+            "confidence_max": 0.2,
+            "n": 0,
+            "mean_confidence": null,
+            "accuracy": null
+          },
+          {
+            "confidence_min": 0.2,
+            "confidence_max": 0.3,
+            "n": 1,
+            "mean_confidence": 0.2869912670180005,
+            "accuracy": 0.0
+          },
+          {
+            "confidence_min": 0.3,
+            "confidence_max": 0.4,
+            "n": 11,
+            "mean_confidence": 0.35875870984788266,
+            "accuracy": 0.18181818181818182
+          },
+          {
+            "confidence_min": 0.4,
+            "confidence_max": 0.5,
+            "n": 37,
+            "mean_confidence": 0.4560993732560993,
+            "accuracy": 0.5675675675675675
+          },
+          {
+            "confidence_min": 0.5,
+            "confidence_max": 0.6,
+            "n": 89,
+            "mean_confidence": 0.5455220011912214,
+            "accuracy": 0.4044943820224719
+          },
+          {
+            "confidence_min": 0.6,
+            "confidence_max": 0.7,
+            "n": 79,
+            "mean_confidence": 0.6484496284487394,
+            "accuracy": 0.5443037974683544
+          },
+          {
+            "confidence_min": 0.7,
+            "confidence_max": 0.8,
+            "n": 105,
+            "mean_confidence": 0.749556716334762,
+            "accuracy": 0.638095238095238
+          },
+          {
+            "confidence_min": 0.8,
+            "confidence_max": 0.9,
+            "n": 154,
+            "mean_confidence": 0.8529288320163797,
+            "accuracy": 0.7337662337662337
+          },
+          {
+            "confidence_min": 0.9,
+            "confidence_max": 1.0,
+            "n": 537,
+            "mean_confidence": 0.9683212770413365,
+            "accuracy": 0.8864059590316573
+          }
+        ]
+      }
+    },
+    "7000": {
+      "n": 1013,
+      "valid_rate": 1.0,
+      "accuracy": 0.7512339585389931,
+      "macro_f1": 0.6263933363993726,
+      "per_class": {
+        "A": {
+          "support": 106,
+          "recall": 0.5377358490566038,
+          "fpr": 0.024255788313120176,
+          "f1": 0.6162162162162163
+        },
+        "B": {
+          "support": 84,
+          "recall": 0.23809523809523808,
+          "fpr": 0.005382131324004306,
+          "f1": 0.3669724770642202
+        },
+        "C": {
+          "support": 562,
+          "recall": 0.8932384341637011,
+          "fpr": 0.2926829268292683,
+          "f1": 0.8394648829431438
+        },
+        "D": {
+          "support": 215,
+          "recall": 0.7255813953488373,
+          "fpr": 0.10150375939849623,
+          "f1": 0.6902654867256637
+        },
+        "E": {
+          "support": 46,
+          "recall": 0.5652173913043478,
+          "fpr": 0.012409513960703205,
+          "f1": 0.6190476190476191
+        }
+      },
+      "correct": 761,
+      "teacher_matches": 845,
+      "teacher_agreement_all_cases": 0.8341559723593287,
+      "predicted_counts": {
+        "C": 634,
+        "D": 237,
+        "B": 25,
+        "E": 38,
+        "A": 79
+      },
+      "confusion_rows_reference_columns_prediction": {
+        "A": {
+          "A": 57,
+          "B": 2,
+          "C": 27,
+          "D": 19,
+          "E": 1,
+          "FAIL": 0
+        },
+        "B": {
+          "A": 19,
+          "B": 20,
+          "C": 32,
+          "D": 10,
+          "E": 3,
+          "FAIL": 0
+        },
+        "C": {
+          "A": 2,
+          "B": 3,
+          "C": 502,
+          "D": 49,
+          "E": 6,
+          "FAIL": 0
+        },
+        "D": {
+          "A": 1,
+          "B": 0,
+          "C": 56,
+          "D": 156,
+          "E": 2,
+          "FAIL": 0
+        },
+        "E": {
+          "A": 0,
+          "B": 0,
+          "C": 17,
+          "D": 3,
+          "E": 26,
+          "FAIL": 0
+        }
+      },
+      "fit_seconds": 1.7829757740255445,
+      "fit_iterations": 487,
+      "teacher_agreement_by_label": {
+        "A": {
+          "support": 85,
+          "matches": 61,
+          "agreement": 0.7176470588235294
+        },
+        "B": {
+          "support": 43,
+          "matches": 16,
+          "agreement": 0.37209302325581395
+        },
+        "C": {
+          "support": 598,
+          "matches": 551,
+          "agreement": 0.9214046822742475
+        },
+        "D": {
+          "support": 232,
+          "matches": 184,
+          "agreement": 0.7931034482758621
+        },
+        "E": {
+          "support": 54,
+          "matches": 33,
+          "agreement": 0.6111111111111112
+        }
+      },
+      "training_label_counts": {
+        "A": 561,
+        "B": 180,
+        "C": 4189,
+        "D": 1718,
+        "E": 352
+      },
+      "confidence": {
+        "mean_confidence": 0.8436189091074668,
+        "correct_mean_confidence": 0.8830866659835324,
+        "incorrect_mean_confidence": 0.7244325480650632,
+        "ece_10_bins": 0.09395296251465309,
+        "multiclass_brier": 0.3715354878416189,
+        "confidence_correctness_auroc": 0.7664726863149991,
+        "bins": [
+          {
+            "confidence_min": 0.0,
+            "confidence_max": 0.1,
+            "n": 0,
+            "mean_confidence": null,
+            "accuracy": null
+          },
+          {
+            "confidence_min": 0.1,
+            "confidence_max": 0.2,
+            "n": 0,
+            "mean_confidence": null,
+            "accuracy": null
+          },
+          {
+            "confidence_min": 0.2,
+            "confidence_max": 0.3,
+            "n": 2,
+            "mean_confidence": 0.29561520058808266,
+            "accuracy": 0.5
+          },
+          {
+            "confidence_min": 0.3,
+            "confidence_max": 0.4,
+            "n": 9,
+            "mean_confidence": 0.37397192632249865,
+            "accuracy": 0.1111111111111111
+          },
+          {
+            "confidence_min": 0.4,
+            "confidence_max": 0.5,
+            "n": 34,
+            "mean_confidence": 0.459252104355414,
+            "accuracy": 0.47058823529411764
+          },
+          {
+            "confidence_min": 0.5,
+            "confidence_max": 0.6,
+            "n": 84,
+            "mean_confidence": 0.5514923542117335,
+            "accuracy": 0.42857142857142855
+          },
+          {
+            "confidence_min": 0.6,
+            "confidence_max": 0.7,
+            "n": 93,
+            "mean_confidence": 0.6501716358061125,
+            "accuracy": 0.5376344086021505
+          },
+          {
+            "confidence_min": 0.7,
+            "confidence_max": 0.8,
+            "n": 92,
+            "mean_confidence": 0.7478855867725266,
+            "accuracy": 0.6413043478260869
+          },
+          {
+            "confidence_min": 0.8,
+            "confidence_max": 0.9,
+            "n": 162,
+            "mean_confidence": 0.8561949725886637,
+            "accuracy": 0.7469135802469136
+          },
+          {
+            "confidence_min": 0.9,
+            "confidence_max": 1.0,
+            "n": 537,
+            "mean_confidence": 0.9696723020735778,
+            "accuracy": 0.888268156424581
+          }
+        ]
+      }
+    },
+    "8000": {
+      "n": 1013,
+      "valid_rate": 1.0,
+      "accuracy": 0.7502467917077986,
+      "macro_f1": 0.6229994835102682,
+      "per_class": {
+        "A": {
+          "support": 106,
+          "recall": 0.5188679245283019,
+          "fpr": 0.024255788313120176,
+          "f1": 0.6010928961748634
+        },
+        "B": {
+          "support": 84,
+          "recall": 0.25,
+          "fpr": 0.008611410118406888,
+          "f1": 0.37168141592920356
+        },
+        "C": {
+          "support": 562,
+          "recall": 0.891459074733096,
+          "fpr": 0.2860310421286031,
+          "f1": 0.8406040268456376
+        },
+        "D": {
+          "support": 215,
+          "recall": 0.7255813953488373,
+          "fpr": 0.09774436090225563,
+          "f1": 0.6948775055679287
+        },
+        "E": {
+          "support": 46,
+          "recall": 0.5869565217391305,
+          "fpr": 0.016546018614270942,
+          "f1": 0.6067415730337079
+        }
+      },
+      "correct": 760,
+      "teacher_matches": 850,
+      "teacher_agreement_all_cases": 0.8390918065153011,
+      "predicted_counts": {
+        "C": 630,
+        "D": 234,
+        "B": 29,
+        "E": 43,
+        "A": 77
+      },
+      "confusion_rows_reference_columns_prediction": {
+        "A": {
+          "A": 55,
+          "B": 4,
+          "C": 28,
+          "D": 18,
+          "E": 1,
+          "FAIL": 0
+        },
+        "B": {
+          "A": 19,
+          "B": 21,
+          "C": 30,
+          "D": 11,
+          "E": 3,
+          "FAIL": 0
+        },
+        "C": {
+          "A": 2,
+          "B": 3,
+          "C": 501,
+          "D": 46,
+          "E": 10,
+          "FAIL": 0
+        },
+        "D": {
+          "A": 1,
+          "B": 1,
+          "C": 55,
+          "D": 156,
+          "E": 2,
+          "FAIL": 0
+        },
+        "E": {
+          "A": 0,
+          "B": 0,
+          "C": 16,
+          "D": 3,
+          "E": 27,
+          "FAIL": 0
+        }
+      },
+      "fit_seconds": 2.343738620984368,
+      "fit_iterations": 518,
+      "teacher_agreement_by_label": {
+        "A": {
+          "support": 85,
+          "matches": 60,
+          "agreement": 0.7058823529411765
+        },
+        "B": {
+          "support": 43,
+          "matches": 19,
+          "agreement": 0.4418604651162791
+        },
+        "C": {
+          "support": 598,
+          "matches": 552,
+          "agreement": 0.9230769230769231
+        },
+        "D": {
+          "support": 232,
+          "matches": 184,
+          "agreement": 0.7931034482758621
+        },
+        "E": {
+          "support": 54,
+          "matches": 35,
+          "agreement": 0.6481481481481481
+        }
+      },
+      "training_label_counts": {
+        "A": 637,
+        "B": 211,
+        "C": 4788,
+        "D": 1958,
+        "E": 406
+      },
+      "confidence": {
+        "mean_confidence": 0.8443796334091914,
+        "correct_mean_confidence": 0.8849878901795953,
+        "incorrect_mean_confidence": 0.7223943561542233,
+        "ece_10_bins": 0.09553435523908294,
+        "multiclass_brier": 0.36918079225518613,
+        "confidence_correctness_auroc": 0.7711358435614728,
+        "bins": [
+          {
+            "confidence_min": 0.0,
+            "confidence_max": 0.1,
+            "n": 0,
+            "mean_confidence": null,
+            "accuracy": null
+          },
+          {
+            "confidence_min": 0.1,
+            "confidence_max": 0.2,
+            "n": 0,
+            "mean_confidence": null,
+            "accuracy": null
+          },
+          {
+            "confidence_min": 0.2,
+            "confidence_max": 0.3,
+            "n": 0,
+            "mean_confidence": null,
+            "accuracy": null
+          },
+          {
+            "confidence_min": 0.3,
+            "confidence_max": 0.4,
+            "n": 12,
+            "mean_confidence": 0.35751111609666425,
+            "accuracy": 0.4166666666666667
+          },
+          {
+            "confidence_min": 0.4,
+            "confidence_max": 0.5,
+            "n": 35,
+            "mean_confidence": 0.4559702194452136,
+            "accuracy": 0.3142857142857143
+          },
+          {
+            "confidence_min": 0.5,
+            "confidence_max": 0.6,
+            "n": 87,
+            "mean_confidence": 0.5512232843334159,
+            "accuracy": 0.4367816091954023
+          },
+          {
+            "confidence_min": 0.6,
+            "confidence_max": 0.7,
+            "n": 81,
+            "mean_confidence": 0.6515258983832849,
+            "accuracy": 0.5308641975308642
+          },
+          {
+            "confidence_min": 0.7,
+            "confidence_max": 0.8,
+            "n": 100,
+            "mean_confidence": 0.75396807965258,
+            "accuracy": 0.65
+          },
+          {
+            "confidence_min": 0.8,
+            "confidence_max": 0.9,
+            "n": 155,
+            "mean_confidence": 0.8567049576504441,
+            "accuracy": 0.7483870967741936
+          },
+          {
+            "confidence_min": 0.9,
+            "confidence_max": 1.0,
+            "n": 543,
+            "mean_confidence": 0.9690448944063322,
+            "accuracy": 0.8876611418047882
+          }
+        ]
+      }
+    },
+    "9000": {
+      "n": 1013,
+      "valid_rate": 1.0,
+      "accuracy": 0.7502467917077986,
+      "macro_f1": 0.6227139844539217,
+      "per_class": {
+        "A": {
+          "support": 106,
+          "recall": 0.5377358490566038,
+          "fpr": 0.025358324145534728,
+          "f1": 0.6129032258064516
+        },
+        "B": {
+          "support": 84,
+          "recall": 0.25,
+          "fpr": 0.007534983853606028,
+          "f1": 0.375
+        },
+        "C": {
+          "support": 562,
+          "recall": 0.8879003558718861,
+          "fpr": 0.28159645232815966,
+          "f1": 0.8400673400673401
+        },
+        "D": {
+          "support": 215,
+          "recall": 0.7302325581395349,
+          "fpr": 0.10025062656641603,
+          "f1": 0.6946902654867256
+        },
+        "E": {
+          "support": 46,
+          "recall": 0.5652173913043478,
+          "fpr": 0.016546018614270942,
+          "f1": 0.5909090909090909
+        }
+      },
+      "correct": 760,
+      "teacher_matches": 847,
+      "teacher_agreement_all_cases": 0.8361303060217177,
+      "predicted_counts": {
+        "C": 626,
+        "D": 237,
+        "B": 28,
+        "E": 42,
+        "A": 80
+      },
+      "confusion_rows_reference_columns_prediction": {
+        "A": {
+          "A": 57,
+          "B": 3,
+          "C": 27,
+          "D": 18,
+          "E": 1,
+          "FAIL": 0
+        },
+        "B": {
+          "A": 20,
+          "B": 21,
+          "C": 29,
+          "D": 11,
+          "E": 3,
+          "FAIL": 0
+        },
+        "C": {
+          "A": 2,
+          "B": 3,
+          "C": 499,
+          "D": 48,
+          "E": 10,
+          "FAIL": 0
+        },
+        "D": {
+          "A": 1,
+          "B": 1,
+          "C": 54,
+          "D": 157,
+          "E": 2,
+          "FAIL": 0
+        },
+        "E": {
+          "A": 0,
+          "B": 0,
+          "C": 17,
+          "D": 3,
+          "E": 26,
+          "FAIL": 0
+        }
+      },
+      "fit_seconds": 2.689876581018325,
+      "fit_iterations": 511,
+      "teacher_agreement_by_label": {
+        "A": {
+          "support": 85,
+          "matches": 60,
+          "agreement": 0.7058823529411765
+        },
+        "B": {
+          "support": 43,
+          "matches": 17,
+          "agreement": 0.3953488372093023
+        },
+        "C": {
+          "support": 598,
+          "matches": 550,
+          "agreement": 0.919732441471572
+        },
+        "D": {
+          "support": 232,
+          "matches": 185,
+          "agreement": 0.7974137931034483
+        },
+        "E": {
+          "support": 54,
+          "matches": 35,
+          "agreement": 0.6481481481481481
+        }
+      },
+      "training_label_counts": {
+        "A": 720,
+        "B": 246,
+        "C": 5387,
+        "D": 2187,
+        "E": 460
+      },
+      "confidence": {
+        "mean_confidence": 0.8492266151236187,
+        "correct_mean_confidence": 0.8902101164876082,
+        "incorrect_mean_confidence": 0.7261141209076818,
+        "ece_10_bins": 0.09897982341582008,
+        "multiclass_brier": 0.3688373900410895,
+        "confidence_correctness_auroc": 0.7715467027251923,
+        "bins": [
+          {
+            "confidence_min": 0.0,
+            "confidence_max": 0.1,
+            "n": 0,
+            "mean_confidence": null,
+            "accuracy": null
+          },
+          {
+            "confidence_min": 0.1,
+            "confidence_max": 0.2,
+            "n": 0,
+            "mean_confidence": null,
+            "accuracy": null
+          },
+          {
+            "confidence_min": 0.2,
+            "confidence_max": 0.3,
+            "n": 0,
+            "mean_confidence": null,
+            "accuracy": null
+          },
+          {
+            "confidence_min": 0.3,
+            "confidence_max": 0.4,
+            "n": 11,
+            "mean_confidence": 0.36091866424423635,
+            "accuracy": 0.2727272727272727
+          },
+          {
+            "confidence_min": 0.4,
+            "confidence_max": 0.5,
+            "n": 39,
+            "mean_confidence": 0.4584314473626333,
+            "accuracy": 0.3076923076923077
+          },
+          {
+            "confidence_min": 0.5,
+            "confidence_max": 0.6,
+            "n": 76,
+            "mean_confidence": 0.5493819507154881,
+            "accuracy": 0.4473684210526316
+          },
+          {
+            "confidence_min": 0.6,
+            "confidence_max": 0.7,
+            "n": 79,
+            "mean_confidence": 0.6469808790582635,
+            "accuracy": 0.5316455696202531
+          },
+          {
+            "confidence_min": 0.7,
+            "confidence_max": 0.8,
+            "n": 96,
+            "mean_confidence": 0.7510878648954226,
+            "accuracy": 0.6666666666666666
+          },
+          {
+            "confidence_min": 0.8,
+            "confidence_max": 0.9,
+            "n": 155,
+            "mean_confidence": 0.8576513343603562,
+            "accuracy": 0.7290322580645161
+          },
+          {
+            "confidence_min": 0.9,
+            "confidence_max": 1.0,
+            "n": 557,
+            "mean_confidence": 0.9703998560333945,
+            "accuracy": 0.8833034111310593
+          }
+        ]
+      }
+    }
+  },
+  "teacher": {
+    "n": 1013,
+    "valid_rate": 0.9990128331688055,
+    "accuracy": 0.7857847976307996,
+    "macro_f1": 0.6833296894798818,
+    "per_class": {
+      "A": {
+        "support": 106,
+        "recall": 0.5660377358490566,
+        "fpr": 0.027563395810363836,
+        "f1": 0.6282722513089005
+      },
+      "B": {
+        "support": 84,
+        "recall": 0.4166666666666667,
+        "fpr": 0.008611410118406888,
+        "f1": 0.5511811023622047
+      },
+      "C": {
+        "support": 562,
+        "recall": 0.8932384341637011,
+        "fpr": 0.21286031042128603,
+        "f1": 0.8655172413793103
+      },
+      "D": {
+        "support": 215,
+        "recall": 0.7813953488372093,
+        "fpr": 0.08020050125313283,
+        "f1": 0.7516778523489933
+      },
+      "E": {
+        "support": 46,
+        "recall": 0.6739130434782609,
+        "fpr": 0.023784901758014478,
+        "f1": 0.62
+      }
+    },
+    "correct": 796,
+    "teacher_matches": 1012,
+    "teacher_agreement_all_cases": 0.9990128331688055,
+    "predicted_counts": {
+      "D": 232,
+      "C": 598,
+      "E": 54,
+      "B": 43,
+      "A": 85,
+      "FAIL": 1
+    },
+    "confusion_rows_reference_columns_prediction": {
+      "A": {
+        "A": 60,
+        "B": 5,
+        "C": 21,
+        "D": 16,
+        "E": 4,
+        "FAIL": 0
+      },
+      "B": {
+        "A": 19,
+        "B": 35,
+        "C": 26,
+        "D": 2,
+        "E": 2,
+        "FAIL": 0
+      },
+      "C": {
+        "A": 4,
+        "B": 3,
+        "C": 502,
+        "D": 42,
+        "E": 11,
+        "FAIL": 0
+      },
+      "D": {
+        "A": 2,
+        "B": 0,
+        "C": 38,
+        "D": 168,
+        "E": 6,
+        "FAIL": 1
+      },
+      "E": {
+        "A": 0,
+        "B": 0,
+        "C": 11,
+        "D": 4,
+        "E": 31,
+        "FAIL": 0
+      }
+    }
+  },
+  "majority_C": 0.5547877591312932,
+  "gate": {
+    "rule": "confidence < threshold -> frozen Teacher; equality retains Student",
+    "thresholds": [
+      0,
+      0.01,
+      0.02,
+      0.03,
+      0.04,
+      0.05,
+      0.06,
+      0.07,
+      0.08,
+      0.09,
+      0.1,
+      0.11,
+      0.12,
+      0.13,
+      0.14,
+      0.15,
+      0.16,
+      0.17,
+      0.18,
+      0.19,
+      0.2,
+      0.21,
+      0.22,
+      0.23,
+      0.24,
+      0.25,
+      0.26,
+      0.27,
+      0.28,
+      0.29,
+      0.3,
+      0.31,
+      0.32,
+      0.33,
+      0.34,
+      0.35,
+      0.36,
+      0.37,
+      0.38,
+      0.39,
+      0.4,
+      0.41,
+      0.42,
+      0.43,
+      0.44,
+      0.45,
+      0.46,
+      0.47,
+      0.48,
+      0.49,
+      0.5,
+      0.51,
+      0.52,
+      0.53,
+      0.54,
+      0.55,
+      0.56,
+      0.57,
+      0.58,
+      0.59,
+      0.6,
+      0.61,
+      0.62,
+      0.63,
+      0.64,
+      0.65,
+      0.66,
+      0.67,
+      0.68,
+      0.69,
+      0.7,
+      0.71,
+      0.72,
+      0.73,
+      0.74,
+      0.75,
+      0.76,
+      0.77,
+      0.78,
+      0.79,
+      0.8,
+      0.81,
+      0.82,
+      0.83,
+      0.84,
+      0.85,
+      0.86,
+      0.87,
+      0.88,
+      0.89,
+      0.9,
+      0.91,
+      0.92,
+      0.93,
+      0.94,
+      0.95,
+      0.96,
+      0.97,
+      0.98,
+      0.99,
+      0.995,
+      1
+    ],
+    "ledger_thresholds": [
+      0,
+      0.3,
+      0.4,
+      0.5,
+      0.6,
+      0.7,
+      0.8,
+      0.9,
+      0.95,
+      0.99,
+      0.995,
+      1
+    ],
+    "actual_new_teacher_api_calls": 0
+  }
+}
