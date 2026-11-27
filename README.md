@@ -247,6 +247,17 @@ Use `strict_generation.teacher_agreement_all_cases` to compare the two Students 
 
 Run the FP16 mixed-precision Qwen3 learning curve with `sh student_qwen3_lora_fp16_mixed.sh`. It trains the 100, 200, and 500 sample prefixes and each 1,000-sample increment through 9,000, with gradient checkpointing disabled and an FP32 October validation after each adapter. Pass sizes as arguments to select specific prefixes, for example `sh student_qwen3_lora_fp16_mixed.sh 100 200 500`. Set `QWEN_MICRO_BATCH_SIZE=2` to use micro-batch 2 with effective batch size 8. The script reuses completed adapters and the validation ledger for each prefix. Adapter directories use `output/lora/qwen3-0.6b_v3_nXXXX_fp16_mixed`, with a suffix such as `_mb2` for a larger micro-batch. The corresponding validation results are under `output/lora_eval/`.
 
+## Confidence-gated Teacher fallback (offline)
+
+[CGTF 实验报告](result/validation/gemma3-270m-it-v3-cgtf/note.md) evaluates confidence-gated Teacher fallback on all 12 archived Gemma validation checkpoints. A request is escalated only when `confidence < threshold`; equality retains the Student output. The primary mode preserves original strict outputs, including failures; a separate five-way mode provides a diagnostic comparison. No new Teacher API calls are made.
+
+```bash
+python3 -m unittest discover -s code -p 'test_confidence_gated_fallback.py'
+MPLCONFIGDIR=/tmp/llm-jit-matplotlib python3 code/confidence_gated_fallback.py
+```
+
+The script writes threshold metrics, routing counts, per-request hybrid validation ledgers and plots under `result/validation/gemma3-270m-it-v3-cgtf/`. Matplotlib is required for plots; `--skip-plots` runs the standard-library scoring/export path. Add `--export-threshold 0.85` to export another threshold's detailed records. This follow-up experiment reports full-cohort hybrid quality separately from quality on retained Student cases; Teacher request counts are preserved for subsequent cost analysis.
+
 ## Code and checks
 
 | Module | Responsibility |
