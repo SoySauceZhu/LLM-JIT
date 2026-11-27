@@ -1,0 +1,70 @@
+{
+  "split": "validation",
+  "device": "cuda",
+  "dtype": "float32",
+  "prompt": "v3",
+  "definition": "Maximum softmax over the raw first-token logits for A through E",
+  "checkpoints": [
+    {
+      "validation_run": "output/lora_eval/gemma3-270m-it_v3_n6000_validation",
+      "predictions_sha256": "bc3f664c3455e5b06cf2c1b556bac43888def09b27a2299569febfcdcfa330a3",
+      "model_revision": "ac82b4e820549b854eebf28ce6dedaf9fdfa17b3",
+      "adapter": {
+        "adapter_config.json": "08a52ac04efe5bf666c511a37723cfd0bb6c19a3b2ea8cfa5fefa6a149607d8b",
+        "adapter_model.safetensors": "e18969ce7951a1b10d641d709f9d590f9c34d34a4ab7ae66d87d1cab9fffbeaa"
+      },
+      "confidence_file": "gemma3-270m-it_v3_n6000_validation.csv",
+      "n": 1013,
+      "five_way_cfpb_accuracy": 0.7393879565646594,
+      "archived_strict_cfpb_accuracy": 0.7255676209279368,
+      "five_way_mean_confidence_correct": 0.9156330713681449,
+      "five_way_mean_confidence_wrong": 0.7612788494337689,
+      "archived_strict_invalid": 29,
+      "archived_first_token_choices_matched": 1013,
+      "confidence_bins": [
+        {
+          "lower": 0.0,
+          "upper": 0.4,
+          "n": 5,
+          "cfpb_correct": 0,
+          "cfpb_accuracy": 0.0
+        },
+        {
+          "lower": 0.4,
+          "upper": 0.6,
+          "n": 98,
+          "cfpb_correct": 36,
+          "cfpb_accuracy": 0.3673469387755102
+        },
+        {
+          "lower": 0.6,
+          "upper": 0.8,
+          "n": 144,
+          "cfpb_correct": 74,
+          "cfpb_accuracy": 0.5138888888888888
+        },
+        {
+          "lower": 0.8,
+          "upper": 0.9,
+          "n": 123,
+          "cfpb_correct": 83,
+          "cfpb_accuracy": 0.6747967479674797
+        },
+        {
+          "lower": 0.9,
+          "upper": 0.95,
+          "n": 114,
+          "cfpb_correct": 85,
+          "cfpb_accuracy": 0.7456140350877193
+        },
+        {
+          "lower": 0.95,
+          "upper": 1.0,
+          "n": 529,
+          "cfpb_correct": 471,
+          "cfpb_accuracy": 0.8903591682419659
+        }
+      ]
+    }
+  ]
+}
